@@ -9,6 +9,7 @@ export default function App() {
   const [me, setMe] = React.useState<{ email: string; role: string } | null>(null);
   const [globalOk, setGlobalOk] = React.useState(false);
   const [projects, setProjects] = React.useState<Project[]>([]);
+  const [activeView, setActiveView] = React.useState<"dashboard" | "publishing">("dashboard");
 
   React.useEffect(() => {
     (async () => {
@@ -24,6 +25,23 @@ export default function App() {
       <div className="card">
         <div style={{ color: "var(--muted)" }}>MASTER</div>
         <div className="kpi">HUB</div>
+      </div>
+
+      <div style={{ marginTop: 20, display: "flex", flexDirection: "column", gap: 8 }}>
+        <button 
+           className="btn" 
+           style={{ justifyContent: "flex-start", background: activeView === "dashboard" ? "rgba(255,255,255,0.05)" : "transparent" }}
+           onClick={() => setActiveView("dashboard")}
+        >
+          DASHBOARD
+        </button>
+        <button 
+           className="btn" 
+           style={{ justifyContent: "flex-start", background: activeView === "publishing" ? "rgba(255,255,255,0.05)" : "transparent" }}
+           onClick={() => setActiveView("publishing")}
+        >
+          PUBLISHING
+        </button>
       </div>
 
       <div style={{ marginTop: 12, color: "var(--muted)" }}>PROJECTS</div>
@@ -47,6 +65,7 @@ export default function App() {
       sidebar={sidebar}
       footer={`hub / ${new Date().toISOString()}`}
     >
+      {activeView === "dashboard" ? (
       <div className="grid">
         <div className="card" style={{ gridColumn: "span 4" }}>
           <div style={{ color: "var(--muted)" }}>GLOBAL</div>
@@ -71,6 +90,16 @@ export default function App() {
           </div>
         </div>
       </div>
+      ) : (
+        <React.Suspense fallback={<div>Loading...</div>}>
+           <PublishingView />
+        </React.Suspense>
+      )}
     </AppShell>
   );
 }
+
+// Lazy load to avoid cycle deps if any (though none here)
+import { PublishingView } from "./features/publishing/PublishingView";
+
+

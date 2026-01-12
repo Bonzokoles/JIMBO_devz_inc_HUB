@@ -27,3 +27,23 @@ export type CommandOut = {
   projectId: string;
   action: string;
 };
+
+export interface PublishResponse {
+  id: string;
+  platform: string;
+  status: "success" | "failed" | "pending";
+  url?: string;
+  error?: string;
+  created_at: string;
+}
+
+export interface PublishEverywhereRequest {
+  article_markdown: string;
+  image_path?: string;
+}
+
+export interface R2UploadResponse {
+  status: string;
+  url: string;
+  key: string;
+}

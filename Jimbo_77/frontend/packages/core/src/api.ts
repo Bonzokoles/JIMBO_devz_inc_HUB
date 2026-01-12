@@ -29,4 +29,16 @@ export const api = {
   commandGet: (id: string) => jget<any>(`/v1/commands/${id}`),
   commandEvents: (id: string) => jget<any[]>(`/v1/commands/${id}/events`),
   audit: (limit = 50) => jget<any[]>(`/v1/audit?limit=${limit}`),
+  
+  // Publishing
+  publishEverywhere: (payload: import("./types").PublishEverywhereRequest) => 
+    jpost<import("./types").PublishResponse[]>("/v1/publish/everywhere", payload),
+    
+  publishR2: (formData: FormData) => fetch(`${API_BASE}/v1/publish/r2`, {
+      method: "POST",
+      body: formData, // Browser handles Content-Type for FormData
+    }).then(r => r.ok ? r.json() : Promise.reject(r.statusText)),
+
+  publishHistory: () => jget<any[]>("/v1/publish/history"),
 };
+
