@@ -1,8 +1,9 @@
 import React from "react";
-import { AppShell } from "@ui/layout/AppShell";
-import { Topbar } from "@ui/layout/Topbar";
-import { api } from "@core/api";
-import { can } from "@core/rbac";
+import { AppShell } from "@jimbo77/ui/layout/AppShell";
+import { Topbar } from "@jimbo77/ui/layout/Topbar";
+import { CommandDrawer } from "@jimbo77/ui/components/CommandDrawer";
+import { api } from "@jimbo77/core/api";
+import { can } from "@jimbo77/core/rbac";
 import type { Project, CommandIn } from "@core/types";
 
 function idemKey() {

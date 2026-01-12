@@ -1,0 +1,21 @@
+{
+  "name": "@jimbo77/ui",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./layout/AppShell": "./src/layout/AppShell.tsx",
+    "./layout/Topbar": "./src/layout/Topbar.tsx",
+    "./components/CommandDrawer": "./src/components/CommandDrawer.tsx",
+    "./components/DangerConfirmModal": "./src/components/DangerConfirmModal.tsx"
+  },
+  "dependencies": {
+    "react": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.5",
+    "typescript": "^5.3.3"
+  }
+}
