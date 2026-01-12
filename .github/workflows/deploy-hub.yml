@@ -1,0 +1,51 @@
+name: Deploy Hub to Cloudflare Pages
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "Jimbo_77/frontend/**"  # Trigger only on frontend changes
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Build & Deploy
+    permissions:
+      contents: read
+      deployments: write
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: Jimbo_77/frontend
+
+      - name: Build Frontend (Hub)
+        run: pnpm --filter @apps/hub build
+        working-directory: Jimbo_77/frontend
+        env:
+          # Inject secrets into build process (needed for Vite envs)
+          VITE_API_BASE: ${{ vars.VITE_API_BASE || 'https://api.ops.jimbo77.org' }}
+          VITE_ENV: "production"
+
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: "jimbo-devz-inc-hub" 
+          directory: "Jimbo_77/frontend/apps/hub/dist"
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
