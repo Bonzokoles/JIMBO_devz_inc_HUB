@@ -1,0 +1,50 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  memory_limiter:
+    check_interval: 2s
+    limit_mib: 256
+    spike_limit_mib: 64
+
+  batch:
+    timeout: 2s
+    send_batch_size: 512
+    send_batch_max_size: 1024
+
+  attributes/host:
+    actions:
+      - key: host.name
+        value: ${env:HOST_NAME}
+        action: upsert
+
+  # sampling per-host (opcjonalnie): jak chcesz ciąć, ustaw np 50
+  probabilistic_sampler:
+    sampling_percentage: 100
+
+exporters:
+  otlp/central:
+    endpoint: ${env:CENTRAL_OTLP_ENDPOINT}
+    tls:
+      insecure: true
+
+  # metryki collectora (Prometheus zbierze z :8888)
+  prometheus:
+    endpoint: 0.0.0.0:8888
+
+extensions:
+  health_check:
+    endpoint: 0.0.0.0:13133
+
+service:
+  extensions: [health_check]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, attributes/host, probabilistic_sampler, batch]
+      exporters: [otlp/central]
