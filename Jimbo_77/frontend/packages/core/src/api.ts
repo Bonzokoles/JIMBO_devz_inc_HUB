@@ -39,6 +39,11 @@ export const api = {
       body: formData, // Browser handles Content-Type for FormData
     }).then(r => r.ok ? r.json() : Promise.reject(r.statusText)),
 
+
   publishHistory: () => jget<any[]>("/v1/publish/history"),
+
+  // Analytics
+  analyticsSystem: () => jget<import("./types").SystemStats>("/v1/analytics/system"),
 };
+
 

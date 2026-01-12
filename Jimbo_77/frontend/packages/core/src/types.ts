@@ -47,3 +47,15 @@ export interface R2UploadResponse {
   url: string;
   key: string;
 }
+
+export interface SystemStats {
+  cpu_percent: number;
+  memory_percent: number;
+  memory_used_gb: number;
+  memory_total_gb: number;
+  disk_percent: number;
+  uptime_seconds: number;
+  uptime_human: string;
+  platform: string;
+  timestamp: string;
+}

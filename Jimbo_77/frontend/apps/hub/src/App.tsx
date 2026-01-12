@@ -9,7 +9,7 @@ export default function App() {
   const [me, setMe] = React.useState<{ email: string; role: string } | null>(null);
   const [globalOk, setGlobalOk] = React.useState(false);
   const [projects, setProjects] = React.useState<Project[]>([]);
-  const [activeView, setActiveView] = React.useState<"dashboard" | "publishing">("dashboard");
+  const [activeView, setActiveView] = React.useState<"dashboard" | "publishing" | "operations">("dashboard");
 
   React.useEffect(() => {
     (async () => {
@@ -41,6 +41,13 @@ export default function App() {
            onClick={() => setActiveView("publishing")}
         >
           PUBLISHING
+        </button>
+        <button 
+           className="btn" 
+           style={{ justifyContent: "flex-start", background: activeView === "operations" ? "rgba(255,255,255,0.05)" : "transparent" }}
+           onClick={() => setActiveView("operations")}
+        >
+          OPERATIONS
         </button>
       </div>
 
@@ -90,9 +97,13 @@ export default function App() {
           </div>
         </div>
       </div>
-      ) : (
+      ) : activeView === "publishing" ? (
         <React.Suspense fallback={<div>Loading...</div>}>
            <PublishingView />
+        </React.Suspense>
+      ) : (
+        <React.Suspense fallback={<div>Loading...</div>}>
+           <OperationsView />
         </React.Suspense>
       )}
     </AppShell>
@@ -101,5 +112,6 @@ export default function App() {
 
 // Lazy load to avoid cycle deps if any (though none here)
 import { PublishingView } from "./features/publishing/PublishingView";
+import { OperationsView } from "./features/operations/OperationsView";
 
 

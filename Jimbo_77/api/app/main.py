@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 from .metrics import setup_metrics
 from .otel import setup_otel
 from .logging_setup import setup_logging
-from .routes import projects, commands, audit, publishing
+from .routes import projects, commands, audit, publishing, analytics
 
 # 1. Setup Logging (JSON + OTEL trace_id) - Global setup before app creation
 setup_logging("jimbo77-ops-api")
@@ -37,7 +37,7 @@ origins = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all for now, restrict later if needed
+    allow_origins=origins,  # Use explicit list for credentials support
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -52,6 +52,7 @@ app.include_router(projects.router)
 app.include_router(commands.router)
 app.include_router(audit.router)
 app.include_router(publishing.router)
+app.include_router(analytics.router)
 
 @app.get("/")
 async def root():
