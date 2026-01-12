@@ -1,0 +1,14 @@
+{
+  "name": "jimbo77-ops-ui",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev:hub": "pnpm --filter @jimbo77/hub dev",
+    "dev:project": "pnpm --filter @jimbo77/project dev",
+    "build:hub": "pnpm --filter @jimbo77/hub build",
+    "build:project": "pnpm --filter @jimbo77/project build"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}
