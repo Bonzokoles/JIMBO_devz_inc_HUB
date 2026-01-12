@@ -1,0 +1,405 @@
+/* =========================
+   JIMBO77 UNIFIED OPS THEME
+   Sci-fi ultra-computer theme
+   Zero rounded corners
+   Extracted from UNIFIED_OPERATIONS_DASHBOARD
+   ========================= */
+
+:root {
+    /* Colors - Sci-fi palette */
+    --bg: #07090f;
+    --bg2: #05070c;
+    --panel: #0b0f1a;
+    --panel2: #090d17;
+    --text: #e7ecff;
+    --muted: #9aa6c7;
+    --faint: #6b7696;
+    --line: #1b2542;
+    --hot: #7cffb2;        /* neon green */
+    --cold: #6aa6ff;       /* neon blue */
+    --warn: #ffd166;       /* amber */
+    --bad: #ff4d6d;        /* red/pink */
+    --shadow: 0 0 0 1px rgba(231, 236, 255, .06), 0 18px 50px rgba(0, 0, 0, .55);
+
+    /* Layout */
+    --maxw: 1800px;
+    --lh: 1.65;
+    --fs: 14px;
+    --fs-sm: 12px;
+    --fs-lg: 16px;
+    --fs-xl: 24px;
+
+    /* Fonts */
+    --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", sans-serif;
+
+    /* Effects */
+    --focus: 0 0 0 2px var(--cold), 0 0 0 4px rgba(106, 166, 255, .25);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* Zero rounded corners - JIMBO77 signature */
+.btn,
+.panel,
+.card,
+.stat,
+.tab,
+.service-card,
+.metric,
+.stat-box,
+.service-icon,
+.badge {
+    border-radius: 0 !important
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    overflow-x: hidden
+}
+
+body {
+    font: var(--fs)/var(--lh) var(--sans);
+    background:
+        radial-gradient(1200px 800px at 15% 0%, rgba(124, 255, 178, .08), transparent 60%),
+        radial-gradient(1200px 800px at 90% 5%, rgba(106, 166, 255, .08), transparent 60%),
+        linear-gradient(180deg, var(--bg), var(--bg2) 70%);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+}
+
+a {
+    color: inherit;
+    text-decoration: none
+}
+
+a:hover {
+    color: var(--hot)
+}
+
+::selection {
+    background: rgba(124, 255, 178, .25)
+}
+
+/* ======= SHELL LAYOUT ======= */
+.shell {
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+/* ======= TOP BAR ======= */
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+    background: linear-gradient(180deg, rgba(11, 15, 26, .92), rgba(7, 9, 15, .70));
+    border-bottom: 1px solid rgba(27, 37, 66, .9);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, .4);
+}
+
+.toprow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 14px 20px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 280px;
+}
+
+.sigil {
+    width: 32px;
+    height: 32px;
+    border: 1px solid rgba(231, 236, 255, .18);
+    background:
+        repeating-linear-gradient(90deg,
+            rgba(124, 255, 178, .40) 0px,
+            rgba(124, 255, 178, .40) 1px,
+            transparent 1px,
+            transparent 6px),
+        radial-gradient(24px 24px at 35% 35%, rgba(106, 166, 255, .65), transparent 65%);
+    box-shadow: 0 0 0 1px rgba(231, 236, 255, .08), 0 0 18px rgba(124, 255, 178, .15);
+}
+
+.brand h1 {
+    margin: 0;
+    font: 900 15px/1.1 var(--mono);
+    letter-spacing: 1.4px;
+    color: var(--text);
+}
+
+.brand .sub {
+    margin-top: 3px;
+    font: 800 11px/1.1 var(--mono);
+    letter-spacing: 0.8px;
+    color: var(--muted);
+}
+
+.status-bar {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    flex-wrap: wrap;
+}
+
+.stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid rgba(27, 37, 66, .8);
+    padding: 7px 10px;
+    background: rgba(11, 15, 26, .6);
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    background: var(--hot);
+    box-shadow: 0 0 12px rgba(124, 255, 178, .35);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1 }
+    50% { opacity: .5 }
+}
+
+.dot.warn {
+    background: var(--warn);
+    box-shadow: 0 0 12px rgba(255, 209, 102, .35)
+}
+
+.dot.bad {
+    background: var(--bad);
+    box-shadow: 0 0 12px rgba(255, 77, 109, .35)
+}
+
+.dot.cold {
+    background: var(--cold);
+    box-shadow: 0 0 12px rgba(106, 166, 255, .35)
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    min-width: 280px;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.btn {
+    appearance: none;
+    background: transparent;
+    border: 1px solid rgba(27, 37, 66, .9);
+    color: var(--text);
+    padding: 9px 12px;
+    font: 700 11px/1 var(--mono);
+    letter-spacing: 0.8px;
+    cursor: pointer;
+    transition: all .15s ease;
+}
+
+.btn:hover {
+    border-color: rgba(124, 255, 178, .55);
+    color: var(--hot);
+    background: rgba(124, 255, 178, .05);
+}
+
+.btn:focus {
+    outline: none;
+    box-shadow: var(--focus)
+}
+
+.btn.active {
+    border-color: var(--hot);
+    background: rgba(124, 255, 178, .12);
+    color: var(--hot);
+}
+
+/* ======= MAIN LAYOUT ======= */
+.main {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: 0;
+}
+
+.sidebar {
+    border-right: 1px solid var(--line);
+    padding: 12px;
+    background: rgba(0, 0, 0, .15);
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 6px
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: rgba(11, 15, 26, .5)
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(106, 166, 255, .25)
+}
+
+.content {
+    padding: 20px;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.content::-webkit-scrollbar {
+    width: 8px
+}
+
+.content::-webkit-scrollbar-track {
+    background: rgba(11, 15, 26, .5)
+}
+
+.content::-webkit-scrollbar-thumb {
+    background: rgba(106, 166, 255, .25)
+}
+
+.section-title {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: .08em;
+    margin: 10px 0 8px;
+}
+
+.nav a {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border: 1px solid var(--line);
+    margin-bottom: 8px;
+    background: rgba(10, 18, 32, .35);
+    transition: all .15s ease;
+}
+
+.nav a:hover {
+    border-color: rgba(90, 167, 255, .45);
+    background: rgba(106, 166, 255, .06);
+}
+
+.nav small {
+    color: var(--muted)
+}
+
+/* ======= GRID ======= */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 12px;
+}
+
+/* ======= CARDS/PANELS ======= */
+.card,
+.panel {
+    border: 1px solid rgba(27, 37, 66, .85);
+    background: linear-gradient(180deg, rgba(11, 15, 26, .95), rgba(9, 13, 23, .80));
+    box-shadow: var(--shadow);
+    padding: 12px;
+    min-height: 60px;
+    position: relative;
+    overflow: hidden;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.card:hover,
+.panel:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 0 1px rgba(231, 236, 255, .10), 0 24px 60px rgba(0, 0, 0, .65);
+}
+
+.card::before,
+.panel::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    background:
+        linear-gradient(135deg, rgba(106, 166, 255, .06), transparent 50%),
+        radial-gradient(600px 200px at 15% 0%, rgba(124, 255, 178, .08), transparent 65%);
+    pointer-events: none;
+}
+
+.card > *,
+.panel > * {
+    position: relative
+}
+
+.card h3,
+.panel h3 {
+    margin: 0 0 8px 0;
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: .06em;
+}
+
+.kpi {
+    font-size: 22px;
+    color: var(--hot)
+}
+
+/* ======= FOOTER ======= */
+.footer {
+    border-top: 1px solid var(--line);
+    padding: 10px 14px;
+    color: var(--muted);
+    font-size: 12px;
+    text-align: center;
+    font-family: var(--mono);
+}
+
+/* ======= RESPONSIVE ======= */
+@media (max-width: 900px) {
+    .main {
+        grid-template-columns: 1fr;
+    }
+    
+    .sidebar {
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+    }
+    
+    .toprow {
+        flex-wrap: wrap
+    }
+
+    .brand,
+    .actions {
+        min-width: auto
+    }
+
+    .status-bar {
+        width: 100%;
+        justify-content: flex-start
+    }
+}
+
+/* ======= ACCESSIBILITY ======= */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}

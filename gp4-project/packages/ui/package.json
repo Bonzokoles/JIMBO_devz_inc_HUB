@@ -1,0 +1,22 @@
+{
+  "name": "@jimbo77/ui",
+  "version": "1.0.0",
+  "description": "JIMBO77 Unified UI Package - Sci-fi ultra-computer theme",
+  "type": "module",
+  "exports": {
+    "./styles/*": "./src/styles/*",
+    "./components/*": "./src/components/*",
+    "./layouts/*": "./src/layouts/*"
+  },
+  "files": [
+    "src"
+  ],
+  "keywords": [
+    "jimbo77",
+    "ui",
+    "astro",
+    "components"
+  ],
+  "author": "JIMBO77 DEVZ Inc",
+  "license": "MIT"
+}
