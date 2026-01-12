@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 from .metrics import setup_metrics
 from .otel import setup_otel
 from .logging_setup import setup_logging
-from .routes import projects, commands, audit, publishing, analytics
+from .routes import projects, commands, audit, publishing, analytics, logs
 
 # 1. Setup Logging (JSON + OTEL trace_id) - Global setup before app creation
 setup_logging("jimbo77-ops-api")
@@ -53,6 +53,7 @@ app.include_router(commands.router)
 app.include_router(audit.router)
 app.include_router(publishing.router)
 app.include_router(analytics.router)
+app.include_router(logs.router)
 
 @app.get("/")
 async def root():

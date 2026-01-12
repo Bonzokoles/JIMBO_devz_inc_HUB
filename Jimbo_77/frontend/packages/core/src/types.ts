@@ -8,6 +8,15 @@ export type Project = {
   host: string;
   modules: string[];
   agents?: { id: string; url: string }[];
+  services: Service[];
+};
+
+export type Service = {
+  id: string;
+  label: string;
+  target: string;
+  agentId: string;
+  kind?: string;
 };
 
 export type GlobalStatus = { ok: boolean; ts: string };

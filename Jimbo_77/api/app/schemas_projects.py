@@ -1,6 +1,6 @@
 from __future__ import annotations
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List, Dict
 
 class AgentCfg(BaseModel):
     id: str
@@ -9,15 +9,15 @@ class AgentCfg(BaseModel):
 class ServiceCfg(BaseModel):
     id: str             # stable ID w UI
     label: str
-    target: str         # nazwa kontenera (docker) przekazywana do agenta
+    target: str         # nazwa kontenera/procesu
     agentId: str        # który agent ma to wykonać
-    kind: str = "docker"  # na start: docker
+    kind: str = "docker"
 
 class ProjectOut(BaseModel):
     id: str
     name: str
     host: str
-    modules: list[str]
-    agents: list[AgentCfg]
-    services: list[ServiceCfg]
-    links: dict[str, str] = {}
+    modules: List[str]
+    agents: List[AgentCfg]
+    services: List[ServiceCfg]
+    links: Dict[str, str] = {}
