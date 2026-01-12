@@ -8,7 +8,7 @@ from .logging_setup import setup_logging
 from .routes import projects, commands, audit, publishing
 
 # 1. Setup Logging (JSON + OTEL trace_id) - Global setup before app creation
-setup_logging()
+setup_logging("jimbo77-ops-api")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
