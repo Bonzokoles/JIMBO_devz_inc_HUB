@@ -2,31 +2,46 @@ import React from "react";
 import { AppShell } from "@ui/layout/AppShell";
 import { Topbar } from "@ui/layout/Topbar";
 import { api } from "@core/api";
-import type { Project } from "@core/types";
+import { can } from "@core/rbac";
+import type { Project, CommandIn } from "@core/types";
+
+function idemKey() {
+  return crypto.randomUUID();
+}
 
 export default function App() {
   const env = import.meta.env.VITE_ENV ?? "prod";
-  const [me, setMe] = React.useState<{ email: string; role: string } | null>(null);
+  const projectId = import.meta.env.VITE_PROJECT_ID ?? "unknown";
+
+  const [me, setMe] = React.useState<{ email: string; role: any } | null>(null);
   const [globalOk, setGlobalOk] = React.useState(false);
   const [projects, setProjects] = React.useState<Project[]>([]);
+  const [status, setStatus] = React.useState<any>(null);
+  const [busy, setBusy] = React.useState(false);
 
   React.useEffect(() => {
     (async () => {
-      const [m, g, p] = await Promise.all([api.me(), api.globalStatus(), api.projects()]);
+      const [m, g, p, s] = await Promise.all([
+        api.me(),
+        api.globalStatus(),
+        api.projects(),
+        api.projectStatus(projectId),
+      ]);
       setMe(m);
       setGlobalOk(g.ok);
       setProjects(p);
+      setStatus(s);
     })().catch(console.error);
-  }, []);
+  }, [projectId]);
 
   const sidebar = (
     <>
       <div className="card">
-        <div style={{ color: "var(--muted)" }}>MASTER</div>
-        <div className="kpi">HUB</div>
+        <div style={{ color: "var(--muted)" }}>PROJECT</div>
+        <div className="kpi">{projectId}</div>
       </div>
 
-      <div style={{ marginTop: 12, color: "var(--muted)" }}>PROJECTS</div>
+      <div style={{ marginTop: 12, color: "var(--muted)" }}>JUMP</div>
       {projects.map((p) => (
         <a
           key={p.id}
@@ -41,34 +56,63 @@ export default function App() {
     </>
   );
 
+  async function restartExample() {
+    if (!me) return;
+    if (!can(me.role, "service.restart")) return;
+
+    setBusy(true);
+    try {
+      const payload: CommandIn = {
+        projectId,
+        action: "service.restart",
+        target: `${projectId}-api`, // docelowo z configu projektu
+        params: {},
+        reason: "manual restart from dashboard",
+      };
+      const out = await api.command(payload, idemKey());
+      console.log("command:", out);
+      alert(`Command queued: ${out.id}`);
+    } catch (e: any) {
+      alert(`Error: ${String(e?.message ?? e)}`);
+    } finally {
+      setBusy(false);
+    }
+  }
+
   return (
     <AppShell
-      topbar={<Topbar title="CONTROL HUB" env={env} userEmail={me?.email} role={me?.role} globalOk={globalOk} />}
+      topbar={
+        <Topbar
+          title={`PROJECT / ${projectId}`}
+          env={env}
+          userEmail={me?.email}
+          role={me?.role}
+          globalOk={globalOk}
+        />
+      }
       sidebar={sidebar}
-      footer={`hub / ${new Date().toISOString()}`}
+      footer={`${projectId} / ${new Date().toISOString()}`}
     >
       <div className="grid">
         <div className="card" style={{ gridColumn: "span 4" }}>
-          <div style={{ color: "var(--muted)" }}>GLOBAL</div>
-          <div className="kpi">{globalOk ? "OK" : "DOWN"}</div>
+          <div style={{ color: "var(--muted)" }}>HEALTH</div>
+          <div className="kpi">{status?.ok ? "OK" : "DEGRADED"}</div>
         </div>
 
-        <div className="card" style={{ gridColumn: "span 8" }}>
-          <div style={{ color: "var(--muted)" }}>PROJECTS</div>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 10 }}>
-            {projects.map((p) => (
-              <a key={p.id} className="btn" href={p.host}>
-                {p.name}
-              </a>
-            ))}
-          </div>
+        <div className="card" style={{ gridColumn: "span 4" }}>
+          <div style={{ color: "var(--muted)" }}>SERVICES</div>
+          <div className="kpi">{status ? `${status.servicesUp}/${status.servicesTotal}` : "-"}</div>
         </div>
 
-        <div className="card" style={{ gridColumn: "span 12" }}>
-          <div style={{ color: "var(--muted)" }}>RECENT</div>
-          <div style={{ color: "var(--muted)", marginTop: 8 }}>
-            tu podepniesz audit / alerty / ostatnie komendy
-          </div>
+        <div className="card" style={{ gridColumn: "span 4" }}>
+          <div style={{ color: "var(--muted)" }}>ACTIONS</div>
+          <button
+            className="btn"
+            disabled={busy || !me || !can(me.role, "service.restart")}
+            onClick={restartExample}
+          >
+            RESTART (example)
+          </button>
         </div>
       </div>
     </AppShell>
