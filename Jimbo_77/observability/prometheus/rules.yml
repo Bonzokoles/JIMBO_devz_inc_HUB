@@ -1,0 +1,29 @@
+groups:
+  - name: ops-min
+    rules:
+      - alert: InstanceDown
+        expr: up == 0
+        for: 60s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Target down"
+          description: "Prometheus target is down for >60s."
+
+      - alert: HighCpuLoad
+        expr: avg(rate(node_cpu_seconds_total{mode!="idle"}[2m])) by (instance) > 0.9
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU"
+          description: "CPU >90% for 2m on {{ $labels.instance }}"
+
+      - alert: LowDiskSpace
+        expr: (node_filesystem_avail_bytes{fstype!~"tmpfs|overlay"} / node_filesystem_size_bytes{fstype!~"tmpfs|overlay"}) < 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Low disk space"
+          description: "Disk space <10% on {{ $labels.instance }} ({{ $labels.mountpoint }})"
