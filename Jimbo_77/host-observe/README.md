@@ -6,7 +6,7 @@ Stack dla każdego hosta projektu (PUMO, ZENON, BLOGOPS).
 
 - **ops-agent** - FastAPI agent dla docker operations
 - **otelcol** - OpenTelemetry Collector (edge)
-- **promtail** - Log shipping do centralnego Loki
+- **alloy** - Grafana Alloy dla log shipping (zamiast promtail)
 - **node-exporter** - System metrics
 - **cadvisor** - Container metrics
 
@@ -16,20 +16,28 @@ Stack dla każdego hosta projektu (PUMO, ZENON, BLOGOPS).
 cd host-observe
 export HOST_NAME=pumo-1
 export CENTRAL_OTLP_ENDPOINT=http://CENTRAL_IP:4317
+# Edytuj alloy.alloy i ustaw host = "pumo-1"
 docker compose up -d
 ```
 
 ## Configuration
 
 - `otel-collector-host.yaml` - OTLP receiver → central forwarder
-- `promtail-config.yml` - Docker logs → Loki (z trace_id extraction)
+- `alloy.alloy` - Docker logs → Loki z container labels
+
+## Grafana Alloy vs Promtail
+
+**Alloy** zapewnia:
+- Stabilne label'e: `host`, `container`, `job`
+- Docker service discovery
+- Precyzyjne query bez string matching: `{job="docker",host="pumo-1",container="pumo-api"}`
 
 ## Trace Correlation
 
 Logi zawierają:
 - `otelTraceID` - link do Tempo trace
 - `otelSpanID` - specific span
-- `service` - service name
+- `container` - container name (label, nie string match)
 
 W Grafana Loki datasource skonfiguruj "Derived fields" dla auto-link do Tempo.
 
@@ -39,4 +47,5 @@ W Grafana Loki datasource skonfiguruj "Derived fields" dla auto-link do Tempo.
 - 8888 - OTEL Collector metrics
 - 9100 - node-exporter
 - 8080 - cadvisor
+- 12345 - Alloy UI/metrics (opcjonalnie)
 - 8787 - ops-agent (opcjonalnie, zwykle przez cloudflared)

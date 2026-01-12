@@ -1,0 +1,38 @@
+// ============ LOKI OUTPUT ============
+loki.write "central" {
+  endpoint {
+    url = "http://10.0.0.20:3100/loki/api/v1/push" // <-- central Loki (prywatny)
+  }
+}
+
+// ============ DISCOVERY: DOCKER ============
+discovery.docker "containers" {
+  host = "unix:///var/run/docker.sock"
+}
+
+// ============ PROCESSING: LABELS + PARSING ============
+loki.process "docker_logs" {
+  forward_to = [loki.write.central.receiver]
+
+  stage.static_labels {
+    values = {
+      host = "HOSTNAME_PLACEHOLDER" // <-- ustaw per-host (np. pumo-1)
+      job  = "docker"
+    }
+  }
+
+  stage.labels {
+    values = {
+      container = "container_name"
+    }
+  }
+
+  stage.docker {}
+}
+
+// ============ SOURCE: DOCKER LOGS ============
+loki.source.docker "containers" {
+  host       = "unix:///var/run/docker.sock"
+  targets    = discovery.docker.containers.targets
+  forward_to = [loki.process.docker_logs.receiver]
+}

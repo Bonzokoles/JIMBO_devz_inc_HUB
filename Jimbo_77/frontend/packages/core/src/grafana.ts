@@ -1,24 +1,23 @@
 export function grafanaExploreLokiUrl(opts: {
   grafanaBase: string;
   host: string;
-  needle: string; // np. container name / target
-  timeRangeMs?: number; // default 30m
+  container: string;
+  timeRangeMs?: number;
+  datasourceName?: string; // default: "Loki"
 }) {
   const base = opts.grafanaBase.replace(/\/+$/, "");
-  const range = opts.timeRangeMs ?? 30 * 60 * 1000;
+  const range = opts.timeRangeMs ?? 60 * 60 * 1000; // 1h
   const to = Date.now();
   const from = to - range;
 
-  // Loki query: filtr po host label i tekstowe dopasowanie do kontenera/target
-  // {job="docker",host="pumo-1"} |= "pumo-api"
-  const expr = `{job="docker",host="${opts.host}"} |= "${opts.needle}"`;
+  const ds = opts.datasourceName ?? "Loki";
+  const expr = `{job="docker",host="${opts.host}",container="${opts.container}"}`;
 
   const left = {
-    datasource: "Loki",
+    datasource: ds,
     queries: [{ expr, refId: "A" }],
     range: { from: new Date(from).toISOString(), to: new Date(to).toISOString() },
   };
 
-  const encoded = encodeURIComponent(JSON.stringify(left));
-  return `${base}/explore?left=${encoded}`;
+  return `${base}/explore?left=${encodeURIComponent(JSON.stringify(left))}`;
 }
