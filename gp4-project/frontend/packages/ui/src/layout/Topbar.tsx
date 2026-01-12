@@ -1,5 +1,3 @@
-import React from "react";
-
 export function Topbar(props: {
   title: string;
   env: string;

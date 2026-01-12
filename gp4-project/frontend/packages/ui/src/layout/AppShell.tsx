@@ -1,4 +1,3 @@
-import React from "react";
 import "../styles/ops.css";
 
 export function AppShell(props: {
