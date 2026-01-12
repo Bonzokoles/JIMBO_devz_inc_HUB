@@ -34,6 +34,7 @@ export function OperationsView() {
       </div>
 
       {/* Metrics Grid */}
+      {/* Metrics Grid */}
       <div className="grid">
         <MetricCard 
           label="CPU LOAD" 
