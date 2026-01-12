@@ -5,10 +5,9 @@ import { PublishResponse } from "@jimbo77/core/types";
 export function PublishingView() {
   const [title, setTitle] = React.useState("");
   const [content, setContent] = React.useState("");
-  const [file, setFile] = React.useState<File | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [results, setResults] = React.useState<PublishResponse[]>([]);
-  const [history, setHistory] = React.useState<any[]>([]);
+//   const [history, setHistory] = React.useState<any[]>([]); 
 
   // Load history on mount
   React.useEffect(() => {
@@ -21,28 +20,14 @@ export function PublishingView() {
     setResults([]);
 
     try {
-      let imagePath = undefined;
-
+      /*
       // 1. Upload Image to R2 if selected
       if (file) {
-        const formData = new FormData();
-        formData.append("file", file);
-        const r2Res = await api.publishR2(formData);
-        // r2Res should contain url or key, assuming backend handles "file" upload logic 
-        // actually our backend r2 service expects file_path string in json for python script,
-        // BUT for frontend upload we need a multipart endpoint!
-        // Wait, the routes/publishing.py: upload_to_r2 takes R2UploadRequest(BaseModel) which is JSON.
-        // It expects 'file_path' which is a local path on server?
-        // Ah, I made a mistake in routes design for Frontend upload.
-        // Frontend cannot pass a server file path.
-        // I need to update API to accept Multipart Upload for R2.
-        
-        // Let's assume for now we skip image upload or use a public URL if user provides one.
-        // Or I fix backend to accept UploadFile.
-        
-        // HOTFIX: Backend expects R2UploadRequest with file_path. 
-        // I need to change endpoint to accept UploadFile.
+        // const formData = new FormData();
+        // formData.append("file", file);
+        // await api.publishR2(formData);
       }
+      */
 
       // 2. Publish
       // Construct markdown with frontmatter
@@ -110,9 +95,7 @@ ${content}`;
           </div>
 
           <div>
-             <label style={{ display: "block", color: "var(--muted)", marginBottom: 4 }}>Cover Image</label>
-             <input type="file" onChange={e => setFile(e.target.files?.[0] || null)} />
-             <small style={{display:"block", color:"var(--warn)"}}>*Image upload disabled in this version (Backend update needed)</small>
+             <small style={{display:"block", color:"var(--muted)"}}>*Image upload disabled (backend update needed)</small>
           </div>
 
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
