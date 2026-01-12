@@ -1,0 +1,300 @@
+/* =========================
+   JIMBO77 CONTROL HUB
+   Sci-fi ultra-computer theme
+   Zero rounded corners
+   ========================= */
+
+:root {
+    --bg: #07090f;
+    --bg2: #05070c;
+    --panel: #0b0f1a;
+    --panel2: #090d17;
+    --text: #e7ecff;
+    --muted: #9aa6c7;
+    --faint: #6b7696;
+    --line: #1b2542;
+    --hot: #7cffb2;
+    /* neon green */
+    --cold: #6aa6ff;
+    /* neon blue */
+    --warn: #ffd166;
+    /* amber */
+    --bad: #ff4d6d;
+    /* red/pink */
+    --shadow: 0 0 0 1px rgba(231, 236, 255, .06), 0 18px 50px rgba(0, 0, 0, .55);
+
+    --maxw: 1800px;
+    --lh: 1.65;
+    --fs: 14px;
+    --fs-sm: 12px;
+    --fs-lg: 16px;
+    --fs-xl: 24px;
+
+    --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", sans-serif;
+
+    --focus: 0 0 0 2px var(--cold), 0 0 0 4px rgba(106, 166, 255, .25);
+}
+
+* {
+    box-sizing: border-box;
+    border-radius: 0 !important
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    overflow-x: hidden
+}
+
+body {
+    font: var(--fs)/var(--lh) var(--sans);
+    background:
+        radial-gradient(1200px 800px at 15% 0%, rgba(124, 255, 178, .08), transparent 60%),
+        radial-gradient(1200px 800px at 90% 5%, rgba(106, 166, 255, .08), transparent 60%),
+        linear-gradient(180deg, var(--bg), var(--bg2) 70%);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+}
+
+a {
+    color: inherit;
+    text-decoration: none
+}
+
+a:hover {
+    color: var(--hot)
+}
+
+::selection {
+    background: rgba(124, 255, 178, .25)
+}
+
+/* ======= TOP BAR ======= */
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+    background: linear-gradient(180deg, rgba(11, 15, 26, .92), rgba(7, 9, 15, .70));
+    border-bottom: 1px solid rgba(27, 37, 66, .9);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, .4);
+}
+
+.toprow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 14px 20px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 280px;
+}
+
+.sigil {
+    width: 32px;
+    height: 32px;
+    border: 1px solid rgba(231, 236, 255, .18);
+    background:
+        repeating-linear-gradient(90deg,
+            rgba(124, 255, 178, .40) 0px,
+            rgba(124, 255, 178, .40) 1px,
+            transparent 1px,
+            transparent 6px),
+        radial-gradient(24px 24px at 35% 35%, rgba(106, 166, 255, .65), transparent 65%);
+    box-shadow: 0 0 0 1px rgba(231, 236, 255, .08), 0 0 18px rgba(124, 255, 178, .15);
+}
+
+.brand h1 {
+    margin: 0;
+    font: 900 15px/1.1 var(--mono);
+    letter-spacing: 1.4px;
+    color: var(--text);
+}
+
+.brand .sub {
+    margin-top: 3px;
+    font: 700 11px/1.1 var(--mono);
+    letter-spacing: 0.8px;
+    color: var(--muted);
+}
+
+.status-bar {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    flex-wrap: wrap;
+}
+
+.stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid rgba(27, 37, 66, .8);
+    padding: 7px 10px;
+    background: rgba(11, 15, 26, .6);
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    background: var(--hot);
+    box-shadow: 0 0 12px rgba(124, 255, 178, .35);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1
+    }
+
+    50% {
+        opacity: .5
+    }
+}
+
+.dot.warn {
+    background: var(--warn);
+    box-shadow: 0 0 12px rgba(255, 209, 102, .35)
+}
+
+.dot.bad {
+    background: var(--bad);
+    box-shadow: 0 0 12px rgba(255, 77, 109, .35)
+}
+
+.dot.cold {
+    background: var(--cold);
+    box-shadow: 0 0 12px rgba(106, 166, 255, .35)
+}
+
+/* ======= LAYOUT ======= */
+.app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main {
+    display: flex;
+    flex: 1;
+    max-width: var(--maxw);
+    margin: 0 auto;
+    width: 100%;
+}
+
+.sidebar {
+    width: 240px;
+    background: rgba(11, 15, 26, .4);
+    border-right: 1px solid var(--line);
+    padding: 16px;
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.footer {
+    background: rgba(11, 15, 26, .6);
+    border-top: 1px solid var(--line);
+    padding: 10px 20px;
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+    font-family: var(--mono);
+}
+
+/* ======= GRID & CARDS ======= */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 16px;
+}
+
+.card {
+    background: rgba(11, 15, 26, .6);
+    border: 1px solid var(--line);
+    padding: 14px;
+    box-shadow: var(--shadow);
+}
+
+.kpi {
+    font-size: 28px;
+    font-weight: bold;
+    margin-top: 8px;
+    color: var(--hot);
+    font-family: var(--mono);
+}
+
+/* ======= BUTTONS ======= */
+.btn {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--text);
+    padding: 8px 14px;
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 12px;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+}
+
+.btn:hover:not(:disabled) {
+    border-color: var(--hot);
+    color: var(--hot);
+    box-shadow: 0 0 12px rgba(124, 255, 178, .15);
+}
+
+.btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* ======= PILLS ======= */
+.pill {
+    padding: 4px 10px;
+    border: 1px solid var(--line);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    font-family: var(--mono);
+}
+
+.pillOk {
+    border-color: var(--hot);
+    color: var(--hot);
+    box-shadow: 0 0 8px rgba(124, 255, 178, .15);
+}
+
+.pillBad {
+    border-color: var(--bad);
+    color: var(--bad);
+    box-shadow: 0 0 8px rgba(255, 77, 109, .15);
+}
+
+.pillWarn {
+    border-color: var(--warn);
+    color: var(--warn);
+    box-shadow: 0 0 8px rgba(255, 209, 102, .15);
+}
+
+/* ======= USER INFO ======= */
+.user {
+    font-size: 12px;
+    text-align: right;
+    font-family: var(--mono);
+}
