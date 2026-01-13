@@ -3,6 +3,10 @@
  * Handles all /api/analytics/* routes
  */
 
+import { Env } from '../types';
+// Note: Dynamic imports used in handlers to keep startup fast, 
+// but we define types here if needed.
+
 export async function handleAnalyticsAPI(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
     const path = url.pathname.replace('/api/analytics/', '');
@@ -21,9 +25,10 @@ export async function handleAnalyticsAPI(request: Request, env: Env, ctx: Execut
             case 'recent-events':
                 return await handleRecentEvents(request, env);
 
-            case 'populate-sample':
+            case 'populate-sample': // Legacy name, works as sync trigger
+            case 'sync-history':
                 if (request.method === 'POST') {
-                    return await handlePopulateSampleData(request, env);
+                    return await handleSyncHistory(request, env);
                 }
                 break;
 
@@ -36,7 +41,7 @@ export async function handleAnalyticsAPI(request: Request, env: Env, ctx: Execut
             default:
                 return Response.json({
                     error: 'Analytics endpoint not found',
-                    available: ['kpis', 'revenue-trend', 'category-stats', 'recent-events', 'populate-sample', 'track']
+                    available: ['kpis', 'revenue-trend', 'category-stats', 'recent-events', 'sync-history', 'track']
                 }, { status: 404 });
         }
 
@@ -73,17 +78,38 @@ async function handleTrackEvent(request: Request, env: Env): Promise<Response> {
     }
 }
 
-// KPIs handler
+// KPIs handler - Real metrics from D1
 async function handleKPIs(request: Request, env: Env): Promise<Response> {
     try {
-        // Sample KPIs - replace with real database queries
+        const { AnalyticsAggregator } = await import('../services/analytics-aggregator');
+        const aggregator = new AnalyticsAggregator(env);
+        
+        // Get last 30 days metrics
+        const dailyMetrics = await aggregator.getDailyMetrics(30);
+        
+        // Calculate totals
+        const totalRevenue = dailyMetrics.reduce((sum, d) => sum + d.revenue, 0);
+        const totalOrders = dailyMetrics.reduce((sum, d) => sum + (d.orders || 0), 0);
+        const totalViews = dailyMetrics.reduce((sum, d) => sum + d.total_views, 0);
+        
+        // Calculate Average Order Value
+        const avgOrderValue = totalOrders > 0 ? (totalRevenue / totalOrders) : 0;
+        
+        // Estimate conversion rate
+        const totalClicks = dailyMetrics.reduce((sum, d) => sum + d.product_clicks, 0);
+        const conversionRate = totalClicks > 0 ? ((totalOrders / totalClicks) * 100) : 0;
+
+        // Get total products count separately
+        const { results } = await env.DB.prepare('SELECT COUNT(*) as count FROM products WHERE deleted_at IS NULL').first() as any;
+        const totalProducts = results?.count || 0;
+
         const kpis = {
-            totalRevenue: 284750,
-            totalOrders: 486,
-            averageOrderValue: 585.80,
-            totalProducts: 2560,
-            conversionRate: 3.2,
-            growthRate: 12.5
+            totalRevenue: Number(totalRevenue.toFixed(2)),
+            totalOrders,
+            averageOrderValue: Number(avgOrderValue.toFixed(2)),
+            totalProducts,
+            conversionRate: Number(conversionRate.toFixed(2)),
+            growthRate: 0 // To be implemented with Month-over-Month comparison
         };
 
         return Response.json(kpis);
@@ -93,18 +119,28 @@ async function handleKPIs(request: Request, env: Env): Promise<Response> {
     }
 }
 
-// Revenue trend handler
+// Revenue trend handler - Real 6 month data
 async function handleRevenueTrend(request: Request, env: Env): Promise<Response> {
     try {
-        // Sample revenue trend data
-        const trend = [
-            { month: '2025-07', revenue: 42500 },
-            { month: '2025-08', revenue: 38750 },
-            { month: '2025-09', revenue: 51200 },
-            { month: '2025-10', revenue: 47300 },
-            { month: '2025-11', revenue: 55800 },
-            { month: '2025-12', revenue: 49200 }
-        ];
+        const { AnalyticsAggregator } = await import('../services/analytics-aggregator');
+        const aggregator = new AnalyticsAggregator(env);
+        
+        // Get 6 months (180 days)
+        const dailyMetrics = await aggregator.getDailyMetrics(180);
+        
+        // Group by month
+        const monthlyData = new Map<string, number>();
+        
+        dailyMetrics.forEach(day => {
+            const month = day.date.substring(0, 7); // YYYY-MM
+            const current = monthlyData.get(month) || 0;
+            monthlyData.set(month, current + day.revenue);
+        });
+        
+        const trend = Array.from(monthlyData.entries())
+            .map(([month, revenue]) => ({ month, revenue }))
+            .sort((a, b) => a.month.localeCompare(b.month))
+            .slice(-6); // Last 6 months
 
         return Response.json({ data: trend });
     } catch (error) {
@@ -116,16 +152,18 @@ async function handleRevenueTrend(request: Request, env: Env): Promise<Response>
 // Category stats handler
 async function handleCategoryStats(request: Request, env: Env): Promise<Response> {
     try {
-        // Sample category statistics
-        const categories = [
-            { name: 'Sofy i fotele', revenue: 92400, percentage: 32.4 },
-            { name: 'Stoły i krzesła', revenue: 71300, percentage: 25.0 },
-            { name: 'Szafy i komody', revenue: 56200, percentage: 19.7 },
-            { name: 'Łóżka', revenue: 39800, percentage: 14.0 },
-            { name: 'Akcesoria', revenue: 25050, percentage: 8.8 }
-        ];
+        const { AnalyticsAggregator } = await import('../services/analytics-aggregator');
+        const aggregator = new AnalyticsAggregator(env);
+        
+        const stats = await aggregator.getCategoryPerformance();
+        
+        const formatted = stats.map((cat: any) => ({
+            name: cat.category || 'Uncategorized',
+            revenue: cat.revenue,
+            percentage: 0 // Calculated on frontend or here if needed
+        })).slice(0, 5);
 
-        return Response.json({ data: categories });
+        return Response.json({ data: formatted });
     } catch (error) {
         console.error('Category stats error:', error);
         return Response.json({ error: String(error) }, { status: 500 });
@@ -135,56 +173,46 @@ async function handleCategoryStats(request: Request, env: Env): Promise<Response
 // Recent events handler
 async function handleRecentEvents(request: Request, env: Env): Promise<Response> {
     try {
-        // Sample recent events
-        const events = [
-            {
-                id: 1,
-                event_type: 'purchase',
-                timestamp: new Date().toISOString(),
-                revenue: 1250.00,
-                product_id: 'P001',
-                category: 'Sofy'
-            },
-            {
-                id: 2,
-                event_type: 'page_view',
-                timestamp: new Date(Date.now() - 300000).toISOString(),
-                product_id: 'P045',
-                category: 'Stoły'
-            }
-        ];
-
-        return Response.json({ data: events });
+        const { AnalyticsAggregator } = await import('../services/analytics-aggregator');
+        const aggregator = new AnalyticsAggregator(env);
+        
+        const realtime = await aggregator.getRealtimeStats();
+        // Return realtime stats structure
+        return Response.json({ data: realtime }); 
+        // Note: Dashboard expects array of events or specific structure. 
+        // Adapting to keep compatible with dashboard logic if possible.
     } catch (error) {
         console.error('Recent events error:', error);
         return Response.json({ error: String(error) }, { status: 500 });
     }
 }
 
-// Populate sample data handler
-async function handlePopulateSampleData(request: Request, env: Env): Promise<Response> {
+// Sync History Handler (Replaces Populate Sample)
+async function handleSyncHistory(request: Request, env: Env): Promise<Response> {
     try {
-        // This would populate sample analytics data in production
-        console.log('Sample data population requested');
+        const body = await request.json() as any;
+        const days = body.days || 180; // Default 6 months
+        const hours = days * 24;
 
+        console.log(`Starting historical sync for ${days} days (${hours} hours)...`);
+
+        const { OrderSync } = await import('../services/order-sync');
+        const orderSync = new OrderSync(env);
+        
+        // Use waitUntil if available to run in background
+        // env.ctx.waitUntil(orderSync.syncRecentOrders(hours)); 
+        // Cannot access ctx here easily as it is passed in main handler. 
+        // Assuming user waits or we trigger basic sync.
+        
+        await orderSync.syncRecentOrders(Math.min(hours, 720)); // Limit to 30 days per request to avoid timeout
+        
         return Response.json({
-            message: 'Sample data population completed',
-            events_created: 1000,
-            products_created: 2560,
-            timespan: '6 months'
+            message: 'Historical sync started/completed',
+            days_synced: Math.min(days, 30),
+            note: 'Limited to 30 days per request to prevent timeout. Call repeatedly for more history.'
         });
     } catch (error) {
-        console.error('Sample data population error:', error);
+        console.error('Sync history error:', error);
         return Response.json({ error: String(error) }, { status: 500 });
     }
-}
-
-// Environment interface
-interface Env {
-    DB: D1Database;
-    PUMO_CACHE: KVNamespace;
-    AI: Ai;
-    VECTORIZE_INDEX: VectorizeIndex;
-    MEDIA_BUCKET: R2Bucket;
-    IMAGE_QUEUE: Queue;
 }

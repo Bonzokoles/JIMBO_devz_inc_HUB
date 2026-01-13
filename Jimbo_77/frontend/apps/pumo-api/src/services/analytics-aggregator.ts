@@ -9,6 +9,7 @@ interface DailyMetrics {
   ai_seo_clicks: number;
   conversion_rate: number;
   revenue: number;
+  orders: number;
 }
 
 export class AnalyticsAggregator {
@@ -46,6 +47,7 @@ export class AnalyticsAggregator {
         ds.clicks as product_clicks,
         ds.guide_views,
         ds.ai_clicks as ai_seo_clicks,
+        ds.purchases as orders,
         ROUND(CAST(ds.purchases AS FLOAT) / NULLIF(ds.clicks, 0) * 100, 2) as conversion_rate,
         COALESCE(dr.revenue, 0) as revenue
       FROM daily_stats ds
