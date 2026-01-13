@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 from .metrics import setup_metrics
 from .otel import setup_otel
 from .logging_setup import setup_logging
-from .routes import projects, commands, audit, publishing, analytics, logs
+from .routes import projects, commands, audit, publishing, analytics, logs, shop_sync
 from .security.rbac import current_actor
 
 # Mock current_actor for testing
@@ -55,6 +55,7 @@ app.include_router(audit.router, prefix="/v1")
 app.include_router(publishing.router, prefix="/v1")
 app.include_router(analytics.router, prefix="/v1")
 app.include_router(logs.router, prefix="/v1")
+app.include_router(shop_sync.router)  # Already has /v1/shop-sync prefix
 
 # Agent compatibility routes (no /v1 prefix)
 app.include_router(commands.router, prefix="/api")
