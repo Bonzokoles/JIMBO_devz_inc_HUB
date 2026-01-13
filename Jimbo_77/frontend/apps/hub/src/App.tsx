@@ -11,6 +11,7 @@ import { ServicesPage } from "./features/services/ServicesPage";
 import { LoginPage } from "./features/auth/LoginPage";
 import { UnifiedOpsView } from "./features/unified/UnifiedOpsView";
 import { ControlCenterView } from "./features/control/ControlCenterView";
+import { AgentsView } from "./features/agents/AgentsView";
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
@@ -89,7 +90,7 @@ export default function App() {
           <ControlCenterView onBack={() => setDashboardView("main")} />
         )}
         {activeTab === "services" && <ServicesPage projects={projects} onCommand={(id) => setActiveCommandId(id)} />}
-        {activeTab === "agents" && <div className="card">Agents view - Coming soon</div>}
+        {activeTab === "agents" && <AgentsView />}
       </div>
     </AppShell>
   );
