@@ -1,0 +1,27 @@
+%% Mermaid diagram (możesz wkleić do mermaid.live)
+flowchart LR
+  subgraph CF[Cloudflare]
+    W[Worker]
+    D1[(D1 / SQLite)]
+    KV[(KV Cache)]
+    V[Vectorize]
+    R2[(R2 Bucket)]
+    Cron[Cron]
+  end
+
+  subgraph Sources[Źródła]
+    ShopAPI[API sklepu: produkty/zamówienia]
+    GA4[GA4 Data API]
+    Front[Frontend events]
+  end
+
+  Front -->|/api/track| W
+  ShopAPI -->|sync full/incremental| W
+  GA4 -->|/api/ga4/run-report| W
+
+  W --> D1
+  W --> KV
+  W --> V
+  W --> R2
+
+  Cron -->|co 6h| W
