@@ -299,6 +299,12 @@ export default {
         return await handleSendTestEmail(request, env, corsHeaders);
       }
 
+      // Agent Command System
+      if (path.startsWith('/api/commands')) {
+        const { handleCommands } = await import('./endpoints/commands');
+        return await handleCommands(request, env);
+      }
+
       // === NEW SYNC ENDPOINTS ===
 
       // Product sync

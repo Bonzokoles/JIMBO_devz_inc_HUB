@@ -38,10 +38,10 @@ export const api = {
   projectStatus: (id: string) => jget<ProjectStatus>(`/v1/status/project/${id}`),
   analyticsSystem: () => jget<SystemStats>("/v1/analytics/system"),
   publishEverywhere: (payload: any) => jpost<PublishResponse[]>("/v1/publish/everywhere", payload),
-  commandGet: (id: string) => jget<any>(`/v1/commands/${id}`),
-  commandEvents: (id: string) => jget<any[]>(`/v1/commands/${id}/events`),
+  commandGet: (id: string) => jget<any>(`/api/commands/${id}`),
+  commandEvents: (id: string) => jget<any[]>(`/api/commands/${id}/events`),
   command: (payload: CommandIn, idempotencyKey: string) =>
-    jpost<CommandOut>("/v1/commands", payload, { "Idempotency-Key": idempotencyKey }),
+    jpost<CommandOut>("/api/commands", payload, { "Idempotency-Key": idempotencyKey }),
 };
 
 

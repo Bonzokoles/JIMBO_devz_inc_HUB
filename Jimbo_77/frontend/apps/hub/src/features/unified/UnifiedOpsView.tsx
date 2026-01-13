@@ -1,3 +1,5 @@
+import { AICrawlerWidget } from "../pumo/components/AICrawlerWidget";
+
 interface UnifiedOpsViewProps {
   onOpenPumo?: () => void;
   onOpenControlCenter?: () => void;
@@ -214,7 +216,8 @@ export function UnifiedOpsView({ onOpenPumo }: UnifiedOpsViewProps) {
           </div>
         </div>
 
-        {/* Agent Manager - NEW */}
+
+        {/* AGENT MANAGER (NEW) */}
         <div className="card">
           <div style={{ borderBottom: "1px solid var(--line)", paddingBottom: 12, marginBottom: 12 }}>
             <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>AUTOMATION</div>
@@ -246,7 +249,10 @@ export function UnifiedOpsView({ onOpenPumo }: UnifiedOpsViewProps) {
           </div>
         </div>
 
-        {/* System Monitor - NEW */}
+        {/* AI Crawler Widget (Live Data) */}
+        <AICrawlerWidget />
+
+        {/* System Monitor (NEW) */}
         <div className="card">
           <div style={{ borderBottom: "1px solid var(--line)", paddingBottom: 12, marginBottom: 12 }}>
             <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>MONITORING</div>

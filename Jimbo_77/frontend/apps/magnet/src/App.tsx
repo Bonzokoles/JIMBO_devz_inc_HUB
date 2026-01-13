@@ -1,43 +1,134 @@
-import { AppShell } from "@jimbo77/ui/layout/AppShell";
-import { Topbar } from "@jimbo77/ui/layout/Topbar";
-import "@jimbo77/ui/styles/ops.css";
+import { AppShell } from "@jimbo77/ui";
+import { PROJECTS } from "./data/projects";
+import type { ProjectMeta } from "./data/projects";
 
-export default function App() {
-  return (
-    <AppShell
-      topbar={<Topbar title="AI INDEX" />}
-    >
-      <div className="grid">
-        <div className="panel" style={{ gridColumn: "span 12" }}>
-          <div className="panel-header">
-            <h3>JIMBO77 PROJECT INDEX</h3>
-            <span className="badge active">PUBLIC</span>
-          </div>
-          <div className="panel-body">
-             <p style={{ color: "var(--muted)", fontSize: "16px", maxWidth: "800px", lineHeight: "1.6" }}>
-               Welcome to the automated index of Jimbo77 Operations. 
-               This interface is optimized for AI Agents and Crawlers.
-             </p>
-             
-             <div style={{ marginTop: 20, display: "flex", gap: 10 }}>
-                <div className="service-card" style={{ flex: 1 }}>
-                   <div className="service-icon">P</div>
-                   <div className="service-info">
-                      <h4>PUMO</h4>
-                      <p>Advanced Content & Sales Automation</p>
-                   </div>
-                </div>
-                <div className="service-card" style={{ flex: 1 }}>
-                   <div className="service-icon">Z</div>
-                   <div className="service-info">
-                      <h4>ZENON</h4>
-                      <p>Browser Automation & Testing</p>
-                   </div>
-                </div>
-             </div>
-          </div>
+function ProjectCard({ p }: { p: ProjectMeta }) {
+    return (
+        <div style={{
+            background: "rgba(10, 15, 25, 0.7)",
+            border: "1px solid var(--line)",
+            padding: "20px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+            position: "relative",
+            overflow: "hidden"
+        }}>
+            <div style={{
+                position: "absolute",
+                top: 0, right: 0,
+                background: p.role === "public" ? "var(--success)" : "var(--primary)",
+                color: "#000",
+                fontSize: "10px",
+                padding: "2px 6px",
+                fontWeight: "bold",
+                fontFamily: "var(--mono)"
+            }}>
+                {p.role.toUpperCase()}
+            </div>
+
+            <h3 style={{ margin: 0, fontFamily: "var(--mono)", letterSpacing: "1px", color: "var(--fg)" }}>
+                {p.id.toUpperCase()}
+            </h3>
+            <div style={{ fontSize: "12px", color: "var(--primary)", opacity: 0.8 }}>
+                {p.domain}
+            </div>
+            
+            <p style={{ fontSize: "14px", lineHeight: "1.5", color: "var(--muted)", flex: 1 }}>
+                {p.description}
+            </p>
+
+            <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginTop: "10px" }}>
+                {p.stack.map(s => (
+                    <span key={s} style={{
+                        fontSize: "10px",
+                        border: "1px solid var(--line)",
+                        padding: "2px 6px",
+                        color: "var(--faint)",
+                        fontFamily: "var(--mono)"
+                    }}>
+                        {s}
+                    </span>
+                ))}
+            </div>
         </div>
-      </div>
+    );
+}
+
+function SchemaGenerator({ projects }: { projects: ProjectMeta[] }) {
+    const schema = {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "JIMBO77 DEVZ INC",
+        "url": "https://jimbo77.org",
+        "logo": "https://jimbo77.org/logo.png",
+        "description": "Advanced AI Development & Operations Hub",
+        "knowsAbout": projects.map(p => ({
+            "@type": "SoftwareApplication",
+            "name": p.name,
+            "url": `https://${p.domain}`,
+            "description": p.description,
+            "applicationCategory": "DeveloperApplication"
+        }))
+    };
+
+    return (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+    );
+}
+
+function App() {
+  return (
+    <AppShell topbar={<div />} footer={null}>
+        <SchemaGenerator projects={PROJECTS} />
+        
+        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "40px 20px" }}>
+            <header style={{ marginBottom: "60px", textAlign: "center" }}>
+                <h1 style={{ 
+                    fontSize: "48px", 
+                    margin: "0 0 20px 0", 
+                    background: "linear-gradient(to right, #fff, var(--primary))",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    fontFamily: "var(--mono)",
+                    letterSpacing: "-2px"
+                }}>
+                    JIMBO // MAGNET
+                </h1>
+                <p style={{ color: "var(--muted)", fontSize: "18px", maxWidth: "600px", margin: "0 auto" }}>
+                    Public Interface & Semantic Index for the JIMBO77 Ecosystem.
+                    <br />
+                    <span style={{ fontSize: "12px", color: "var(--faint)", fontFamily: "var(--mono)" }}>
+                        SYSTEM_STATUS: ONLINE // AGENTS: LISTENING
+                    </span>
+                </p>
+            </header>
+
+            <div style={{ 
+                display: "grid", 
+                gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", 
+                gap: "20px" 
+            }}>
+                {PROJECTS.map(p => (
+                    <ProjectCard key={p.id} p={p} />
+                ))}
+            </div>
+
+            <footer style={{ 
+                marginTop: "100px", 
+                borderTop: "1px solid var(--line)", 
+                paddingTop: "40px",
+                textAlign: "center",
+                color: "var(--faint)",
+                fontSize: "12px",
+                fontFamily: "var(--mono)"
+            }}>
+                Generated by JIMBO Unified Ops (Magnet Node) <br />
+                {new Date().getFullYear()} © JIMBO77 DEVZ INC
+            </footer>
+        </div>
     </AppShell>
   );
 }
+
+export default App;

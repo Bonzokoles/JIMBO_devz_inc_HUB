@@ -41,10 +41,18 @@ export async function handleAnalyticsAPI(request: Request, env: Env, ctx: Execut
             case 'test-idosell':
                  return await testIdoSell(env);
 
+            case 'track-bot':
+                 if (request.method === 'POST') {
+                     return await handleBotTrack(request, env);
+                 } else if (request.method === 'GET') {
+                     return await handleBotStats(request, env);
+                 }
+                 break;
+
             default:
                 return Response.json({
                     error: 'Analytics endpoint not found',
-                    available: ['kpis', 'revenue-trend', 'category-stats', 'recent-events', 'sync-history', 'track', 'test-idosell']
+                    available: ['kpis', 'revenue-trend', 'category-stats', 'recent-events', 'sync-history', 'track', 'test-idosell', 'track-bot']
                 }, { status: 404 });
         }
 
@@ -246,6 +254,84 @@ async function testIdoSell(env: Env): Promise<Response> {
         return new Response(text, { 
             status: res.status,
             headers: { 'Content-Type': 'application/json' }
+        });
+    } catch (e) {
+        return Response.json({ error: String(e) }, { status: 500 });
+    }
+}
+
+// Bot Tracking Handler
+async function handleBotTrack(request: Request, env: Env): Promise<Response> {
+    try {
+        const body = await request.json() as any;
+        const userAgent = body.userAgent || request.headers.get('User-Agent') || 'unknown';
+        const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+        const path = body.path || 'unknown';
+
+        // Simple Bot Detection/Classification
+        let botType = 'other';
+        const ua = userAgent.toLowerCase();
+        if (ua.includes('gpt') || ua.includes('openai')) botType = 'gpt';
+        else if (ua.includes('claude') || ua.includes('anthropic')) botType = 'claude';
+        else if (ua.includes('google') || ua.includes('gemini') || ua.includes('vertex')) botType = 'google';
+        else if (ua.includes('bing') || ua.includes('msnbot')) botType = 'bing';
+        else if (ua.includes('facebook') || ua.includes('meta')) botType = 'meta';
+        else if (ua.includes('applebot')) botType = 'apple';
+        
+        await env.DB.prepare(
+            `INSERT INTO bot_logs (user_agent, ip_address, path, method, headers, is_known_bot, bot_type)
+             VALUES (?, ?, ?, ?, ?, ?, ?)`
+        ).bind(
+            userAgent,
+            ip,
+            path,
+            request.method,
+            JSON.stringify(body.headers || {}),
+            botType !== 'other' ? 1 : 0,
+            botType
+        ).run();
+
+        return Response.json({ success: true, botType });
+    } catch (e) {
+        console.error('Bot track error:', e);
+        // Be silent about errors to not alert bots too much, or return 200 anyway
+        return Response.json({ success: false, error: String(e) });
+    }
+}
+
+// Bot Stats Handler (Read)
+async function handleBotStats(request: Request, env: Env): Promise<Response> {
+    try {
+        // Get total hits
+        const total = await env.DB.prepare('SELECT COUNT(*) as count FROM bot_logs').first() as any;
+        
+        // Get hits by bot type
+        const { results: byType } = await env.DB.prepare(
+            'SELECT bot_type, COUNT(*) as count FROM bot_logs GROUP BY bot_type ORDER BY count DESC'
+        ).all();
+
+        // Get recent logs
+        const { results: recent } = await env.DB.prepare(
+            'SELECT * FROM bot_logs ORDER BY timestamp DESC LIMIT 10'
+        ).all();
+
+        // Get hits over time (Group by day for last 14 days)
+        const { results: history } = await env.DB.prepare(`
+            SELECT substr(timestamp, 1, 10) as day, COUNT(*) as count 
+            FROM bot_logs 
+            WHERE timestamp >= date('now', '-14 days')
+            GROUP BY day 
+            ORDER BY day ASC
+        `).all();
+
+        return Response.json({
+            summary: {
+                total_hits: total.count,
+                unique_bots_24h: 0 
+            },
+            by_type: byType,
+            recent_logs: recent,
+            history: history
         });
     } catch (e) {
         return Response.json({ error: String(e) }, { status: 500 });
