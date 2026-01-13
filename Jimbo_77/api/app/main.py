@@ -6,6 +6,11 @@ from .metrics import setup_metrics
 from .otel import setup_otel
 from .logging_setup import setup_logging
 from .routes import projects, commands, audit, publishing, analytics, logs
+from .security.rbac import current_actor
+
+# Mock current_actor for testing
+def get_current_actor():
+    return {"email": "dev@jimbo77.com", "role": "admin"}
 
 # 1. Setup Logging (JSON + OTEL trace_id) - Global setup before app creation
 setup_logging("jimbo77-ops-api")
