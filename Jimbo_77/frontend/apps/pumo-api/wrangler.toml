@@ -41,6 +41,9 @@ bucket_name = "pumo-raw-data"
 [vars]
 ALLOWED_ORIGINS = "https://www.mybonzoaiblog.com,http://localhost:4656"
 PUMO_API_BASE_URL = "https://meblepumo.iai-shop.com/api/admin/v3"
+# Explicit configs for IdoSell debugging
+IDOSELL_SHOP_URL = "https://meblepumo.iai-shop.com"
+IDOSELL_API_KEY = "YXBwbGljYXRpb24yMDpDcGRCOVp3cE1adG9HY2JTMWVUMXhYUTlmU1dLb0VhWWJOd2lDbG5wN3FpQzEwUkx4cStUYVE1cUFnc041dEpT"
 DASHBOARD_API_BASE = ""
 GA4_PROPERTY_ID = ""
 CF_ACCESS_AUD = ""

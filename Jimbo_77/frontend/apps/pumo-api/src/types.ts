@@ -33,6 +33,10 @@ export interface Env {
   PUMO_CUSTOMERS_API_KEY?: string;
   PUMO_INVENTORY_API_KEY?: string;
   PUMO_REVIEWS_API_KEY?: string;
+
+  // IdoSell Debug
+  IDOSELL_SHOP_URL?: string;
+  IDOSELL_API_KEY?: string;
 }
 
 export interface PumoProduct {

@@ -38,10 +38,13 @@ export async function handleAnalyticsAPI(request: Request, env: Env, ctx: Execut
                 }
                 break;
 
+            case 'test-idosell':
+                 return await testIdoSell(env);
+
             default:
                 return Response.json({
                     error: 'Analytics endpoint not found',
-                    available: ['kpis', 'revenue-trend', 'category-stats', 'recent-events', 'sync-history', 'track']
+                    available: ['kpis', 'revenue-trend', 'category-stats', 'recent-events', 'sync-history', 'track', 'test-idosell']
                 }, { status: 404 });
         }
 
@@ -214,5 +217,37 @@ async function handleSyncHistory(request: Request, env: Env): Promise<Response> 
     } catch (error) {
         console.error('Sync history error:', error);
         return Response.json({ error: String(error) }, { status: 500 });
+    }
+}
+
+// Test handler for direct IdoSell debugging
+async function testIdoSell(env: Env): Promise<Response> {
+    const shopUrl = env.IDOSELL_SHOP_URL || 'https://meblepumo.iai-shop.com';
+    const apiKey = env.IDOSELL_API_KEY || env.PUMO_API_KEY;
+    
+    if (!apiKey) {
+        return Response.json({ error: 'Missing API Key' }, { status: 500 });
+    }
+
+    const url = `${shopUrl}/api/admin/v3/orders/orders?page=1&per_page=1`;
+    console.log(`Testing IdoSell: ${url}`);
+
+    try {
+        const res = await fetch(url, {
+            headers: {
+                'X-API-KEY': apiKey,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const text = await res.text();
+        console.log(`IdoSell Status: ${res.status}`);
+        
+        return new Response(text, { 
+            status: res.status,
+            headers: { 'Content-Type': 'application/json' }
+        });
+    } catch (e) {
+        return Response.json({ error: String(e) }, { status: 500 });
     }
 }
