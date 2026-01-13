@@ -1,0 +1,77 @@
+{
+  "success": true,
+  "timestamp": "2026-01-13T09:13:32.577527",
+  "total_products": 10,
+  "products": [
+    {
+      "name": "Materac Comfort Plus 160x200",
+      "category": "Materace",
+      "price": 1899.99,
+      "sku": "MAT-001",
+      "stock": 25
+    },
+    {
+      "name": "Szafa Classic Oak 220cm",
+      "category": "Szafy",
+      "price": 2499.99,
+      "sku": "SZA-002",
+      "stock": 12
+    },
+    {
+      "name": "Fotel Relax Pro szary",
+      "category": "Fotele",
+      "price": 899.99,
+      "sku": "FOT-003",
+      "stock": 35
+    },
+    {
+      "name": "Stół Family 180x90 dąb",
+      "category": "Stoły",
+      "price": 1299.99,
+      "sku": "STO-004",
+      "stock": 18
+    },
+    {
+      "name": "Łóżko Dream 160x200 białe",
+      "category": "Łóżka",
+      "price": 1699.99,
+      "sku": "LOZ-005",
+      "stock": 8
+    },
+    {
+      "name": "Komoda Nord 4-szuflady",
+      "category": "Komody",
+      "price": 699.99,
+      "sku": "KOM-006",
+      "stock": 42
+    },
+    {
+      "name": "Regał Book Tower 200cm",
+      "category": "Regały",
+      "price": 599.99,
+      "sku": "REG-007",
+      "stock": 28
+    },
+    {
+      "name": "Materac Ortho 140x200",
+      "category": "Materace",
+      "price": 1299.99,
+      "sku": "MAT-008",
+      "stock": 33
+    },
+    {
+      "name": "Biurko Office Pro białe",
+      "category": "Biurka",
+      "price": 799.99,
+      "sku": "BIU-009",
+      "stock": 15
+    },
+    {
+      "name": "Krzesło Comfort ergonomiczne",
+      "category": "Krzesła",
+      "price": 399.99,
+      "sku": "KRZ-010",
+      "stock": 67
+    }
+  ]
+}

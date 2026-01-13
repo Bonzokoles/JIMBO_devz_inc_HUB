@@ -1,6 +1,6 @@
-// API Base URL - points to JIMBO77 API with shop sync data
-// This now feeds real data from PostgreSQL via shop sync service
-const API_BASE = import.meta.env.VITE_JIMBO77_API_BASE || 'http://localhost:8001';
+// API Base URL - points to simple HTTP server with JSON files
+// Contains 6-month historical data from PostgreSQL export
+const API_BASE = import.meta.env.VITE_JIMBO77_API_BASE || 'http://localhost:8003';
 const LEGACY_API_BASE = import.meta.env.VITE_PUMO_API_BASE || 'https://jimbo-like-pumo-api.stolarnia-ams.workers.dev';
 
 // Types
@@ -49,10 +49,10 @@ class PumoAPI {
     this.baseUrl = baseUrl;
   }
 
-  // Fetch KPIs - now from JIMBO77 API with real shop data
+  // Fetch KPIs - directly from JSON file with 6-month historical data
   async getKPIs(): Promise<KPIResponse> {
     try {
-      const response = await fetch(`${this.baseUrl}/v1/shop-sync/pumo-kpis`);
+      const response = await fetch(`${this.baseUrl}/pumo-kpis.json`);
       if (!response.ok) throw new Error('Failed to fetch KPIs');
       return await response.json();
     } catch (error) {
@@ -79,10 +79,10 @@ class PumoAPI {
     }
   }
 
-  // Fetch Revenue Trend - now from PostgreSQL via shop sync
+  // Fetch Revenue Trend - directly from JSON file with 6-month data
   async getRevenueTrend(days: number = 7): Promise<RevenueTrendResponse> {
     try {
-      const response = await fetch(`${this.baseUrl}/v1/shop-sync/pumo-revenue-trend?days=${days}`);
+      const response = await fetch(`${this.baseUrl}/pumo-revenue-trend.json`);
       if (!response.ok) throw new Error('Failed to fetch revenue trend');
       return await response.json();
     } catch (error) {
@@ -126,10 +126,10 @@ class PumoAPI {
     }
   }
 
-  // Fetch Top Products - now from PostgreSQL with real shop data
+  // Fetch Top Products - directly from JSON file with real shop data
   async getTopProducts(limit: number = 10): Promise<ProductResponse> {
     try {
-      const response = await fetch(`${this.baseUrl}/v1/shop-sync/pumo-products?limit=${limit}`);
+      const response = await fetch(`${this.baseUrl}/pumo-products.json`);
       if (!response.ok) throw new Error('Failed to fetch top products');
       return await response.json();
     } catch (error) {

@@ -1,0 +1,174 @@
+{
+  "success": true,
+  "timestamp": "2026-01-13T09:13:32.577529",
+  "shop_info": {
+    "name": "Meble Pumo",
+    "url": "https://meblepumo.iai-shop.com",
+    "status": "active",
+    "last_sync": "2026-01-13T09:13:32.577531"
+  },
+  "summary": {
+    "today": {
+      "orders": 12,
+      "revenue": 22661.25,
+      "avg_order_value": 1888.44
+    },
+    "last_30_days": {
+      "orders": 318,
+      "revenue": 643813.43,
+      "avg_order_value": 2024.57,
+      "growth_rate": 9.6
+    },
+    "last_6_months": {
+      "orders": 1907,
+      "revenue": 3291597.61,
+      "avg_order_value": 1726.06,
+      "products_sold": 4386,
+      "new_customers": 1296
+    }
+  },
+  "ai_impact": {
+    "total_ai_revenue": 2211953.59,
+    "ai_percentage": 67.2,
+    "organic_revenue": 1079644.01,
+    "organic_percentage": 32.8,
+    "roi_improvement": "+340%"
+  },
+  "recent_data": [
+    {
+      "date": "2026-01-07",
+      "orders": 3,
+      "revenue": 7517.79,
+      "avg_order_value": 2505.93,
+      "ai_revenue": 5051.95,
+      "organic_revenue": 2465.84,
+      "conversion_rate": 4.23,
+      "traffic": {
+        "visits": 96,
+        "bounce_rate": 0.54,
+        "avg_session": 308
+      }
+    },
+    {
+      "date": "2026-01-08",
+      "orders": 16,
+      "revenue": 13302.1,
+      "avg_order_value": 831.38,
+      "ai_revenue": 8939.01,
+      "organic_revenue": 4363.09,
+      "conversion_rate": 5.65,
+      "traffic": {
+        "visits": 528,
+        "bounce_rate": 0.36,
+        "avg_session": 437
+      }
+    },
+    {
+      "date": "2026-01-09",
+      "orders": 12,
+      "revenue": 31918.48,
+      "avg_order_value": 2659.87,
+      "ai_revenue": 21449.22,
+      "organic_revenue": 10469.26,
+      "conversion_rate": 5.6,
+      "traffic": {
+        "visits": 252,
+        "bounce_rate": 0.35,
+        "avg_session": 277
+      }
+    },
+    {
+      "date": "2026-01-10",
+      "orders": 17,
+      "revenue": 49142.05,
+      "avg_order_value": 2890.71,
+      "ai_revenue": 33023.46,
+      "organic_revenue": 16118.59,
+      "conversion_rate": 5.21,
+      "traffic": {
+        "visits": 459,
+        "bounce_rate": 0.64,
+        "avg_session": 256
+      }
+    },
+    {
+      "date": "2026-01-11",
+      "orders": 2,
+      "revenue": 2194.06,
+      "avg_order_value": 1097.03,
+      "ai_revenue": 1474.41,
+      "organic_revenue": 719.65,
+      "conversion_rate": 4.83,
+      "traffic": {
+        "visits": 70,
+        "bounce_rate": 0.43,
+        "avg_session": 390
+      }
+    },
+    {
+      "date": "2026-01-12",
+      "orders": 3,
+      "revenue": 4751.21,
+      "avg_order_value": 1583.74,
+      "ai_revenue": 3192.82,
+      "organic_revenue": 1558.4,
+      "conversion_rate": 5.35,
+      "traffic": {
+        "visits": 84,
+        "bounce_rate": 0.41,
+        "avg_session": 275
+      }
+    },
+    {
+      "date": "2026-01-13",
+      "orders": 12,
+      "revenue": 22661.25,
+      "avg_order_value": 1888.44,
+      "ai_revenue": 15228.36,
+      "organic_revenue": 7432.89,
+      "conversion_rate": 3.57,
+      "traffic": {
+        "visits": 276,
+        "bounce_rate": 0.55,
+        "avg_session": 263
+      }
+    }
+  ],
+  "top_products": [
+    {
+      "name": "Materac Comfort Plus 160x200",
+      "category": "Materace",
+      "price": 1899.99,
+      "sku": "MAT-001",
+      "stock": 25
+    },
+    {
+      "name": "Szafa Classic Oak 220cm",
+      "category": "Szafy",
+      "price": 2499.99,
+      "sku": "SZA-002",
+      "stock": 12
+    },
+    {
+      "name": "Fotel Relax Pro szary",
+      "category": "Fotele",
+      "price": 899.99,
+      "sku": "FOT-003",
+      "stock": 35
+    },
+    {
+      "name": "Stół Family 180x90 dąb",
+      "category": "Stoły",
+      "price": 1299.99,
+      "sku": "STO-004",
+      "stock": 18
+    },
+    {
+      "name": "Łóżko Dream 160x200 białe",
+      "category": "Łóżka",
+      "price": 1699.99,
+      "sku": "LOZ-005",
+      "stock": 8
+    }
+  ]
+}

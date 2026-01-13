@@ -1,0 +1,2539 @@
+{
+  "success": true,
+  "data": [
+    {
+      "date": "2025-07-17",
+      "orders": 10,
+      "revenue": 12850.28,
+      "avg_order_value": 1285.03,
+      "ai_revenue": 8635.39,
+      "organic_revenue": 4214.89,
+      "conversion_rate": 4.55,
+      "traffic": {
+        "visits": 350,
+        "bounce_rate": 0.45,
+        "avg_session": 284
+      }
+    },
+    {
+      "date": "2025-07-18",
+      "orders": 6,
+      "revenue": 5036.69,
+      "avg_order_value": 839.45,
+      "ai_revenue": 3384.66,
+      "organic_revenue": 1652.04,
+      "conversion_rate": 4.07,
+      "traffic": {
+        "visits": 96,
+        "bounce_rate": 0.4,
+        "avg_session": 391
+      }
+    },
+    {
+      "date": "2025-07-19",
+      "orders": 11,
+      "revenue": 25166.19,
+      "avg_order_value": 2287.84,
+      "ai_revenue": 16911.68,
+      "organic_revenue": 8254.51,
+      "conversion_rate": 5.75,
+      "traffic": {
+        "visits": 242,
+        "bounce_rate": 0.64,
+        "avg_session": 449
+      }
+    },
+    {
+      "date": "2025-07-20",
+      "orders": 11,
+      "revenue": 11725.35,
+      "avg_order_value": 1065.94,
+      "ai_revenue": 7879.44,
+      "organic_revenue": 3845.92,
+      "conversion_rate": 5.35,
+      "traffic": {
+        "visits": 165,
+        "bounce_rate": 0.47,
+        "avg_session": 252
+      }
+    },
+    {
+      "date": "2025-07-21",
+      "orders": 11,
+      "revenue": 8465.38,
+      "avg_order_value": 769.58,
+      "ai_revenue": 5688.74,
+      "organic_revenue": 2776.65,
+      "conversion_rate": 3.69,
+      "traffic": {
+        "visits": 264,
+        "bounce_rate": 0.48,
+        "avg_session": 400
+      }
+    },
+    {
+      "date": "2025-07-22",
+      "orders": 4,
+      "revenue": 3590.78,
+      "avg_order_value": 897.69,
+      "ai_revenue": 2413.0,
+      "organic_revenue": 1177.77,
+      "conversion_rate": 5.94,
+      "traffic": {
+        "visits": 140,
+        "bounce_rate": 0.46,
+        "avg_session": 345
+      }
+    },
+    {
+      "date": "2025-07-23",
+      "orders": 9,
+      "revenue": 14018.98,
+      "avg_order_value": 1557.66,
+      "ai_revenue": 9420.76,
+      "organic_revenue": 4598.23,
+      "conversion_rate": 3.64,
+      "traffic": {
+        "visits": 135,
+        "bounce_rate": 0.55,
+        "avg_session": 386
+      }
+    },
+    {
+      "date": "2025-07-24",
+      "orders": 6,
+      "revenue": 5250.79,
+      "avg_order_value": 875.13,
+      "ai_revenue": 3528.53,
+      "organic_revenue": 1722.26,
+      "conversion_rate": 5.56,
+      "traffic": {
+        "visits": 156,
+        "bounce_rate": 0.43,
+        "avg_session": 182
+      }
+    },
+    {
+      "date": "2025-07-25",
+      "orders": 12,
+      "revenue": 22110.26,
+      "avg_order_value": 1842.52,
+      "ai_revenue": 14858.09,
+      "organic_revenue": 7252.16,
+      "conversion_rate": 4.15,
+      "traffic": {
+        "visits": 288,
+        "bounce_rate": 0.55,
+        "avg_session": 402
+      }
+    },
+    {
+      "date": "2025-07-26",
+      "orders": 5,
+      "revenue": 10925.28,
+      "avg_order_value": 2185.06,
+      "ai_revenue": 7341.79,
+      "organic_revenue": 3583.49,
+      "conversion_rate": 3.96,
+      "traffic": {
+        "visits": 145,
+        "bounce_rate": 0.35,
+        "avg_session": 301
+      }
+    },
+    {
+      "date": "2025-07-27",
+      "orders": 15,
+      "revenue": 18534.94,
+      "avg_order_value": 1235.66,
+      "ai_revenue": 12455.48,
+      "organic_revenue": 6079.46,
+      "conversion_rate": 5.04,
+      "traffic": {
+        "visits": 285,
+        "bounce_rate": 0.62,
+        "avg_session": 386
+      }
+    },
+    {
+      "date": "2025-07-28",
+      "orders": 13,
+      "revenue": 11782.31,
+      "avg_order_value": 906.33,
+      "ai_revenue": 7917.71,
+      "organic_revenue": 3864.6,
+      "conversion_rate": 4.26,
+      "traffic": {
+        "visits": 377,
+        "bounce_rate": 0.52,
+        "avg_session": 208
+      }
+    },
+    {
+      "date": "2025-07-29",
+      "orders": 13,
+      "revenue": 33908.22,
+      "avg_order_value": 2608.32,
+      "ai_revenue": 22786.32,
+      "organic_revenue": 11121.9,
+      "conversion_rate": 3.77,
+      "traffic": {
+        "visits": 442,
+        "bounce_rate": 0.58,
+        "avg_session": 296
+      }
+    },
+    {
+      "date": "2025-07-30",
+      "orders": 11,
+      "revenue": 8408.08,
+      "avg_order_value": 764.37,
+      "ai_revenue": 5650.23,
+      "organic_revenue": 2757.85,
+      "conversion_rate": 5.43,
+      "traffic": {
+        "visits": 352,
+        "bounce_rate": 0.43,
+        "avg_session": 258
+      }
+    },
+    {
+      "date": "2025-07-31",
+      "orders": 6,
+      "revenue": 13007.88,
+      "avg_order_value": 2167.98,
+      "ai_revenue": 8741.3,
+      "organic_revenue": 4266.59,
+      "conversion_rate": 3.87,
+      "traffic": {
+        "visits": 132,
+        "bounce_rate": 0.57,
+        "avg_session": 349
+      }
+    },
+    {
+      "date": "2025-08-01",
+      "orders": 13,
+      "revenue": 21234.54,
+      "avg_order_value": 1633.43,
+      "ai_revenue": 14269.61,
+      "organic_revenue": 6964.93,
+      "conversion_rate": 4.16,
+      "traffic": {
+        "visits": 208,
+        "bounce_rate": 0.44,
+        "avg_session": 375
+      }
+    },
+    {
+      "date": "2025-08-02",
+      "orders": 21,
+      "revenue": 44416.23,
+      "avg_order_value": 2115.06,
+      "ai_revenue": 29847.71,
+      "organic_revenue": 14568.52,
+      "conversion_rate": 5.72,
+      "traffic": {
+        "visits": 420,
+        "bounce_rate": 0.65,
+        "avg_session": 229
+      }
+    },
+    {
+      "date": "2025-08-03",
+      "orders": 8,
+      "revenue": 12651.35,
+      "avg_order_value": 1581.42,
+      "ai_revenue": 8501.7,
+      "organic_revenue": 4149.64,
+      "conversion_rate": 3.89,
+      "traffic": {
+        "visits": 240,
+        "bounce_rate": 0.47,
+        "avg_session": 417
+      }
+    },
+    {
+      "date": "2025-08-04",
+      "orders": 8,
+      "revenue": 10982.49,
+      "avg_order_value": 1372.81,
+      "ai_revenue": 7380.23,
+      "organic_revenue": 3602.26,
+      "conversion_rate": 5.18,
+      "traffic": {
+        "visits": 200,
+        "bounce_rate": 0.56,
+        "avg_session": 331
+      }
+    },
+    {
+      "date": "2025-08-05",
+      "orders": 12,
+      "revenue": 17942.0,
+      "avg_order_value": 1495.17,
+      "ai_revenue": 12057.03,
+      "organic_revenue": 5884.98,
+      "conversion_rate": 4.24,
+      "traffic": {
+        "visits": 204,
+        "bounce_rate": 0.43,
+        "avg_session": 224
+      }
+    },
+    {
+      "date": "2025-08-06",
+      "orders": 11,
+      "revenue": 17693.47,
+      "avg_order_value": 1608.5,
+      "ai_revenue": 11890.01,
+      "organic_revenue": 5803.46,
+      "conversion_rate": 4.92,
+      "traffic": {
+        "visits": 297,
+        "bounce_rate": 0.41,
+        "avg_session": 317
+      }
+    },
+    {
+      "date": "2025-08-07",
+      "orders": 11,
+      "revenue": 13612.69,
+      "avg_order_value": 1237.52,
+      "ai_revenue": 9147.72,
+      "organic_revenue": 4464.96,
+      "conversion_rate": 5.09,
+      "traffic": {
+        "visits": 330,
+        "bounce_rate": 0.64,
+        "avg_session": 200
+      }
+    },
+    {
+      "date": "2025-08-08",
+      "orders": 11,
+      "revenue": 16634.61,
+      "avg_order_value": 1512.24,
+      "ai_revenue": 11178.46,
+      "organic_revenue": 5456.15,
+      "conversion_rate": 4.09,
+      "traffic": {
+        "visits": 165,
+        "bounce_rate": 0.39,
+        "avg_session": 311
+      }
+    },
+    {
+      "date": "2025-08-09",
+      "orders": 12,
+      "revenue": 29983.88,
+      "avg_order_value": 2498.66,
+      "ai_revenue": 20149.17,
+      "organic_revenue": 9834.71,
+      "conversion_rate": 3.68,
+      "traffic": {
+        "visits": 312,
+        "bounce_rate": 0.53,
+        "avg_session": 269
+      }
+    },
+    {
+      "date": "2025-08-10",
+      "orders": 11,
+      "revenue": 16972.74,
+      "avg_order_value": 1542.98,
+      "ai_revenue": 11405.68,
+      "organic_revenue": 5567.06,
+      "conversion_rate": 4.36,
+      "traffic": {
+        "visits": 176,
+        "bounce_rate": 0.5,
+        "avg_session": 256
+      }
+    },
+    {
+      "date": "2025-08-11",
+      "orders": 16,
+      "revenue": 12825.27,
+      "avg_order_value": 801.58,
+      "ai_revenue": 8618.58,
+      "organic_revenue": 4206.69,
+      "conversion_rate": 4.69,
+      "traffic": {
+        "visits": 512,
+        "bounce_rate": 0.51,
+        "avg_session": 418
+      }
+    },
+    {
+      "date": "2025-08-12",
+      "orders": 10,
+      "revenue": 19823.75,
+      "avg_order_value": 1982.37,
+      "ai_revenue": 13321.56,
+      "organic_revenue": 6502.19,
+      "conversion_rate": 3.66,
+      "traffic": {
+        "visits": 310,
+        "bounce_rate": 0.59,
+        "avg_session": 192
+      }
+    },
+    {
+      "date": "2025-08-13",
+      "orders": 5,
+      "revenue": 7120.87,
+      "avg_order_value": 1424.17,
+      "ai_revenue": 4785.22,
+      "organic_revenue": 2335.64,
+      "conversion_rate": 4.04,
+      "traffic": {
+        "visits": 170,
+        "bounce_rate": 0.38,
+        "avg_session": 314
+      }
+    },
+    {
+      "date": "2025-08-14",
+      "orders": 14,
+      "revenue": 13295.03,
+      "avg_order_value": 949.65,
+      "ai_revenue": 8934.26,
+      "organic_revenue": 4360.77,
+      "conversion_rate": 3.89,
+      "traffic": {
+        "visits": 238,
+        "bounce_rate": 0.39,
+        "avg_session": 200
+      }
+    },
+    {
+      "date": "2025-08-15",
+      "orders": 5,
+      "revenue": 12117.53,
+      "avg_order_value": 2423.51,
+      "ai_revenue": 8142.98,
+      "organic_revenue": 3974.55,
+      "conversion_rate": 4.59,
+      "traffic": {
+        "visits": 85,
+        "bounce_rate": 0.35,
+        "avg_session": 316
+      }
+    },
+    {
+      "date": "2025-08-16",
+      "orders": 3,
+      "revenue": 3318.13,
+      "avg_order_value": 1106.04,
+      "ai_revenue": 2229.78,
+      "organic_revenue": 1088.35,
+      "conversion_rate": 3.62,
+      "traffic": {
+        "visits": 69,
+        "bounce_rate": 0.49,
+        "avg_session": 373
+      }
+    },
+    {
+      "date": "2025-08-17",
+      "orders": 18,
+      "revenue": 13275.84,
+      "avg_order_value": 737.55,
+      "ai_revenue": 8921.37,
+      "organic_revenue": 4354.48,
+      "conversion_rate": 4.7,
+      "traffic": {
+        "visits": 360,
+        "bounce_rate": 0.44,
+        "avg_session": 212
+      }
+    },
+    {
+      "date": "2025-08-18",
+      "orders": 15,
+      "revenue": 17636.32,
+      "avg_order_value": 1175.75,
+      "ai_revenue": 11851.61,
+      "organic_revenue": 5784.71,
+      "conversion_rate": 5.52,
+      "traffic": {
+        "visits": 525,
+        "bounce_rate": 0.37,
+        "avg_session": 402
+      }
+    },
+    {
+      "date": "2025-08-19",
+      "orders": 4,
+      "revenue": 4593.16,
+      "avg_order_value": 1148.29,
+      "ai_revenue": 3086.6,
+      "organic_revenue": 1506.56,
+      "conversion_rate": 5.21,
+      "traffic": {
+        "visits": 140,
+        "bounce_rate": 0.4,
+        "avg_session": 414
+      }
+    },
+    {
+      "date": "2025-08-20",
+      "orders": 6,
+      "revenue": 3604.45,
+      "avg_order_value": 600.74,
+      "ai_revenue": 2422.19,
+      "organic_revenue": 1182.26,
+      "conversion_rate": 3.93,
+      "traffic": {
+        "visits": 138,
+        "bounce_rate": 0.57,
+        "avg_session": 436
+      }
+    },
+    {
+      "date": "2025-08-21",
+      "orders": 17,
+      "revenue": 25849.8,
+      "avg_order_value": 1520.58,
+      "ai_revenue": 17371.07,
+      "organic_revenue": 8478.74,
+      "conversion_rate": 4.03,
+      "traffic": {
+        "visits": 561,
+        "bounce_rate": 0.47,
+        "avg_session": 242
+      }
+    },
+    {
+      "date": "2025-08-22",
+      "orders": 9,
+      "revenue": 17043.4,
+      "avg_order_value": 1893.71,
+      "ai_revenue": 11453.17,
+      "organic_revenue": 5590.24,
+      "conversion_rate": 5.98,
+      "traffic": {
+        "visits": 171,
+        "bounce_rate": 0.5,
+        "avg_session": 425
+      }
+    },
+    {
+      "date": "2025-08-23",
+      "orders": 7,
+      "revenue": 12537.16,
+      "avg_order_value": 1791.02,
+      "ai_revenue": 8424.97,
+      "organic_revenue": 4112.19,
+      "conversion_rate": 4.09,
+      "traffic": {
+        "visits": 224,
+        "bounce_rate": 0.41,
+        "avg_session": 317
+      }
+    },
+    {
+      "date": "2025-08-24",
+      "orders": 14,
+      "revenue": 32733.03,
+      "avg_order_value": 2338.07,
+      "ai_revenue": 21996.6,
+      "organic_revenue": 10736.44,
+      "conversion_rate": 4.12,
+      "traffic": {
+        "visits": 294,
+        "bounce_rate": 0.47,
+        "avg_session": 399
+      }
+    },
+    {
+      "date": "2025-08-25",
+      "orders": 14,
+      "revenue": 11288.51,
+      "avg_order_value": 806.32,
+      "ai_revenue": 7585.88,
+      "organic_revenue": 3702.63,
+      "conversion_rate": 6.19,
+      "traffic": {
+        "visits": 378,
+        "bounce_rate": 0.4,
+        "avg_session": 437
+      }
+    },
+    {
+      "date": "2025-08-26",
+      "orders": 2,
+      "revenue": 3103.89,
+      "avg_order_value": 1551.94,
+      "ai_revenue": 2085.81,
+      "organic_revenue": 1018.08,
+      "conversion_rate": 4.17,
+      "traffic": {
+        "visits": 40,
+        "bounce_rate": 0.45,
+        "avg_session": 325
+      }
+    },
+    {
+      "date": "2025-08-27",
+      "orders": 9,
+      "revenue": 16244.71,
+      "avg_order_value": 1804.97,
+      "ai_revenue": 10916.45,
+      "organic_revenue": 5328.27,
+      "conversion_rate": 3.97,
+      "traffic": {
+        "visits": 216,
+        "bounce_rate": 0.4,
+        "avg_session": 201
+      }
+    },
+    {
+      "date": "2025-08-28",
+      "orders": 4,
+      "revenue": 5080.47,
+      "avg_order_value": 1270.12,
+      "ai_revenue": 3414.08,
+      "organic_revenue": 1666.4,
+      "conversion_rate": 5.59,
+      "traffic": {
+        "visits": 124,
+        "bounce_rate": 0.49,
+        "avg_session": 417
+      }
+    },
+    {
+      "date": "2025-08-29",
+      "orders": 8,
+      "revenue": 19501.93,
+      "avg_order_value": 2437.74,
+      "ai_revenue": 13105.3,
+      "organic_revenue": 6396.63,
+      "conversion_rate": 4.83,
+      "traffic": {
+        "visits": 152,
+        "bounce_rate": 0.37,
+        "avg_session": 446
+      }
+    },
+    {
+      "date": "2025-08-30",
+      "orders": 15,
+      "revenue": 32350.87,
+      "avg_order_value": 2156.72,
+      "ai_revenue": 21739.78,
+      "organic_revenue": 10611.08,
+      "conversion_rate": 5.97,
+      "traffic": {
+        "visits": 435,
+        "bounce_rate": 0.51,
+        "avg_session": 398
+      }
+    },
+    {
+      "date": "2025-08-31",
+      "orders": 24,
+      "revenue": 27793.56,
+      "avg_order_value": 1158.06,
+      "ai_revenue": 18677.27,
+      "organic_revenue": 9116.29,
+      "conversion_rate": 4.77,
+      "traffic": {
+        "visits": 528,
+        "bounce_rate": 0.4,
+        "avg_session": 294
+      }
+    },
+    {
+      "date": "2025-09-01",
+      "orders": 11,
+      "revenue": 7722.15,
+      "avg_order_value": 702.01,
+      "ai_revenue": 5189.28,
+      "organic_revenue": 2532.86,
+      "conversion_rate": 6.12,
+      "traffic": {
+        "visits": 253,
+        "bounce_rate": 0.49,
+        "avg_session": 268
+      }
+    },
+    {
+      "date": "2025-09-02",
+      "orders": 7,
+      "revenue": 7657.37,
+      "avg_order_value": 1093.91,
+      "ai_revenue": 5145.75,
+      "organic_revenue": 2511.62,
+      "conversion_rate": 4.45,
+      "traffic": {
+        "visits": 161,
+        "bounce_rate": 0.54,
+        "avg_session": 216
+      }
+    },
+    {
+      "date": "2025-09-03",
+      "orders": 18,
+      "revenue": 41618.01,
+      "avg_order_value": 2312.11,
+      "ai_revenue": 27967.3,
+      "organic_revenue": 13650.71,
+      "conversion_rate": 6.02,
+      "traffic": {
+        "visits": 540,
+        "bounce_rate": 0.57,
+        "avg_session": 369
+      }
+    },
+    {
+      "date": "2025-09-04",
+      "orders": 12,
+      "revenue": 23443.66,
+      "avg_order_value": 1953.64,
+      "ai_revenue": 15754.14,
+      "organic_revenue": 7689.52,
+      "conversion_rate": 3.6,
+      "traffic": {
+        "visits": 216,
+        "bounce_rate": 0.38,
+        "avg_session": 349
+      }
+    },
+    {
+      "date": "2025-09-05",
+      "orders": 7,
+      "revenue": 9234.12,
+      "avg_order_value": 1319.16,
+      "ai_revenue": 6205.33,
+      "organic_revenue": 3028.79,
+      "conversion_rate": 4.8,
+      "traffic": {
+        "visits": 140,
+        "bounce_rate": 0.43,
+        "avg_session": 410
+      }
+    },
+    {
+      "date": "2025-09-06",
+      "orders": 18,
+      "revenue": 15047.45,
+      "avg_order_value": 835.97,
+      "ai_revenue": 10111.89,
+      "organic_revenue": 4935.56,
+      "conversion_rate": 4.96,
+      "traffic": {
+        "visits": 576,
+        "bounce_rate": 0.64,
+        "avg_session": 188
+      }
+    },
+    {
+      "date": "2025-09-07",
+      "orders": 21,
+      "revenue": 37351.99,
+      "avg_order_value": 1778.67,
+      "ai_revenue": 25100.54,
+      "organic_revenue": 12251.45,
+      "conversion_rate": 4.71,
+      "traffic": {
+        "visits": 378,
+        "bounce_rate": 0.49,
+        "avg_session": 337
+      }
+    },
+    {
+      "date": "2025-09-08",
+      "orders": 12,
+      "revenue": 20572.18,
+      "avg_order_value": 1714.35,
+      "ai_revenue": 13824.51,
+      "organic_revenue": 6747.68,
+      "conversion_rate": 4.62,
+      "traffic": {
+        "visits": 348,
+        "bounce_rate": 0.49,
+        "avg_session": 229
+      }
+    },
+    {
+      "date": "2025-09-09",
+      "orders": 11,
+      "revenue": 25827.06,
+      "avg_order_value": 2347.91,
+      "ai_revenue": 17355.79,
+      "organic_revenue": 8471.28,
+      "conversion_rate": 5.02,
+      "traffic": {
+        "visits": 231,
+        "bounce_rate": 0.6,
+        "avg_session": 419
+      }
+    },
+    {
+      "date": "2025-09-10",
+      "orders": 11,
+      "revenue": 21170.48,
+      "avg_order_value": 1924.59,
+      "ai_revenue": 14226.56,
+      "organic_revenue": 6943.92,
+      "conversion_rate": 4.34,
+      "traffic": {
+        "visits": 242,
+        "bounce_rate": 0.5,
+        "avg_session": 419
+      }
+    },
+    {
+      "date": "2025-09-11",
+      "orders": 11,
+      "revenue": 14744.28,
+      "avg_order_value": 1340.39,
+      "ai_revenue": 9908.16,
+      "organic_revenue": 4836.12,
+      "conversion_rate": 3.83,
+      "traffic": {
+        "visits": 319,
+        "bounce_rate": 0.58,
+        "avg_session": 235
+      }
+    },
+    {
+      "date": "2025-09-12",
+      "orders": 7,
+      "revenue": 9600.98,
+      "avg_order_value": 1371.57,
+      "ai_revenue": 6451.86,
+      "organic_revenue": 3149.12,
+      "conversion_rate": 3.76,
+      "traffic": {
+        "visits": 210,
+        "bounce_rate": 0.64,
+        "avg_session": 439
+      }
+    },
+    {
+      "date": "2025-09-13",
+      "orders": 17,
+      "revenue": 39361.77,
+      "avg_order_value": 2315.4,
+      "ai_revenue": 26451.11,
+      "organic_revenue": 12910.66,
+      "conversion_rate": 3.66,
+      "traffic": {
+        "visits": 306,
+        "bounce_rate": 0.61,
+        "avg_session": 368
+      }
+    },
+    {
+      "date": "2025-09-14",
+      "orders": 12,
+      "revenue": 11190.56,
+      "avg_order_value": 932.55,
+      "ai_revenue": 7520.06,
+      "organic_revenue": 3670.5,
+      "conversion_rate": 3.88,
+      "traffic": {
+        "visits": 396,
+        "bounce_rate": 0.5,
+        "avg_session": 364
+      }
+    },
+    {
+      "date": "2025-09-15",
+      "orders": 1,
+      "revenue": 1777.13,
+      "avg_order_value": 1777.13,
+      "ai_revenue": 1194.23,
+      "organic_revenue": 582.9,
+      "conversion_rate": 3.55,
+      "traffic": {
+        "visits": 34,
+        "bounce_rate": 0.39,
+        "avg_session": 371
+      }
+    },
+    {
+      "date": "2025-09-16",
+      "orders": 9,
+      "revenue": 17270.58,
+      "avg_order_value": 1918.95,
+      "ai_revenue": 11605.83,
+      "organic_revenue": 5664.75,
+      "conversion_rate": 5.55,
+      "traffic": {
+        "visits": 315,
+        "bounce_rate": 0.51,
+        "avg_session": 425
+      }
+    },
+    {
+      "date": "2025-09-17",
+      "orders": 16,
+      "revenue": 39375.01,
+      "avg_order_value": 2460.94,
+      "ai_revenue": 26460.0,
+      "organic_revenue": 12915.0,
+      "conversion_rate": 5.22,
+      "traffic": {
+        "visits": 240,
+        "bounce_rate": 0.44,
+        "avg_session": 368
+      }
+    },
+    {
+      "date": "2025-09-18",
+      "orders": 13,
+      "revenue": 31129.26,
+      "avg_order_value": 2394.56,
+      "ai_revenue": 20918.86,
+      "organic_revenue": 10210.4,
+      "conversion_rate": 5.28,
+      "traffic": {
+        "visits": 247,
+        "bounce_rate": 0.4,
+        "avg_session": 369
+      }
+    },
+    {
+      "date": "2025-09-19",
+      "orders": 11,
+      "revenue": 25663.16,
+      "avg_order_value": 2333.01,
+      "ai_revenue": 17245.64,
+      "organic_revenue": 8417.52,
+      "conversion_rate": 4.02,
+      "traffic": {
+        "visits": 165,
+        "bounce_rate": 0.5,
+        "avg_session": 199
+      }
+    },
+    {
+      "date": "2025-09-20",
+      "orders": 17,
+      "revenue": 33135.51,
+      "avg_order_value": 1949.15,
+      "ai_revenue": 22267.06,
+      "organic_revenue": 10868.45,
+      "conversion_rate": 4.63,
+      "traffic": {
+        "visits": 357,
+        "bounce_rate": 0.44,
+        "avg_session": 181
+      }
+    },
+    {
+      "date": "2025-09-21",
+      "orders": 14,
+      "revenue": 29582.79,
+      "avg_order_value": 2113.06,
+      "ai_revenue": 19879.63,
+      "organic_revenue": 9703.16,
+      "conversion_rate": 4.93,
+      "traffic": {
+        "visits": 434,
+        "bounce_rate": 0.58,
+        "avg_session": 299
+      }
+    },
+    {
+      "date": "2025-09-22",
+      "orders": 8,
+      "revenue": 14536.52,
+      "avg_order_value": 1817.06,
+      "ai_revenue": 9768.54,
+      "organic_revenue": 4767.98,
+      "conversion_rate": 4.95,
+      "traffic": {
+        "visits": 264,
+        "bounce_rate": 0.6,
+        "avg_session": 221
+      }
+    },
+    {
+      "date": "2025-09-23",
+      "orders": 12,
+      "revenue": 8640.71,
+      "avg_order_value": 720.06,
+      "ai_revenue": 5806.56,
+      "organic_revenue": 2834.15,
+      "conversion_rate": 3.69,
+      "traffic": {
+        "visits": 228,
+        "bounce_rate": 0.55,
+        "avg_session": 349
+      }
+    },
+    {
+      "date": "2025-09-24",
+      "orders": 3,
+      "revenue": 2162.96,
+      "avg_order_value": 720.99,
+      "ai_revenue": 1453.51,
+      "organic_revenue": 709.45,
+      "conversion_rate": 3.75,
+      "traffic": {
+        "visits": 51,
+        "bounce_rate": 0.51,
+        "avg_session": 343
+      }
+    },
+    {
+      "date": "2025-09-25",
+      "orders": 2,
+      "revenue": 3098.46,
+      "avg_order_value": 1549.23,
+      "ai_revenue": 2082.16,
+      "organic_revenue": 1016.29,
+      "conversion_rate": 3.8,
+      "traffic": {
+        "visits": 34,
+        "bounce_rate": 0.64,
+        "avg_session": 362
+      }
+    },
+    {
+      "date": "2025-09-26",
+      "orders": 7,
+      "revenue": 10186.41,
+      "avg_order_value": 1455.2,
+      "ai_revenue": 6845.27,
+      "organic_revenue": 3341.14,
+      "conversion_rate": 5.77,
+      "traffic": {
+        "visits": 154,
+        "bounce_rate": 0.37,
+        "avg_session": 407
+      }
+    },
+    {
+      "date": "2025-09-27",
+      "orders": 17,
+      "revenue": 14914.04,
+      "avg_order_value": 877.3,
+      "ai_revenue": 10022.23,
+      "organic_revenue": 4891.8,
+      "conversion_rate": 5.3,
+      "traffic": {
+        "visits": 595,
+        "bounce_rate": 0.36,
+        "avg_session": 280
+      }
+    },
+    {
+      "date": "2025-09-28",
+      "orders": 12,
+      "revenue": 8478.0,
+      "avg_order_value": 706.5,
+      "ai_revenue": 5697.21,
+      "organic_revenue": 2780.78,
+      "conversion_rate": 5.21,
+      "traffic": {
+        "visits": 276,
+        "bounce_rate": 0.39,
+        "avg_session": 240
+      }
+    },
+    {
+      "date": "2025-09-29",
+      "orders": 16,
+      "revenue": 24232.0,
+      "avg_order_value": 1514.5,
+      "ai_revenue": 16283.9,
+      "organic_revenue": 7948.1,
+      "conversion_rate": 4.31,
+      "traffic": {
+        "visits": 560,
+        "bounce_rate": 0.45,
+        "avg_session": 202
+      }
+    },
+    {
+      "date": "2025-09-30",
+      "orders": 14,
+      "revenue": 28969.42,
+      "avg_order_value": 2069.24,
+      "ai_revenue": 19467.45,
+      "organic_revenue": 9501.97,
+      "conversion_rate": 5.32,
+      "traffic": {
+        "visits": 448,
+        "bounce_rate": 0.64,
+        "avg_session": 385
+      }
+    },
+    {
+      "date": "2025-10-01",
+      "orders": 11,
+      "revenue": 18779.88,
+      "avg_order_value": 1707.26,
+      "ai_revenue": 12620.08,
+      "organic_revenue": 6159.8,
+      "conversion_rate": 3.78,
+      "traffic": {
+        "visits": 242,
+        "bounce_rate": 0.48,
+        "avg_session": 239
+      }
+    },
+    {
+      "date": "2025-10-02",
+      "orders": 10,
+      "revenue": 13862.68,
+      "avg_order_value": 1386.27,
+      "ai_revenue": 9315.72,
+      "organic_revenue": 4546.96,
+      "conversion_rate": 4.76,
+      "traffic": {
+        "visits": 180,
+        "bounce_rate": 0.52,
+        "avg_session": 335
+      }
+    },
+    {
+      "date": "2025-10-03",
+      "orders": 7,
+      "revenue": 14046.98,
+      "avg_order_value": 2006.71,
+      "ai_revenue": 9439.57,
+      "organic_revenue": 4607.41,
+      "conversion_rate": 3.75,
+      "traffic": {
+        "visits": 189,
+        "bounce_rate": 0.44,
+        "avg_session": 295
+      }
+    },
+    {
+      "date": "2025-10-04",
+      "orders": 16,
+      "revenue": 15916.46,
+      "avg_order_value": 994.78,
+      "ai_revenue": 10695.86,
+      "organic_revenue": 5220.6,
+      "conversion_rate": 5.0,
+      "traffic": {
+        "visits": 368,
+        "bounce_rate": 0.36,
+        "avg_session": 266
+      }
+    },
+    {
+      "date": "2025-10-05",
+      "orders": 24,
+      "revenue": 19769.15,
+      "avg_order_value": 823.71,
+      "ai_revenue": 13284.87,
+      "organic_revenue": 6484.28,
+      "conversion_rate": 5.69,
+      "traffic": {
+        "visits": 528,
+        "bounce_rate": 0.38,
+        "avg_session": 199
+      }
+    },
+    {
+      "date": "2025-10-06",
+      "orders": 5,
+      "revenue": 6867.46,
+      "avg_order_value": 1373.49,
+      "ai_revenue": 4614.93,
+      "organic_revenue": 2252.53,
+      "conversion_rate": 5.48,
+      "traffic": {
+        "visits": 125,
+        "bounce_rate": 0.36,
+        "avg_session": 406
+      }
+    },
+    {
+      "date": "2025-10-07",
+      "orders": 9,
+      "revenue": 17250.36,
+      "avg_order_value": 1916.71,
+      "ai_revenue": 11592.24,
+      "organic_revenue": 5658.12,
+      "conversion_rate": 4.28,
+      "traffic": {
+        "visits": 234,
+        "bounce_rate": 0.48,
+        "avg_session": 371
+      }
+    },
+    {
+      "date": "2025-10-08",
+      "orders": 12,
+      "revenue": 20742.54,
+      "avg_order_value": 1728.55,
+      "ai_revenue": 13938.99,
+      "organic_revenue": 6803.55,
+      "conversion_rate": 4.6,
+      "traffic": {
+        "visits": 228,
+        "bounce_rate": 0.6,
+        "avg_session": 190
+      }
+    },
+    {
+      "date": "2025-10-09",
+      "orders": 6,
+      "revenue": 14201.77,
+      "avg_order_value": 2366.96,
+      "ai_revenue": 9543.59,
+      "organic_revenue": 4658.18,
+      "conversion_rate": 5.1,
+      "traffic": {
+        "visits": 174,
+        "bounce_rate": 0.38,
+        "avg_session": 382
+      }
+    },
+    {
+      "date": "2025-10-10",
+      "orders": 4,
+      "revenue": 4655.95,
+      "avg_order_value": 1163.99,
+      "ai_revenue": 3128.8,
+      "organic_revenue": 1527.15,
+      "conversion_rate": 5.44,
+      "traffic": {
+        "visits": 76,
+        "bounce_rate": 0.57,
+        "avg_session": 192
+      }
+    },
+    {
+      "date": "2025-10-11",
+      "orders": 7,
+      "revenue": 13144.24,
+      "avg_order_value": 1877.75,
+      "ai_revenue": 8832.93,
+      "organic_revenue": 4311.31,
+      "conversion_rate": 5.15,
+      "traffic": {
+        "visits": 182,
+        "bounce_rate": 0.52,
+        "avg_session": 374
+      }
+    },
+    {
+      "date": "2025-10-12",
+      "orders": 18,
+      "revenue": 10974.61,
+      "avg_order_value": 609.7,
+      "ai_revenue": 7374.94,
+      "organic_revenue": 3599.67,
+      "conversion_rate": 5.08,
+      "traffic": {
+        "visits": 270,
+        "bounce_rate": 0.54,
+        "avg_session": 383
+      }
+    },
+    {
+      "date": "2025-10-13",
+      "orders": 6,
+      "revenue": 11026.55,
+      "avg_order_value": 1837.76,
+      "ai_revenue": 7409.84,
+      "organic_revenue": 3616.71,
+      "conversion_rate": 4.79,
+      "traffic": {
+        "visits": 150,
+        "bounce_rate": 0.44,
+        "avg_session": 354
+      }
+    },
+    {
+      "date": "2025-10-14",
+      "orders": 10,
+      "revenue": 24560.41,
+      "avg_order_value": 2456.04,
+      "ai_revenue": 16504.59,
+      "organic_revenue": 8055.81,
+      "conversion_rate": 3.85,
+      "traffic": {
+        "visits": 190,
+        "bounce_rate": 0.41,
+        "avg_session": 409
+      }
+    },
+    {
+      "date": "2025-10-15",
+      "orders": 7,
+      "revenue": 11858.88,
+      "avg_order_value": 1694.13,
+      "ai_revenue": 7969.17,
+      "organic_revenue": 3889.71,
+      "conversion_rate": 4.45,
+      "traffic": {
+        "visits": 126,
+        "bounce_rate": 0.36,
+        "avg_session": 418
+      }
+    },
+    {
+      "date": "2025-10-16",
+      "orders": 8,
+      "revenue": 10954.75,
+      "avg_order_value": 1369.34,
+      "ai_revenue": 7361.59,
+      "organic_revenue": 3593.16,
+      "conversion_rate": 5.53,
+      "traffic": {
+        "visits": 192,
+        "bounce_rate": 0.65,
+        "avg_session": 316
+      }
+    },
+    {
+      "date": "2025-10-17",
+      "orders": 6,
+      "revenue": 14828.0,
+      "avg_order_value": 2471.33,
+      "ai_revenue": 9964.42,
+      "organic_revenue": 4863.58,
+      "conversion_rate": 5.94,
+      "traffic": {
+        "visits": 210,
+        "bounce_rate": 0.43,
+        "avg_session": 364
+      }
+    },
+    {
+      "date": "2025-10-18",
+      "orders": 10,
+      "revenue": 16293.78,
+      "avg_order_value": 1629.38,
+      "ai_revenue": 10949.42,
+      "organic_revenue": 5344.36,
+      "conversion_rate": 4.99,
+      "traffic": {
+        "visits": 220,
+        "bounce_rate": 0.48,
+        "avg_session": 291
+      }
+    },
+    {
+      "date": "2025-10-19",
+      "orders": 3,
+      "revenue": 4483.91,
+      "avg_order_value": 1494.64,
+      "ai_revenue": 3013.19,
+      "organic_revenue": 1470.72,
+      "conversion_rate": 5.01,
+      "traffic": {
+        "visits": 60,
+        "bounce_rate": 0.56,
+        "avg_session": 274
+      }
+    },
+    {
+      "date": "2025-10-20",
+      "orders": 5,
+      "revenue": 9621.17,
+      "avg_order_value": 1924.23,
+      "ai_revenue": 6465.43,
+      "organic_revenue": 3155.74,
+      "conversion_rate": 4.29,
+      "traffic": {
+        "visits": 150,
+        "bounce_rate": 0.6,
+        "avg_session": 271
+      }
+    },
+    {
+      "date": "2025-10-21",
+      "orders": 8,
+      "revenue": 12857.75,
+      "avg_order_value": 1607.22,
+      "ai_revenue": 8640.41,
+      "organic_revenue": 4217.34,
+      "conversion_rate": 6.01,
+      "traffic": {
+        "visits": 240,
+        "bounce_rate": 0.57,
+        "avg_session": 412
+      }
+    },
+    {
+      "date": "2025-10-22",
+      "orders": 8,
+      "revenue": 16039.49,
+      "avg_order_value": 2004.94,
+      "ai_revenue": 10778.54,
+      "organic_revenue": 5260.95,
+      "conversion_rate": 3.81,
+      "traffic": {
+        "visits": 280,
+        "bounce_rate": 0.56,
+        "avg_session": 412
+      }
+    },
+    {
+      "date": "2025-10-23",
+      "orders": 9,
+      "revenue": 19384.61,
+      "avg_order_value": 2153.85,
+      "ai_revenue": 13026.46,
+      "organic_revenue": 6358.15,
+      "conversion_rate": 3.97,
+      "traffic": {
+        "visits": 153,
+        "bounce_rate": 0.39,
+        "avg_session": 212
+      }
+    },
+    {
+      "date": "2025-10-24",
+      "orders": 14,
+      "revenue": 10827.13,
+      "avg_order_value": 773.37,
+      "ai_revenue": 7275.83,
+      "organic_revenue": 3551.3,
+      "conversion_rate": 5.0,
+      "traffic": {
+        "visits": 308,
+        "bounce_rate": 0.62,
+        "avg_session": 296
+      }
+    },
+    {
+      "date": "2025-10-25",
+      "orders": 7,
+      "revenue": 17239.32,
+      "avg_order_value": 2462.76,
+      "ai_revenue": 11584.82,
+      "organic_revenue": 5654.5,
+      "conversion_rate": 3.69,
+      "traffic": {
+        "visits": 182,
+        "bounce_rate": 0.56,
+        "avg_session": 185
+      }
+    },
+    {
+      "date": "2025-10-26",
+      "orders": 10,
+      "revenue": 20589.11,
+      "avg_order_value": 2058.91,
+      "ai_revenue": 13835.88,
+      "organic_revenue": 6753.23,
+      "conversion_rate": 4.88,
+      "traffic": {
+        "visits": 280,
+        "bounce_rate": 0.57,
+        "avg_session": 254
+      }
+    },
+    {
+      "date": "2025-10-27",
+      "orders": 8,
+      "revenue": 5740.57,
+      "avg_order_value": 717.57,
+      "ai_revenue": 3857.66,
+      "organic_revenue": 1882.91,
+      "conversion_rate": 4.81,
+      "traffic": {
+        "visits": 192,
+        "bounce_rate": 0.42,
+        "avg_session": 225
+      }
+    },
+    {
+      "date": "2025-10-28",
+      "orders": 18,
+      "revenue": 38923.97,
+      "avg_order_value": 2162.44,
+      "ai_revenue": 26156.91,
+      "organic_revenue": 12767.06,
+      "conversion_rate": 5.11,
+      "traffic": {
+        "visits": 612,
+        "bounce_rate": 0.49,
+        "avg_session": 212
+      }
+    },
+    {
+      "date": "2025-10-29",
+      "orders": 8,
+      "revenue": 16152.15,
+      "avg_order_value": 2019.02,
+      "ai_revenue": 10854.25,
+      "organic_revenue": 5297.91,
+      "conversion_rate": 6.13,
+      "traffic": {
+        "visits": 144,
+        "bounce_rate": 0.61,
+        "avg_session": 344
+      }
+    },
+    {
+      "date": "2025-10-30",
+      "orders": 11,
+      "revenue": 24136.73,
+      "avg_order_value": 2194.25,
+      "ai_revenue": 16219.88,
+      "organic_revenue": 7916.85,
+      "conversion_rate": 4.61,
+      "traffic": {
+        "visits": 308,
+        "bounce_rate": 0.52,
+        "avg_session": 409
+      }
+    },
+    {
+      "date": "2025-10-31",
+      "orders": 10,
+      "revenue": 8837.41,
+      "avg_order_value": 883.74,
+      "ai_revenue": 5938.74,
+      "organic_revenue": 2898.67,
+      "conversion_rate": 4.06,
+      "traffic": {
+        "visits": 180,
+        "bounce_rate": 0.44,
+        "avg_session": 315
+      }
+    },
+    {
+      "date": "2025-11-01",
+      "orders": 9,
+      "revenue": 21608.99,
+      "avg_order_value": 2401.0,
+      "ai_revenue": 14521.24,
+      "organic_revenue": 7087.75,
+      "conversion_rate": 4.44,
+      "traffic": {
+        "visits": 189,
+        "bounce_rate": 0.65,
+        "avg_session": 430
+      }
+    },
+    {
+      "date": "2025-11-02",
+      "orders": 7,
+      "revenue": 17550.53,
+      "avg_order_value": 2507.22,
+      "ai_revenue": 11793.96,
+      "organic_revenue": 5756.58,
+      "conversion_rate": 4.54,
+      "traffic": {
+        "visits": 161,
+        "bounce_rate": 0.37,
+        "avg_session": 259
+      }
+    },
+    {
+      "date": "2025-11-03",
+      "orders": 11,
+      "revenue": 8939.61,
+      "avg_order_value": 812.69,
+      "ai_revenue": 6007.42,
+      "organic_revenue": 2932.19,
+      "conversion_rate": 5.06,
+      "traffic": {
+        "visits": 165,
+        "bounce_rate": 0.41,
+        "avg_session": 405
+      }
+    },
+    {
+      "date": "2025-11-04",
+      "orders": 14,
+      "revenue": 38948.98,
+      "avg_order_value": 2782.07,
+      "ai_revenue": 26173.71,
+      "organic_revenue": 12775.27,
+      "conversion_rate": 5.81,
+      "traffic": {
+        "visits": 252,
+        "bounce_rate": 0.4,
+        "avg_session": 283
+      }
+    },
+    {
+      "date": "2025-11-05",
+      "orders": 1,
+      "revenue": 3057.67,
+      "avg_order_value": 3057.67,
+      "ai_revenue": 2054.75,
+      "organic_revenue": 1002.91,
+      "conversion_rate": 4.3,
+      "traffic": {
+        "visits": 29,
+        "bounce_rate": 0.47,
+        "avg_session": 367
+      }
+    },
+    {
+      "date": "2025-11-06",
+      "orders": 12,
+      "revenue": 18592.49,
+      "avg_order_value": 1549.37,
+      "ai_revenue": 12494.15,
+      "organic_revenue": 6098.34,
+      "conversion_rate": 5.22,
+      "traffic": {
+        "visits": 288,
+        "bounce_rate": 0.57,
+        "avg_session": 310
+      }
+    },
+    {
+      "date": "2025-11-07",
+      "orders": 10,
+      "revenue": 11556.95,
+      "avg_order_value": 1155.69,
+      "ai_revenue": 7766.27,
+      "organic_revenue": 3790.68,
+      "conversion_rate": 6.12,
+      "traffic": {
+        "visits": 180,
+        "bounce_rate": 0.4,
+        "avg_session": 219
+      }
+    },
+    {
+      "date": "2025-11-08",
+      "orders": 11,
+      "revenue": 29174.26,
+      "avg_order_value": 2652.21,
+      "ai_revenue": 19605.1,
+      "organic_revenue": 9569.16,
+      "conversion_rate": 4.14,
+      "traffic": {
+        "visits": 198,
+        "bounce_rate": 0.55,
+        "avg_session": 201
+      }
+    },
+    {
+      "date": "2025-11-09",
+      "orders": 13,
+      "revenue": 32219.82,
+      "avg_order_value": 2478.45,
+      "ai_revenue": 21651.72,
+      "organic_revenue": 10568.1,
+      "conversion_rate": 3.69,
+      "traffic": {
+        "visits": 364,
+        "bounce_rate": 0.49,
+        "avg_session": 283
+      }
+    },
+    {
+      "date": "2025-11-10",
+      "orders": 13,
+      "revenue": 39673.17,
+      "avg_order_value": 3051.78,
+      "ai_revenue": 26660.37,
+      "organic_revenue": 13012.8,
+      "conversion_rate": 3.56,
+      "traffic": {
+        "visits": 325,
+        "bounce_rate": 0.51,
+        "avg_session": 267
+      }
+    },
+    {
+      "date": "2025-11-11",
+      "orders": 6,
+      "revenue": 9337.59,
+      "avg_order_value": 1556.26,
+      "ai_revenue": 6274.86,
+      "organic_revenue": 3062.73,
+      "conversion_rate": 4.5,
+      "traffic": {
+        "visits": 126,
+        "bounce_rate": 0.53,
+        "avg_session": 258
+      }
+    },
+    {
+      "date": "2025-11-12",
+      "orders": 1,
+      "revenue": 1081.09,
+      "avg_order_value": 1081.09,
+      "ai_revenue": 726.5,
+      "organic_revenue": 354.6,
+      "conversion_rate": 3.98,
+      "traffic": {
+        "visits": 35,
+        "bounce_rate": 0.62,
+        "avg_session": 353
+      }
+    },
+    {
+      "date": "2025-11-13",
+      "orders": 10,
+      "revenue": 14777.57,
+      "avg_order_value": 1477.76,
+      "ai_revenue": 9930.53,
+      "organic_revenue": 4847.04,
+      "conversion_rate": 3.64,
+      "traffic": {
+        "visits": 340,
+        "bounce_rate": 0.41,
+        "avg_session": 439
+      }
+    },
+    {
+      "date": "2025-11-14",
+      "orders": 17,
+      "revenue": 28603.41,
+      "avg_order_value": 1682.55,
+      "ai_revenue": 19221.49,
+      "organic_revenue": 9381.92,
+      "conversion_rate": 4.25,
+      "traffic": {
+        "visits": 595,
+        "bounce_rate": 0.41,
+        "avg_session": 213
+      }
+    },
+    {
+      "date": "2025-11-15",
+      "orders": 19,
+      "revenue": 56775.78,
+      "avg_order_value": 2988.2,
+      "ai_revenue": 38153.32,
+      "organic_revenue": 18622.46,
+      "conversion_rate": 5.02,
+      "traffic": {
+        "visits": 665,
+        "bounce_rate": 0.48,
+        "avg_session": 251
+      }
+    },
+    {
+      "date": "2025-11-16",
+      "orders": 10,
+      "revenue": 31027.06,
+      "avg_order_value": 3102.71,
+      "ai_revenue": 20850.18,
+      "organic_revenue": 10176.88,
+      "conversion_rate": 5.63,
+      "traffic": {
+        "visits": 280,
+        "bounce_rate": 0.49,
+        "avg_session": 229
+      }
+    },
+    {
+      "date": "2025-11-17",
+      "orders": 8,
+      "revenue": 22810.37,
+      "avg_order_value": 2851.3,
+      "ai_revenue": 15328.57,
+      "organic_revenue": 7481.8,
+      "conversion_rate": 5.98,
+      "traffic": {
+        "visits": 240,
+        "bounce_rate": 0.52,
+        "avg_session": 208
+      }
+    },
+    {
+      "date": "2025-11-18",
+      "orders": 9,
+      "revenue": 17959.37,
+      "avg_order_value": 1995.49,
+      "ai_revenue": 12068.7,
+      "organic_revenue": 5890.67,
+      "conversion_rate": 5.06,
+      "traffic": {
+        "visits": 306,
+        "bounce_rate": 0.59,
+        "avg_session": 346
+      }
+    },
+    {
+      "date": "2025-11-19",
+      "orders": 17,
+      "revenue": 17901.31,
+      "avg_order_value": 1053.02,
+      "ai_revenue": 12029.68,
+      "organic_revenue": 5871.63,
+      "conversion_rate": 5.6,
+      "traffic": {
+        "visits": 527,
+        "bounce_rate": 0.4,
+        "avg_session": 302
+      }
+    },
+    {
+      "date": "2025-11-20",
+      "orders": 6,
+      "revenue": 6250.5,
+      "avg_order_value": 1041.75,
+      "ai_revenue": 4200.33,
+      "organic_revenue": 2050.16,
+      "conversion_rate": 4.59,
+      "traffic": {
+        "visits": 204,
+        "bounce_rate": 0.53,
+        "avg_session": 252
+      }
+    },
+    {
+      "date": "2025-11-21",
+      "orders": 14,
+      "revenue": 35913.9,
+      "avg_order_value": 2565.28,
+      "ai_revenue": 24134.14,
+      "organic_revenue": 11779.76,
+      "conversion_rate": 4.2,
+      "traffic": {
+        "visits": 378,
+        "bounce_rate": 0.63,
+        "avg_session": 295
+      }
+    },
+    {
+      "date": "2025-11-22",
+      "orders": 16,
+      "revenue": 17373.46,
+      "avg_order_value": 1085.84,
+      "ai_revenue": 11674.96,
+      "organic_revenue": 5698.49,
+      "conversion_rate": 5.61,
+      "traffic": {
+        "visits": 560,
+        "bounce_rate": 0.51,
+        "avg_session": 420
+      }
+    },
+    {
+      "date": "2025-11-23",
+      "orders": 18,
+      "revenue": 35764.03,
+      "avg_order_value": 1986.89,
+      "ai_revenue": 24033.43,
+      "organic_revenue": 11730.6,
+      "conversion_rate": 5.21,
+      "traffic": {
+        "visits": 594,
+        "bounce_rate": 0.5,
+        "avg_session": 363
+      }
+    },
+    {
+      "date": "2025-11-24",
+      "orders": 7,
+      "revenue": 6909.17,
+      "avg_order_value": 987.02,
+      "ai_revenue": 4642.96,
+      "organic_revenue": 2266.21,
+      "conversion_rate": 4.83,
+      "traffic": {
+        "visits": 126,
+        "bounce_rate": 0.44,
+        "avg_session": 319
+      }
+    },
+    {
+      "date": "2025-11-25",
+      "orders": 7,
+      "revenue": 20079.71,
+      "avg_order_value": 2868.53,
+      "ai_revenue": 13493.56,
+      "organic_revenue": 6586.14,
+      "conversion_rate": 5.96,
+      "traffic": {
+        "visits": 238,
+        "bounce_rate": 0.5,
+        "avg_session": 354
+      }
+    },
+    {
+      "date": "2025-11-26",
+      "orders": 9,
+      "revenue": 17179.4,
+      "avg_order_value": 1908.82,
+      "ai_revenue": 11544.56,
+      "organic_revenue": 5634.84,
+      "conversion_rate": 3.7,
+      "traffic": {
+        "visits": 225,
+        "bounce_rate": 0.44,
+        "avg_session": 185
+      }
+    },
+    {
+      "date": "2025-11-27",
+      "orders": 7,
+      "revenue": 6557.86,
+      "avg_order_value": 936.84,
+      "ai_revenue": 4406.88,
+      "organic_revenue": 2150.98,
+      "conversion_rate": 5.25,
+      "traffic": {
+        "visits": 182,
+        "bounce_rate": 0.63,
+        "avg_session": 354
+      }
+    },
+    {
+      "date": "2025-11-28",
+      "orders": 12,
+      "revenue": 28933.79,
+      "avg_order_value": 2411.15,
+      "ai_revenue": 19443.51,
+      "organic_revenue": 9490.28,
+      "conversion_rate": 4.65,
+      "traffic": {
+        "visits": 324,
+        "bounce_rate": 0.48,
+        "avg_session": 262
+      }
+    },
+    {
+      "date": "2025-11-29",
+      "orders": 22,
+      "revenue": 26156.63,
+      "avg_order_value": 1188.94,
+      "ai_revenue": 17577.26,
+      "organic_revenue": 8579.38,
+      "conversion_rate": 4.3,
+      "traffic": {
+        "visits": 418,
+        "bounce_rate": 0.47,
+        "avg_session": 206
+      }
+    },
+    {
+      "date": "2025-11-30",
+      "orders": 20,
+      "revenue": 34315.6,
+      "avg_order_value": 1715.78,
+      "ai_revenue": 23060.09,
+      "organic_revenue": 11255.52,
+      "conversion_rate": 3.85,
+      "traffic": {
+        "visits": 660,
+        "bounce_rate": 0.57,
+        "avg_session": 372
+      }
+    },
+    {
+      "date": "2025-12-01",
+      "orders": 9,
+      "revenue": 10184.92,
+      "avg_order_value": 1131.66,
+      "ai_revenue": 6844.26,
+      "organic_revenue": 3340.65,
+      "conversion_rate": 5.96,
+      "traffic": {
+        "visits": 315,
+        "bounce_rate": 0.55,
+        "avg_session": 196
+      }
+    },
+    {
+      "date": "2025-12-02",
+      "orders": 4,
+      "revenue": 5821.82,
+      "avg_order_value": 1455.46,
+      "ai_revenue": 3912.27,
+      "organic_revenue": 1909.56,
+      "conversion_rate": 6.04,
+      "traffic": {
+        "visits": 76,
+        "bounce_rate": 0.65,
+        "avg_session": 237
+      }
+    },
+    {
+      "date": "2025-12-03",
+      "orders": 12,
+      "revenue": 29427.45,
+      "avg_order_value": 2452.29,
+      "ai_revenue": 19775.25,
+      "organic_revenue": 9652.2,
+      "conversion_rate": 3.68,
+      "traffic": {
+        "visits": 336,
+        "bounce_rate": 0.48,
+        "avg_session": 186
+      }
+    },
+    {
+      "date": "2025-12-04",
+      "orders": 13,
+      "revenue": 17803.0,
+      "avg_order_value": 1369.46,
+      "ai_revenue": 11963.62,
+      "organic_revenue": 5839.38,
+      "conversion_rate": 3.62,
+      "traffic": {
+        "visits": 338,
+        "bounce_rate": 0.62,
+        "avg_session": 332
+      }
+    },
+    {
+      "date": "2025-12-05",
+      "orders": 13,
+      "revenue": 37782.47,
+      "avg_order_value": 2906.34,
+      "ai_revenue": 25389.82,
+      "organic_revenue": 12392.65,
+      "conversion_rate": 4.03,
+      "traffic": {
+        "visits": 429,
+        "bounce_rate": 0.47,
+        "avg_session": 377
+      }
+    },
+    {
+      "date": "2025-12-06",
+      "orders": 9,
+      "revenue": 15952.06,
+      "avg_order_value": 1772.45,
+      "ai_revenue": 10719.79,
+      "organic_revenue": 5232.28,
+      "conversion_rate": 5.86,
+      "traffic": {
+        "visits": 216,
+        "bounce_rate": 0.37,
+        "avg_session": 420
+      }
+    },
+    {
+      "date": "2025-12-07",
+      "orders": 20,
+      "revenue": 31244.44,
+      "avg_order_value": 1562.22,
+      "ai_revenue": 20996.26,
+      "organic_revenue": 10248.17,
+      "conversion_rate": 5.12,
+      "traffic": {
+        "visits": 500,
+        "bounce_rate": 0.5,
+        "avg_session": 389
+      }
+    },
+    {
+      "date": "2025-12-08",
+      "orders": 8,
+      "revenue": 15046.38,
+      "avg_order_value": 1880.8,
+      "ai_revenue": 10111.17,
+      "organic_revenue": 4935.21,
+      "conversion_rate": 5.07,
+      "traffic": {
+        "visits": 152,
+        "bounce_rate": 0.38,
+        "avg_session": 186
+      }
+    },
+    {
+      "date": "2025-12-09",
+      "orders": 2,
+      "revenue": 3721.44,
+      "avg_order_value": 1860.72,
+      "ai_revenue": 2500.81,
+      "organic_revenue": 1220.63,
+      "conversion_rate": 3.78,
+      "traffic": {
+        "visits": 50,
+        "bounce_rate": 0.53,
+        "avg_session": 413
+      }
+    },
+    {
+      "date": "2025-12-10",
+      "orders": 2,
+      "revenue": 2399.28,
+      "avg_order_value": 1199.64,
+      "ai_revenue": 1612.31,
+      "organic_revenue": 786.96,
+      "conversion_rate": 4.08,
+      "traffic": {
+        "visits": 64,
+        "bounce_rate": 0.59,
+        "avg_session": 312
+      }
+    },
+    {
+      "date": "2025-12-11",
+      "orders": 14,
+      "revenue": 34838.68,
+      "avg_order_value": 2488.48,
+      "ai_revenue": 23411.59,
+      "organic_revenue": 11427.09,
+      "conversion_rate": 5.86,
+      "traffic": {
+        "visits": 420,
+        "bounce_rate": 0.56,
+        "avg_session": 348
+      }
+    },
+    {
+      "date": "2025-12-12",
+      "orders": 5,
+      "revenue": 4273.22,
+      "avg_order_value": 854.64,
+      "ai_revenue": 2871.6,
+      "organic_revenue": 1401.61,
+      "conversion_rate": 3.67,
+      "traffic": {
+        "visits": 75,
+        "bounce_rate": 0.58,
+        "avg_session": 371
+      }
+    },
+    {
+      "date": "2025-12-13",
+      "orders": 20,
+      "revenue": 21954.1,
+      "avg_order_value": 1097.71,
+      "ai_revenue": 14753.16,
+      "organic_revenue": 7200.95,
+      "conversion_rate": 3.55,
+      "traffic": {
+        "visits": 540,
+        "bounce_rate": 0.55,
+        "avg_session": 228
+      }
+    },
+    {
+      "date": "2025-12-14",
+      "orders": 10,
+      "revenue": 23354.68,
+      "avg_order_value": 2335.47,
+      "ai_revenue": 15694.34,
+      "organic_revenue": 7660.33,
+      "conversion_rate": 4.86,
+      "traffic": {
+        "visits": 250,
+        "bounce_rate": 0.54,
+        "avg_session": 251
+      }
+    },
+    {
+      "date": "2025-12-15",
+      "orders": 6,
+      "revenue": 4570.73,
+      "avg_order_value": 761.79,
+      "ai_revenue": 3071.53,
+      "organic_revenue": 1499.2,
+      "conversion_rate": 5.0,
+      "traffic": {
+        "visits": 102,
+        "bounce_rate": 0.58,
+        "avg_session": 304
+      }
+    },
+    {
+      "date": "2025-12-16",
+      "orders": 8,
+      "revenue": 24941.71,
+      "avg_order_value": 3117.71,
+      "ai_revenue": 16760.83,
+      "organic_revenue": 8180.88,
+      "conversion_rate": 4.13,
+      "traffic": {
+        "visits": 232,
+        "bounce_rate": 0.64,
+        "avg_session": 431
+      }
+    },
+    {
+      "date": "2025-12-17",
+      "orders": 15,
+      "revenue": 24970.49,
+      "avg_order_value": 1664.7,
+      "ai_revenue": 16780.17,
+      "organic_revenue": 8190.32,
+      "conversion_rate": 5.57,
+      "traffic": {
+        "visits": 435,
+        "bounce_rate": 0.55,
+        "avg_session": 328
+      }
+    },
+    {
+      "date": "2025-12-18",
+      "orders": 14,
+      "revenue": 37488.07,
+      "avg_order_value": 2677.72,
+      "ai_revenue": 25191.99,
+      "organic_revenue": 12296.09,
+      "conversion_rate": 5.92,
+      "traffic": {
+        "visits": 308,
+        "bounce_rate": 0.45,
+        "avg_session": 232
+      }
+    },
+    {
+      "date": "2025-12-19",
+      "orders": 15,
+      "revenue": 20307.06,
+      "avg_order_value": 1353.8,
+      "ai_revenue": 13646.34,
+      "organic_revenue": 6660.71,
+      "conversion_rate": 5.77,
+      "traffic": {
+        "visits": 510,
+        "bounce_rate": 0.36,
+        "avg_session": 430
+      }
+    },
+    {
+      "date": "2025-12-20",
+      "orders": 12,
+      "revenue": 29813.03,
+      "avg_order_value": 2484.42,
+      "ai_revenue": 20034.36,
+      "organic_revenue": 9778.68,
+      "conversion_rate": 6.03,
+      "traffic": {
+        "visits": 312,
+        "bounce_rate": 0.57,
+        "avg_session": 220
+      }
+    },
+    {
+      "date": "2025-12-21",
+      "orders": 21,
+      "revenue": 45081.8,
+      "avg_order_value": 2146.75,
+      "ai_revenue": 30294.97,
+      "organic_revenue": 14786.83,
+      "conversion_rate": 3.63,
+      "traffic": {
+        "visits": 630,
+        "bounce_rate": 0.57,
+        "avg_session": 439
+      }
+    },
+    {
+      "date": "2025-12-22",
+      "orders": 10,
+      "revenue": 30512.41,
+      "avg_order_value": 3051.24,
+      "ai_revenue": 20504.34,
+      "organic_revenue": 10008.07,
+      "conversion_rate": 6.04,
+      "traffic": {
+        "visits": 150,
+        "bounce_rate": 0.41,
+        "avg_session": 317
+      }
+    },
+    {
+      "date": "2025-12-23",
+      "orders": 2,
+      "revenue": 3224.91,
+      "avg_order_value": 1612.45,
+      "ai_revenue": 2167.14,
+      "organic_revenue": 1057.77,
+      "conversion_rate": 6.1,
+      "traffic": {
+        "visits": 56,
+        "bounce_rate": 0.5,
+        "avg_session": 190
+      }
+    },
+    {
+      "date": "2025-12-24",
+      "orders": 5,
+      "revenue": 13876.61,
+      "avg_order_value": 2775.32,
+      "ai_revenue": 9325.08,
+      "organic_revenue": 4551.53,
+      "conversion_rate": 5.51,
+      "traffic": {
+        "visits": 160,
+        "bounce_rate": 0.45,
+        "avg_session": 180
+      }
+    },
+    {
+      "date": "2025-12-25",
+      "orders": 6,
+      "revenue": 16098.23,
+      "avg_order_value": 2683.04,
+      "ai_revenue": 10818.01,
+      "organic_revenue": 5280.22,
+      "conversion_rate": 6.13,
+      "traffic": {
+        "visits": 114,
+        "bounce_rate": 0.45,
+        "avg_session": 208
+      }
+    },
+    {
+      "date": "2025-12-26",
+      "orders": 16,
+      "revenue": 13926.01,
+      "avg_order_value": 870.38,
+      "ai_revenue": 9358.28,
+      "organic_revenue": 4567.73,
+      "conversion_rate": 4.42,
+      "traffic": {
+        "visits": 320,
+        "bounce_rate": 0.41,
+        "avg_session": 435
+      }
+    },
+    {
+      "date": "2025-12-27",
+      "orders": 19,
+      "revenue": 49711.16,
+      "avg_order_value": 2616.38,
+      "ai_revenue": 33405.9,
+      "organic_revenue": 16305.26,
+      "conversion_rate": 4.46,
+      "traffic": {
+        "visits": 494,
+        "bounce_rate": 0.42,
+        "avg_session": 446
+      }
+    },
+    {
+      "date": "2025-12-28",
+      "orders": 18,
+      "revenue": 17338.92,
+      "avg_order_value": 963.27,
+      "ai_revenue": 11651.76,
+      "organic_revenue": 5687.17,
+      "conversion_rate": 5.43,
+      "traffic": {
+        "visits": 432,
+        "bounce_rate": 0.5,
+        "avg_session": 362
+      }
+    },
+    {
+      "date": "2025-12-29",
+      "orders": 9,
+      "revenue": 14232.22,
+      "avg_order_value": 1581.36,
+      "ai_revenue": 9564.05,
+      "organic_revenue": 4668.17,
+      "conversion_rate": 4.92,
+      "traffic": {
+        "visits": 207,
+        "bounce_rate": 0.38,
+        "avg_session": 294
+      }
+    },
+    {
+      "date": "2025-12-30",
+      "orders": 16,
+      "revenue": 28429.53,
+      "avg_order_value": 1776.85,
+      "ai_revenue": 19104.65,
+      "organic_revenue": 9324.89,
+      "conversion_rate": 5.34,
+      "traffic": {
+        "visits": 288,
+        "bounce_rate": 0.54,
+        "avg_session": 264
+      }
+    },
+    {
+      "date": "2025-12-31",
+      "orders": 9,
+      "revenue": 26190.34,
+      "avg_order_value": 2910.04,
+      "ai_revenue": 17599.91,
+      "organic_revenue": 8590.43,
+      "conversion_rate": 5.87,
+      "traffic": {
+        "visits": 162,
+        "bounce_rate": 0.5,
+        "avg_session": 372
+      }
+    },
+    {
+      "date": "2026-01-01",
+      "orders": 5,
+      "revenue": 10968.6,
+      "avg_order_value": 2193.72,
+      "ai_revenue": 7370.9,
+      "organic_revenue": 3597.7,
+      "conversion_rate": 5.0,
+      "traffic": {
+        "visits": 135,
+        "bounce_rate": 0.62,
+        "avg_session": 245
+      }
+    },
+    {
+      "date": "2026-01-02",
+      "orders": 4,
+      "revenue": 7237.94,
+      "avg_order_value": 1809.48,
+      "ai_revenue": 4863.89,
+      "organic_revenue": 2374.04,
+      "conversion_rate": 5.6,
+      "traffic": {
+        "visits": 60,
+        "bounce_rate": 0.53,
+        "avg_session": 233
+      }
+    },
+    {
+      "date": "2026-01-03",
+      "orders": 10,
+      "revenue": 20299.1,
+      "avg_order_value": 2029.91,
+      "ai_revenue": 13641.0,
+      "organic_revenue": 6658.11,
+      "conversion_rate": 5.33,
+      "traffic": {
+        "visits": 230,
+        "bounce_rate": 0.58,
+        "avg_session": 387
+      }
+    },
+    {
+      "date": "2026-01-04",
+      "orders": 6,
+      "revenue": 16898.07,
+      "avg_order_value": 2816.34,
+      "ai_revenue": 11355.5,
+      "organic_revenue": 5542.57,
+      "conversion_rate": 5.45,
+      "traffic": {
+        "visits": 186,
+        "bounce_rate": 0.41,
+        "avg_session": 302
+      }
+    },
+    {
+      "date": "2026-01-05",
+      "orders": 9,
+      "revenue": 12020.0,
+      "avg_order_value": 1335.56,
+      "ai_revenue": 8077.44,
+      "organic_revenue": 3942.56,
+      "conversion_rate": 5.18,
+      "traffic": {
+        "visits": 270,
+        "bounce_rate": 0.61,
+        "avg_session": 190
+      }
+    },
+    {
+      "date": "2026-01-06",
+      "orders": 8,
+      "revenue": 20834.86,
+      "avg_order_value": 2604.36,
+      "ai_revenue": 14001.03,
+      "organic_revenue": 6833.83,
+      "conversion_rate": 4.66,
+      "traffic": {
+        "visits": 152,
+        "bounce_rate": 0.46,
+        "avg_session": 350
+      }
+    },
+    {
+      "date": "2026-01-07",
+      "orders": 3,
+      "revenue": 7517.79,
+      "avg_order_value": 2505.93,
+      "ai_revenue": 5051.95,
+      "organic_revenue": 2465.84,
+      "conversion_rate": 4.23,
+      "traffic": {
+        "visits": 96,
+        "bounce_rate": 0.54,
+        "avg_session": 308
+      }
+    },
+    {
+      "date": "2026-01-08",
+      "orders": 16,
+      "revenue": 13302.1,
+      "avg_order_value": 831.38,
+      "ai_revenue": 8939.01,
+      "organic_revenue": 4363.09,
+      "conversion_rate": 5.65,
+      "traffic": {
+        "visits": 528,
+        "bounce_rate": 0.36,
+        "avg_session": 437
+      }
+    },
+    {
+      "date": "2026-01-09",
+      "orders": 12,
+      "revenue": 31918.48,
+      "avg_order_value": 2659.87,
+      "ai_revenue": 21449.22,
+      "organic_revenue": 10469.26,
+      "conversion_rate": 5.6,
+      "traffic": {
+        "visits": 252,
+        "bounce_rate": 0.35,
+        "avg_session": 277
+      }
+    },
+    {
+      "date": "2026-01-10",
+      "orders": 17,
+      "revenue": 49142.05,
+      "avg_order_value": 2890.71,
+      "ai_revenue": 33023.46,
+      "organic_revenue": 16118.59,
+      "conversion_rate": 5.21,
+      "traffic": {
+        "visits": 459,
+        "bounce_rate": 0.64,
+        "avg_session": 256
+      }
+    },
+    {
+      "date": "2026-01-11",
+      "orders": 2,
+      "revenue": 2194.06,
+      "avg_order_value": 1097.03,
+      "ai_revenue": 1474.41,
+      "organic_revenue": 719.65,
+      "conversion_rate": 4.83,
+      "traffic": {
+        "visits": 70,
+        "bounce_rate": 0.43,
+        "avg_session": 390
+      }
+    },
+    {
+      "date": "2026-01-12",
+      "orders": 3,
+      "revenue": 4751.21,
+      "avg_order_value": 1583.74,
+      "ai_revenue": 3192.82,
+      "organic_revenue": 1558.4,
+      "conversion_rate": 5.35,
+      "traffic": {
+        "visits": 84,
+        "bounce_rate": 0.41,
+        "avg_session": 275
+      }
+    },
+    {
+      "date": "2026-01-13",
+      "orders": 12,
+      "revenue": 22661.25,
+      "avg_order_value": 1888.44,
+      "ai_revenue": 15228.36,
+      "organic_revenue": 7432.89,
+      "conversion_rate": 3.57,
+      "traffic": {
+        "visits": 276,
+        "bounce_rate": 0.55,
+        "avg_session": 263
+      }
+    }
+  ]
+}

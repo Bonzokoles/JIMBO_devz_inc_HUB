@@ -89,8 +89,8 @@ class ShopSyncService:
             try:
                 # Test połączenia z IdoSell
                 connection_test = await self.idosell_client.test_connection()
-                if not connection_test["connected"]:
-                    raise Exception(f"IdoSell connection failed: {connection_test['error']}")
+                if not connection_test.get("success", False):
+                    raise Exception(f"IdoSell connection failed: {connection_test.get('error', 'Unknown error')}")
                 
                 # 1. Synchronizacja zamówień
                 orders_result = await self._sync_orders(session, shop_sync)
@@ -304,9 +304,10 @@ class ShopSyncService:
     
     async def _update_shop_sync_status(self, session: AsyncSession, shop_sync: ShopSyncStatus, results: Dict):
         """Aktualizacja statusu synchronizacji"""
+        shop_sync_id = shop_sync.id
         await session.execute(
             update(ShopSyncStatus).where(
-                ShopSyncStatus.id == shop_sync.id
+                ShopSyncStatus.id == shop_sync_id
             ).values(
                 last_sync_at=datetime.now(),
                 status=ShopStatus.active,
@@ -316,9 +317,10 @@ class ShopSyncService:
     
     async def _update_shop_sync_error(self, session: AsyncSession, shop_sync: ShopSyncStatus, error: str):
         """Aktualizacja błędu synchronizacji"""
+        shop_sync_id = shop_sync.id
         await session.execute(
             update(ShopSyncStatus).where(
-                ShopSyncStatus.id == shop_sync.id
+                ShopSyncStatus.id == shop_sync_id
             ).values(
                 status=ShopStatus.error,
                 last_error=error

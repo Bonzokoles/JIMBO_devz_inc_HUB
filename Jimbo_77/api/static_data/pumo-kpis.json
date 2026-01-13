@@ -1,0 +1,61 @@
+{
+  "success": true,
+  "timestamp": "2026-01-13T09:13:32.577488",
+  "shop_name": "Meble Pumo",
+  "shop_url": "https://meblepumo.iai-shop.com",
+  "period": "6_months",
+  "kpis": {
+    "today": {
+      "orders": 12,
+      "revenue": 22661.25,
+      "avg_order_value": 1888.44
+    },
+    "last_30_days": {
+      "orders": 318,
+      "revenue": 643813.43,
+      "avg_order_value": 2024.57,
+      "growth_rate": 9.6
+    },
+    "last_6_months": {
+      "orders": 1907,
+      "revenue": 3291597.61,
+      "avg_order_value": 1726.06,
+      "products_sold": 4386,
+      "new_customers": 1296
+    }
+  },
+  "ai_impact": {
+    "total_ai_revenue": 2211953.59,
+    "ai_percentage": 67.2,
+    "organic_revenue": 1079644.01,
+    "organic_percentage": 32.8,
+    "roi_improvement": "+340%"
+  },
+  "top_categories": [
+    {
+      "name": "Materace",
+      "revenue": 921647.33,
+      "orders": 476
+    },
+    {
+      "name": "Szafy",
+      "revenue": 724151.47,
+      "orders": 343
+    },
+    {
+      "name": "Fotele",
+      "revenue": 625403.55,
+      "orders": 419
+    },
+    {
+      "name": "Łóżka",
+      "revenue": 559571.59,
+      "orders": 286
+    },
+    {
+      "name": "Stoły",
+      "revenue": 460823.66,
+      "orders": 381
+    }
+  ]
+}
