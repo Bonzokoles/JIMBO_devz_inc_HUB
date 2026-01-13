@@ -101,10 +101,10 @@ export function UnifiedOpsView() {
                 className="btn" 
                 style={{ marginTop: 12, width: "100%", justifyContent: "center" }}
                 onClick={() => {
-                  // Smart URL: localhost in dev, production in prod
+                  // Smart URL: localhost in dev, main hub in prod (PUMO not deployed yet)
                   const pumoUrl = window.location.hostname === 'localhost' 
                     ? 'http://localhost:3002' 
-                    : 'https://pumo.jimbo77.com';
+                    : 'https://jimbo77.com'; // Will change to pumo.jimbo77.com when deployed
                   window.open(pumoUrl, '_blank');
                 }}
               >
