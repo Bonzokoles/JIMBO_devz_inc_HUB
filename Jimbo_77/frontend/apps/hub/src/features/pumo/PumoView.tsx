@@ -201,7 +201,7 @@ export const PumoView = ({ onBack }: PumoViewProps) => {
     <div className="container" style={{ padding: '0 20px 40px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
-          <button onClick={onBack} className="btn" style={{ padding: '8px 16px' }}>← BACK</button>
+          <button type="button" onClick={onBack} className="btn" style={{ padding: '8px 16px' }}>← BACK</button>
           <h1 className="header" style={{ margin: 0 }}>🧪 PUMO Diagnosis Hub</h1>
         </div>
         {loading && <div style={{ color: 'var(--cold)', fontSize: 12 }}>⟳ Refreshing...</div>}

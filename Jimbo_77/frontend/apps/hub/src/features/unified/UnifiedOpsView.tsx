@@ -103,9 +103,14 @@ export function UnifiedOpsView({ onOpenPumo }: UnifiedOpsViewProps) {
                 Revenue tracking, traffic analysis, and conversion metrics
               </p>
               <button 
+                type="button"
                 className="btn" 
                 style={{ marginTop: 12, width: "100%", justifyContent: "center" }}
-                onClick={onOpenPumo}
+                onClick={(e) => {
+                   e.preventDefault();
+                   console.log("Opening PUMO...");
+                   if (onOpenPumo) onOpenPumo();
+                }}
               >
                 OPEN DASHBOARD →
               </button>
