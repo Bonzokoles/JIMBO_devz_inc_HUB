@@ -1,17 +1,18 @@
 from typing import List, Dict
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, update
-from datetime import datetime
+from sqlalchemy import select, update, func
+from datetime import datetime, timezone
 import uuid
+import os
 
-from ..models import ShopSyncStatus, ShopProduct, ShopAnalytics, ShopStatus
+from ..models import ShopSyncStatus, ShopProduct, ShopStatus
 from .idosell_parser import IdoSellFeedParser, ProductData
 
 class MeblePumoSyncService:
     """Service do synchronizacji MeblePumo.pl z bazą danych"""
     
     SHOP_NAME = "Meble Pumo"
-    FEED_URL = "https://www.meblepumo.pl/pl/products/*.feed10009"  # Może wymagać dostosowania
+    FEED_URL = os.getenv("MEBLE_PUMO_FEED_URL", "https://www.meblepumo.pl/pl/products/all.xml")  # URL z env lub domyślny
     
     def __init__(self, db: AsyncSession):
         self.db = db
@@ -85,7 +86,7 @@ class MeblePumoSyncService:
                     created += 1
             
             # Update shop sync status
-            shop_sync.last_sync_at = datetime.utcnow()
+            shop_sync.last_sync_at = datetime.now(timezone.utc)
             shop_sync.status = ShopStatus.active
             shop_sync.last_error = None
             
@@ -96,7 +97,7 @@ class MeblePumoSyncService:
                 "products_created": created,
                 "products_updated": updated,
                 "total_products": len(products_data),
-                "synced_at": datetime.utcnow().isoformat()
+                "synced_at": datetime.now(timezone.utc).isoformat()
             }
             
         except Exception as e:
@@ -105,23 +106,37 @@ class MeblePumoSyncService:
             shop_sync.status = ShopStatus.error
             await self.db.commit()
             
-            raise Exception(f"Sync failed: {str(e)}")
+            raise ValueError(f"Sync failed: {str(e)}")
     
     async def get_analytics_summary(self) -> Dict:
         """Zwraca podsumowanie analytics dla MeblePumo"""
         shop_sync = await self.get_or_create_shop_sync()
         
-        # Count products
-        result = await self.db.execute(
-            select(ShopProduct).where(ShopProduct.shop_sync_id == shop_sync.id)
+        # Count products using SQL
+        total_products_result = await self.db.execute(
+            select(func.count(ShopProduct.id)).where(
+                ShopProduct.shop_sync_id == shop_sync.id
+            )
         )
-        products = result.scalars().all()
+        total_products = total_products_result.scalar() or 0
         
-        total_products = len(products)
-        active_products = len([p for p in products if p.is_active])
+        # Count active products using SQL
+        active_products_result = await self.db.execute(
+            select(func.count(ShopProduct.id)).where(
+                ShopProduct.shop_sync_id == shop_sync.id,
+                ShopProduct.is_active == True
+            )
+        )
+        active_products = active_products_result.scalar() or 0
         
-        # Get categories
-        categories = list(set([p.category_name for p in products if p.category_name]))
+        # Get unique categories
+        categories_result = await self.db.execute(
+            select(ShopProduct.category_name).where(
+                ShopProduct.shop_sync_id == shop_sync.id,
+                ShopProduct.category_name.isnot(None)
+            ).distinct()
+        )
+        categories = [row[0] for row in categories_result.fetchall()]
         
         return {
             "shop_name": shop_sync.shop_name,

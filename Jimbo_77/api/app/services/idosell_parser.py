@@ -1,9 +1,12 @@
 from typing import List, Dict, Optional
 from decimal import Decimal
 from datetime import datetime
-import xml.etree.ElementTree as ET
+import logging
+from lxml import etree
 import aiohttp
 from pydantic import BaseModel
+
+logger = logging.getLogger(__name__)
 
 class ProductData(BaseModel):
     """Model danych produktu z IdoSell"""
@@ -38,7 +41,7 @@ class IdoSellFeedParser:
     def parse_xml_feed(self, xml_content: str) -> List[ProductData]:
         """Parsuje XML i zwraca listę produktów"""
         products = []
-        root = ET.fromstring(xml_content)
+        root = etree.fromstring(xml_content.encode('utf-8'))
         
         # Parsuj każdy <product> element
         for product_elem in root.findall('.//product'):
@@ -47,12 +50,12 @@ class IdoSellFeedParser:
                 products.append(product_data)
             except Exception as e:
                 # Log błędów parsowania ale kontynuuj
-                print(f"Error parsing product {product_elem.get('id')}: {e}")
+                logger.warning(f"Error parsing product {product_elem.get('id')}: {e}")
                 continue
         
         return products
     
-    def _extract_product_data(self, product_elem: ET.Element) -> ProductData:
+    def _extract_product_data(self, product_elem) -> ProductData:
         """Ekstraktuje dane z pojedynczego <product> elementu"""
         product_id = product_elem.get('id')
         currency = product_elem.get('currency', 'PLN')
