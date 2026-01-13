@@ -5,6 +5,8 @@
 
 import { requireDashboardAccess } from '../auth/auth';
 import { handleAnalyticsAPI } from '../endpoints/analytics';
+import { handleAIAPI } from '../endpoints/ai';
+import { handleAgentsAPI } from '../endpoints/agents';
 
 export async function handleRequest(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
@@ -35,6 +37,16 @@ export async function handleRequest(request: Request, env: Env, ctx: ExecutionCo
         // Analytics API routes
         if (path.startsWith('/api/analytics/')) {
             return await handleAnalyticsAPI(request, env, ctx);
+        }
+
+        // AI API routes
+        if (path.startsWith('/api/ai/')) {
+            return await handleAIAPI(request, env, ctx);
+        }
+
+        // Agents API routes
+        if (path.startsWith('/api/agents/')) {
+            return await handleAgentsAPI(request, env, ctx);
         }
 
         // Dashboard routes (require auth)
@@ -68,6 +80,8 @@ export async function handleRequest(request: Request, env: Env, ctx: ExecutionCo
                 endpoints: {
                     health: '/health',
                     analytics: '/api/analytics/*',
+                    ai: '/api/ai/*',
+                    agents: '/api/agents/*',
                     products: '/api/products/*',
                     dashboard: '/pumo-diagnosis-hub/'
                 },
