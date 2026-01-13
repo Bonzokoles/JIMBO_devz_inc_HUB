@@ -27,10 +27,16 @@ export async function handleAnalyticsAPI(request: Request, env: Env, ctx: Execut
                 }
                 break;
 
+            case 'track':
+                if (request.method === 'POST') {
+                    return await handleTrackEvent(request, env);
+                }
+                break;
+
             default:
                 return Response.json({
                     error: 'Analytics endpoint not found',
-                    available: ['kpis', 'revenue-trend', 'category-stats', 'recent-events', 'populate-sample']
+                    available: ['kpis', 'revenue-trend', 'category-stats', 'recent-events', 'populate-sample', 'track']
                 }, { status: 404 });
         }
 
@@ -38,6 +44,32 @@ export async function handleAnalyticsAPI(request: Request, env: Env, ctx: Execut
     } catch (error) {
         console.error('Analytics API error:', error);
         return Response.json({ error: String(error) }, { status: 500 });
+    }
+}
+
+// Track event handler
+async function handleTrackEvent(request: Request, env: Env): Promise<Response> {
+    try {
+        const eventData = await request.json() as any;
+
+        if (!eventData.name) {
+            return Response.json({ success: false, error: 'Event name required' }, { status: 400 });
+        }
+
+        const { GA4Analytics } = await import('../services/ga4-analytics');
+        const analytics = new GA4Analytics(env);
+
+        const clientId = request.headers.get('x-client-id') || eventData.client_id || 'anonymous';
+
+        await analytics.trackEvent({
+            name: eventData.name,
+            params: eventData.params || {}
+        }, clientId);
+
+        return Response.json({ success: true, message: 'Event tracked' });
+    } catch (error: any) {
+        console.error('Track event error:', error);
+        return Response.json({ success: false, error: String(error) }, { status: 500 });
     }
 }
 
