@@ -49,12 +49,48 @@ class PumoAPI {
     this.baseUrl = baseUrl;
   }
 
+  private mapWorkerKpisToDashboard(payload: any): KPIResponse {
+    const totalRevenue = Number(payload?.totalRevenue ?? 0);
+    const totalOrders = Number(payload?.totalOrders ?? 0);
+    const conversionRate = Number(payload?.conversionRate ?? 0);
+    const growthRate = Number(payload?.growthRate ?? 0);
+
+    const estimatedClicks = conversionRate > 0
+      ? Math.round(totalOrders / (conversionRate / 100))
+      : totalOrders;
+
+    return {
+      totalRevenue,
+      revenueChange: growthRate,
+      aiShare: Number(payload?.aiShare ?? 0),
+      conversionRate,
+      totalClicks: estimatedClicks,
+      ragHitrate: Number(payload?.ragHitrate ?? 0),
+      apiUptime: Number(payload?.apiUptime ?? 0),
+    };
+  }
+
+  private mapWorkerRevenueTrendToDashboard(payload: any): RevenueTrendResponse {
+    const rows: any[] = Array.isArray(payload?.data) ? payload.data : [];
+    return rows.map((row) => {
+      const month = String(row?.month ?? '');
+      const revenue = Number(row?.revenue ?? 0);
+
+      return {
+        date: month ? `${month}-01` : '',
+        totalRevenue: revenue,
+        aiRevenue: 0,
+      };
+    });
+  }
+
   // Fetch KPIs - from production PUMO worker with real Meble Pumo data
   async getKPIs(): Promise<KPIResponse> {
     try {
       const response = await fetch(`${this.baseUrl}/api/analytics/kpis`);
       if (!response.ok) throw new Error('Failed to fetch KPIs');
-      return await response.json();
+      const payload = await response.json();
+      return this.mapWorkerKpisToDashboard(payload);
     } catch (error) {
       console.error('KPIs API error:', error);
       // Fallback to legacy API
@@ -84,7 +120,8 @@ class PumoAPI {
     try {
       const response = await fetch(`${this.baseUrl}/api/analytics/revenue-trend?days=${days}`);
       if (!response.ok) throw new Error('Failed to fetch revenue trend');
-      return await response.json();
+      const payload = await response.json();
+      return this.mapWorkerRevenueTrendToDashboard(payload);
     } catch (error) {
       console.error('Revenue trend API error:', error);
       // Fallback to legacy API
@@ -112,7 +149,7 @@ class PumoAPI {
   // Fetch Traffic Sources
   async getTrafficSources(): Promise<TrafficSourcesResponse> {
     try {
-      const response = await fetch(`${this.baseUrl}/analytics/traffic-sources`);
+      const response = await fetch(`${this.baseUrl}/api/analytics/traffic-sources`);
       if (!response.ok) throw new Error('Failed to fetch traffic sources');
       return await response.json();
     } catch (error) {
