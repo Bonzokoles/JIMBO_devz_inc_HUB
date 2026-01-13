@@ -40,7 +40,7 @@ bucket_name = "pumo-raw-data"
 # Environment variables
 [vars]
 ALLOWED_ORIGINS = "https://www.mybonzoaiblog.com,http://localhost:4656"
-PUMO_API_BASE_URL = "https://api.wedosell.pl/v1"
+PUMO_API_BASE_URL = "https://meblepumo.pl/api/admin/v3"
 DASHBOARD_API_BASE = ""
 GA4_PROPERTY_ID = ""
 CF_ACCESS_AUD = ""

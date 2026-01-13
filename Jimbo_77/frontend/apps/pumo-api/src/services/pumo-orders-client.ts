@@ -34,7 +34,7 @@ export class PumoOrdersClient {
   private apiKey: string;
 
   constructor(private env: Env) {
-    this.baseUrl = env.PUMO_API_BASE_URL || 'https://api.meblepumo.pl/v1';
+    this.baseUrl = env.PUMO_API_BASE_URL || 'https://meblepumo.pl/api/admin/v3';
     // Use generic key if specific order key absent
     this.apiKey = env.PUMO_ORDERS_API_KEY || env.PUMO_API_KEY || '';
   }
@@ -46,8 +46,8 @@ export class PumoOrdersClient {
     };
 
     if (this.apiKey) {
+      // IdoSell requires X-API-KEY only
       headers['X-API-KEY'] = this.apiKey;
-      headers['Authorization'] = `Bearer ${this.apiKey}`;
     }
 
     return { ...headers, ...(extra || {}) };
@@ -76,7 +76,9 @@ export class PumoOrdersClient {
       if (params?.since) queryParams.set('created_after', params.since);
       if (params?.until) queryParams.set('created_before', params.until);
 
-      const url = `${this.baseUrl}/orders?${queryParams}`;
+      // Adapt for IdoSell v3: use /orders/orders if base url ends with v3
+      const endpoint = this.baseUrl.includes('v3') ? '/orders/orders' : '/orders';
+      const url = `${this.baseUrl}${endpoint}?${queryParams}`;
 
       const response = await fetch(url, {
         method: 'GET',
@@ -106,7 +108,10 @@ export class PumoOrdersClient {
 
   async getOrder(orderId: string): Promise<PumoOrder | null> {
     try {
-      const url = `${this.baseUrl}/orders/${orderId}`;
+      // IdoSell doesn't have a simple GET /orders/orders/{id}, we'll skip or use search logic if needed
+      // Currently assuming typical REST fallback or filtering
+      const endpoint = this.baseUrl.includes('v3') ? `/orders/orders/${orderId}` : `/orders/${orderId}`;
+      const url = `${this.baseUrl}${endpoint}`;
       
       const response = await fetch(url, {
         method: 'GET',

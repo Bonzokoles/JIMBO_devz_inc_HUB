@@ -19,7 +19,7 @@ export class PumoAPIClient {
   
   constructor(private env: Env) {
     this.config = {
-      baseUrl: env.PUMO_API_BASE_URL || 'https://api.meblepumo.pl/v1',
+      baseUrl: env.PUMO_API_BASE_URL || 'https://meblepumo.pl/api/admin/v3',
       apiKey: env.PUMO_API_KEY || '',
       timeout: 30000
     };
@@ -32,8 +32,8 @@ export class PumoAPIClient {
     };
 
     if (this.config.apiKey) {
+      // IdoSell X-API-KEY only
       headers['X-API-KEY'] = this.config.apiKey;
-      headers['Authorization'] = `Bearer ${this.config.apiKey}`;
     }
 
     return { ...headers, ...(extra || {}) };
@@ -79,7 +79,10 @@ export class PumoAPIClient {
   }
 
   private async fetchProductsPage(page: number, perPage: number): Promise<PumoAPIResponse> {
-    const url = `${this.config.baseUrl}/products?page=${page}&per_page=${perPage}`;
+    
+    // Adapt for IdoSell v3: use /products/products if base url ends with v3
+    const endpoint = this.config.baseUrl.includes('v3') ? '/products/products' : '/products';
+    const url = `${this.config.baseUrl}${endpoint}?page=${page}&per_page=${perPage}`;
     
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), this.config.timeout);
@@ -123,7 +126,9 @@ export class PumoAPIClient {
     console.log(`📡 Fetching product: ${productId}`);
     
     try {
-      const url = `${this.config.baseUrl}/products/${productId}`;
+      // IdoSell v3 endpoint logic
+      const endpoint = this.config.baseUrl.includes('v3') ? `/products/products/${productId}` : `/products/${productId}`;
+      const url = `${this.config.baseUrl}${endpoint}`;
       
       const response = await fetch(url, {
         method: 'GET',
@@ -205,7 +210,8 @@ export class PumoAPIClient {
     }
     
     try {
-      const url = `${this.config.baseUrl}/products?page=1&per_page=1`;
+      const endpoint = this.config.baseUrl.includes('v3') ? '/products/products' : '/products';
+      const url = `${this.config.baseUrl}${endpoint}?page=1&per_page=1`;
       
       const response = await fetch(url, {
         method: 'GET',
