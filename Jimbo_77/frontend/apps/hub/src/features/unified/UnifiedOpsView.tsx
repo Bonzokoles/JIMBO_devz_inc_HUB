@@ -1,9 +1,4 @@
-type Props = {
-  onOpenPumo: () => void;
-  onOpenControlCenter: () => void;
-};
-
-export function UnifiedOpsView({ onOpenPumo, onOpenControlCenter }: Props) {
+export function UnifiedOpsView() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20, paddingBottom: 50 }}>
       {/* Header */}
@@ -72,10 +67,10 @@ export function UnifiedOpsView({ onOpenPumo, onOpenControlCenter }: Props) {
               </p>
               <button 
                 className="btn" 
-                style={{ marginTop: 12, width: "100%", justifyContent: "center" }}
-                onClick={onOpenControlCenter}
+                style={{ marginTop: 12, width: "100%", justifyContent: "center", opacity: 0.5, cursor: "not-allowed" }}
+                disabled
               >
-                OPEN DASHBOARD →
+                COMING SOON
               </button>
             </div>
           </div>
@@ -104,10 +99,10 @@ export function UnifiedOpsView({ onOpenPumo, onOpenControlCenter }: Props) {
               </p>
               <button 
                 className="btn" 
-                style={{ marginTop: 12, width: "100%", justifyContent: "center" }}
-                onClick={onOpenPumo}
+                style={{ marginTop: 12, width: "100%", justifyContent: "center", opacity: 0.5, cursor: "not-allowed" }}
+                disabled
               >
-                OPEN DASHBOARD →
+                COMING SOON
               </button>
             </div>
           </div>
