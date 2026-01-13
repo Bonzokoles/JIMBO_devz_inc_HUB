@@ -23,6 +23,20 @@ Real-time business intelligence dashboard for PUMO (Meble PUMO) with AI-powered 
 
 ## Development
 
+### Environment Setup
+
+1. Copy `.env.example` to `.env`:
+```bash
+cp .env.example .env
+```
+
+2. The `.env` file is already configured to use the deployed worker:
+```env
+VITE_API_BASE=https://jimbo-like-pumo-api.stolarnia-ams.workers.dev
+```
+
+### Run Development Server
+
 ```bash
 # Install dependencies
 pnpm install

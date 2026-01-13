@@ -1,5 +1,6 @@
-// API Base URL - will be configured via environment variables
-const API_BASE = import.meta.env.VITE_API_BASE || '/api';
+// API Base URL - points to existing Cloudflare Worker
+const API_BASE = import.meta.env.VITE_API_BASE || 
+  'https://jimbo-like-pumo-api.stolarnia-ams.workers.dev';
 
 // Types
 export type KPIResponse = {
