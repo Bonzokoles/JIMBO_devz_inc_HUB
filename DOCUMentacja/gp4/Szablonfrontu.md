@@ -74,32 +74,117 @@ Dla `apps/hub`:
 `packages/ui/src/styles/ops.css` – skrót (ty to potem dopieścisz):
 
 ```css
-:root{
-  --bg0:#05070a; --bg1:#070b12;
-  --fg:#d7e2ff; --muted:#93a4c7;
-  --line:#1b2a44;
-  --accent:#41ff9a; --accent2:#5aa7ff;
-  --danger:#ff3b57;
-  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+/* =========================
+   JIMBO UNIFIED OPS DASHBOARD
+   Sci-fi ultra-computer theme
+   Zero rounded corners
+   ========================= */
+
+:root {
+  --bg: #07090f;
+  --bg2: #05070c;
+  --panel: #0b0f1a;
+  --panel2: #090d17;
+  --text: #e7ecff;
+  --muted: #9aa6c7;
+  --faint: #6b7696;
+  --line: #1b2542;
+  --hot: #7cffb2;  /* neon green */
+  --cold: #6aa6ff; /* neon blue */
+  --warn: #ffd166; /* amber */
+  --bad: #ff4d6d;  /* red/pink */
+  --shadow: 0 0 0 1px rgba(231, 236, 255, .06), 0 18px 50px rgba(0, 0, 0, .55);
+
+  --maxw: 1800px;
+  --lh: 1.65;
+  --fs: 14px;
+  --fs-sm: 12px;
+  --fs-lg: 16px;
+  --fs-xl: 24px;
+
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", sans-serif;
+
+  --focus: 0 0 0 2px var(--cold), 0 0 0 4px rgba(106, 166, 255, .25);
 }
-html,body,#root{height:100%; margin:0; background:linear-gradient(180deg,var(--bg1),var(--bg0)); color:var(--fg); font-family:var(--mono);}
-*{box-sizing:border-box}
-a{color:inherit; text-decoration:none}
-.shell{min-height:100%; display:grid; grid-template-rows:auto 1fr auto;}
-.topbar{position:sticky; top:0; z-index:50; backdrop-filter:blur(8px); background:rgba(5,7,10,.72); border-bottom:1px solid var(--line);}
-.topbarInner{display:flex; justify-content:space-between; align-items:center; padding:10px 14px; gap:12px;}
-.pill{border:1px solid var(--line); padding:4px 8px; font-size:12px; color:var(--muted);}
-.pillOk{border-color:rgba(65,255,154,.35); color:var(--accent)}
-.pillBad{border-color:rgba(255,59,87,.35); color:var(--danger)}
-.main{display:grid; grid-template-columns:260px 1fr; min-height:0;}
-.sidebar{border-right:1px solid var(--line); padding:12px; background:rgba(0,0,0,.12); overflow:auto;}
-.content{padding:14px; overflow:auto;}
-.card{border:1px solid var(--line); background:rgba(8,12,18,.55); padding:12px;}
-.kpi{font-size:22px; color:var(--accent)}
-.btn{display:inline-flex; gap:8px; align-items:center; border:1px solid var(--line); padding:8px 10px; background:rgba(10,18,32,.35); cursor:pointer; font-family:var(--mono);}
-.btn:hover{border-color:rgba(65,255,154,.45)}
-.footer{border-top:1px solid var(--line); padding:10px 14px; color:var(--muted); font-size:12px;}
-.grid{display:grid; grid-template-columns:repeat(12,1fr); gap:12px;}
+
+* { box-sizing: border-box; border-radius: 0 !important; }
+html, body { height: 100%; margin: 0; overflow-x: hidden; }
+body {
+  font: var(--fs)/var(--lh) var(--sans);
+  background:
+    radial-gradient(1200px 800px at 15% 0%, rgba(124, 255, 178, .08), transparent 60%),
+    radial-gradient(1200px 800px at 90% 5%, rgba(106, 166, 255, .08), transparent 60%),
+    linear-gradient(180deg, var(--bg), var(--bg2) 70%);
+  color: var(--text);
+}
+a { color: inherit; text-decoration: none; }
+a:hover { color: var(--hot); }
+
+/* LAYOUT */
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  backdrop-filter: blur(10px);
+  background: linear-gradient(180deg, rgba(11, 15, 26, .92), rgba(7, 9, 15, .70));
+  border-bottom: 1px solid rgba(27, 37, 66, .9);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, .4);
+}
+.toprow {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; max-width: var(--maxw); margin: 0 auto; padding: 14px 20px;
+}
+.container { max-width: var(--maxw); margin: 0 auto; padding: 20px; }
+.grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 18px; margin-top: 20px;
+}
+
+/* COMPONENTS */
+.panel {
+  border: 1px solid rgba(27, 37, 66, .85);
+  background: linear-gradient(180deg, rgba(11, 15, 26, .95), rgba(9, 13, 23, .80));
+  box-shadow: var(--shadow);
+  position: relative; overflow: hidden;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.panel:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 1px rgba(231, 236, 255, .10), 0 24px 60px rgba(0, 0, 0, .65);
+}
+.panel-header {
+  border-bottom: 1px solid rgba(27, 37, 66, .75);
+  padding: 14px 16px; display: flex; gap: 12px; align-items: center; justify-content: space-between;
+}
+.panel-header h3 { margin: 0; font: 900 14px/1.2 var(--mono); letter-spacing: 1px; color: var(--text); }
+.badge {
+  border: 1px solid rgba(27, 37, 66, .8); padding: 5px 8px;
+  font: 700 10px/1 var(--mono); letter-spacing: 0.6px;
+  color: var(--muted); background: rgba(11, 15, 26, .6);
+}
+.badge.active { border-color: rgba(124, 255, 178, .45); color: var(--hot); background: rgba(124, 255, 178, .08); }
+.badge.inactive { border-color: rgba(255, 77, 109, .35); color: var(--bad); }
+
+.service-card {
+  display: flex; gap: 12px; padding: 12px;
+  border-top: 1px solid rgba(27, 37, 66, .5);
+  align-items: flex-start; transition: background .15s ease;
+}
+.service-icon {
+  width: 42px; height: 42px; min-width: 42px;
+  border: 1px solid rgba(27, 37, 66, .8);
+  background: repeating-linear-gradient(45deg, rgba(106, 166, 255, .12) 0px, rgba(106, 166, 255, .12) 1px, transparent 1px, transparent 4px);
+  display: flex; align-items: center; justify-content: center;
+  font: 900 16px/1 var(--mono); color: var(--cold);
+}
+.service-btn {
+  appearance: none; background: transparent;
+  border: 1px solid rgba(27, 37, 66, .8);
+  color: var(--muted); padding: 6px 10px;
+  font: 700 10px/1 var(--mono); cursor: pointer;
+  transition: all .15s ease;
+}
+.service-btn.launch { border-color: rgba(124, 255, 178, .35); color: var(--hot); }
+.service-btn:hover { border-color: rgba(106, 166, 255, .45); color: var(--cold); background: rgba(106, 166, 255, .06); }
 ```
 
 ---
@@ -204,19 +289,17 @@ import "../styles/ops.css";
 
 export function AppShell(props: {
   topbar: React.ReactNode;
-  sidebar: React.ReactNode;
-  footer?: React.ReactNode;
   children: React.ReactNode;
+  footer?: React.ReactNode;
 }) {
   return (
-    <div className="shell">
+    <>
       {props.topbar}
-      <div className="main">
-        <aside className="sidebar">{props.sidebar}</aside>
-        <main className="content">{props.children}</main>
-      </div>
-      <div className="footer">{props.footer ?? "build: ops-ui"}</div>
-    </div>
+      <main className="container">
+        {props.children}
+      </main>
+      <footer>{props.footer ?? "JIMBO UNIFIED CONTROL HUB"}</footer>
+    </>
   );
 }
 ```
@@ -281,49 +364,55 @@ export default function App() {
     })().catch(console.error);
   }, []);
 
-  const sidebar = (
-    <>
-      <div className="card">
-        <div style={{ color:"var(--muted)" }}>MASTER</div>
-        <div className="kpi">HUB</div>
-      </div>
-
-      <div style={{ marginTop:12, color:"var(--muted)" }}>PROJECTS</div>
-      {projects.map(p => (
-        <a key={p.id} className="btn" style={{ width:"100%", justifyContent:"space-between", marginTop:8 }} href={p.host}>
-          <span>{p.name}</span><small style={{ color:"var(--muted)" }}>{p.id}</small>
-        </a>
-      ))}
-    </>
-  );
-
   return (
     <AppShell
-      topbar={<Topbar title="CONTROL HUB" env={env} userEmail={me?.email} role={me?.role} globalOk={globalOk} />}
-      sidebar={sidebar}
-      footer={`hub / ${new Date().toISOString()}`}
+      topbar={<Topbar title="UNIFIED OPS" />}
+      footer={`JIMBO UNIFIED | ${new Date().toISOString()}`}
     >
+      {/* TABS */}
+      <div className="tabs">
+        <button className="tab active">DASHBOARDS</button>
+        <button className="tab">AGENTS</button>
+        <button className="tab">SERVICES</button>
+      </div>
+
       <div className="grid">
-        <div className="card" style={{ gridColumn:"span 4" }}>
-          <div style={{ color:"var(--muted)" }}>GLOBAL</div>
-          <div className="kpi">{globalOk ? "OK" : "DOWN"}</div>
-        </div>
-
-        <div className="card" style={{ gridColumn:"span 8" }}>
-          <div style={{ color:"var(--muted)" }}>PROJECTS</div>
-          <div style={{ display:"flex", flexWrap:"wrap", gap:10, marginTop:10 }}>
-            {projects.map(p => (
-              <a key={p.id} className="btn" href={p.host}>{p.name}</a>
-            ))}
+        {/* Main Dashboard Panel */}
+        <div className="panel">
+          <div className="panel-header">
+            <div>
+              <div className="label">PORT 4560</div>
+              <h3>MAIN DASHBOARD</h3>
+            </div>
+            <span className="badge active">ACTIVE</span>
+          </div>
+          <div className="panel-body">
+             {/* Service Card Example */}
+             <div className="service-card">
+               <div className="service-icon">?</div>
+               <div className="service-info">
+                 <h4>Dashboard Server</h4>
+                 <p>Centralny panel kontrolny (Flask/React)</p>
+                 <div className="service-btn launch">LAUNCH</div>
+               </div>
+             </div>
           </div>
         </div>
 
-        <div className="card" style={{ gridColumn:"span 12" }}>
-          <div style={{ color:"var(--muted)" }}>RECENT</div>
-          <div style={{ color:"var(--muted)", marginTop:8 }}>
-            tu podłączysz audit + alerty
-          </div>
-        </div>
+        {/* Project Panels */}
+        {projects.map(p => (
+           <div key={p.id} className="panel">
+             <div className="panel-header">
+               <h3>{p.name.toUpperCase()}</h3>
+               <span className="badge">PROJECT</span>
+             </div>
+             <div className="panel-body">
+               <a href={p.host} className="service-btn" style={{display:'block', textAlign:'center'}}>
+                 OPEN HUB →
+               </a>
+             </div>
+           </div>
+        ))}
       </div>
     </AppShell>
   );

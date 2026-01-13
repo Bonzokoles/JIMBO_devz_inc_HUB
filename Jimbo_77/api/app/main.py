@@ -14,6 +14,8 @@ setup_logging("jimbo77-ops-api")
 async def lifespan(app: FastAPI):
     # Startup
     print("🚀 API Starting...")
+    for route in app.routes:
+        print(f"DEBUG ROUTE: {route.path} [{route.name}]")
     yield
     # Shutdown
     print("🛑 API Shutting down...")
@@ -27,13 +29,7 @@ app = FastAPI(
 
 # 2. CORS Configuration
 # Allow Cloudflare Pages and local development
-origins = [
-    "http://localhost:5173",
-    "http://localhost:5174",
-    "https://jimbo77.com",
-    "https://hub.jimbo77.com",
-    "https://jimbo-devz-inc-hub.pages.dev"
-]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -48,12 +44,12 @@ setup_metrics(app)
 setup_otel(app)
 
 # 4. Register Routers
-app.include_router(projects.router)
-app.include_router(commands.router)
-app.include_router(audit.router)
-app.include_router(publishing.router)
-app.include_router(analytics.router)
-app.include_router(logs.router)
+app.include_router(projects.router, prefix="/v1")
+app.include_router(commands.router, prefix="/v1")
+app.include_router(audit.router, prefix="/v1")
+app.include_router(publishing.router, prefix="/v1")
+app.include_router(analytics.router, prefix="/v1")
+app.include_router(logs.router, prefix="/v1")
 
 @app.get("/")
 async def root():

@@ -7,8 +7,8 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      "@ui": path.resolve(__dirname, "../../packages/ui/src"),
-      "@core": path.resolve(__dirname, "../../packages/core/src"),
+      "@jimbo77/ui": path.resolve(__dirname, "../../packages/ui/src"),
+      "@jimbo77/core": path.resolve(__dirname, "../../packages/core/src"),
     },
   },
 });

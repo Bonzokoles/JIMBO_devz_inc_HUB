@@ -1,26 +1,55 @@
 export type Role = "owner" | "admin" | "dev" | "viewer";
 
-export type Me = { email: string; role: Role };
+export type Me = { 
+  email: string; 
+  role: Role 
+};
+
+export type AgentCfg = {
+  id: string;
+  url: string;
+};
+
+export type ServiceCfg = {
+  id: string;        // stable ID in UI (e.g. "pumo-api")
+  label: string;     // Display label
+  target: string;    // Container name / target
+  agentId: string;   // Which agent manages this
+  kind: string;      // "docker" | "systemd" etc
+};
 
 export type Project = {
   id: string;
   name: string;
-  host: string;
-  modules: string[];
-  agents?: { id: string; url: string }[];
-  services: Service[];
-};
-
-export type Service = {
-  id: string;
-  label: string;
-  target: string;
-  agentId: string;
-  kind?: string;
+  host: string;           // https://pumo.ops.tld
+  modules: string[];      // ["overview","services","deploy","logs"]
+  agents: AgentCfg[];
+  services: ServiceCfg[];
+  links?: Record<string, string>;
 };
 
 export type GlobalStatus = { ok: boolean; ts: string };
 export type ProjectStatus = { ok: boolean; servicesUp: number; servicesTotal: number };
+
+export type SystemStats = {
+  platform: string;
+  uptime_human: string;
+  timestamp: string;
+  cpu_percent: number;
+  memory_percent: number;
+  memory_used_gb: number;
+  memory_total_gb: number;
+  disk_percent: number;
+};
+
+export type PublishResponse = {
+  id: string;
+  platform: string;
+  status: "success" | "failed";
+  url?: string;
+  error?: string;
+  created_at: string;
+};
 
 export type CommandIn = {
   projectId: string;
@@ -32,39 +61,10 @@ export type CommandIn = {
 
 export type CommandOut = {
   id: string;
-  status: string;
+  status: string;        // "queued" | "running" | "done" | "failed"
   projectId: string;
   action: string;
-};
-
-export interface PublishResponse {
-  id: string;
-  platform: string;
-  status: "success" | "failed" | "pending";
-  url?: string;
+  result?: any;
   error?: string;
-  created_at: string;
-}
-
-export interface PublishEverywhereRequest {
-  article_markdown: string;
-  image_path?: string;
-}
-
-export interface R2UploadResponse {
-  status: string;
-  url: string;
-  key: string;
-}
-
-export interface SystemStats {
-  cpu_percent: number;
-  memory_percent: number;
-  memory_used_gb: number;
-  memory_total_gb: number;
-  disk_percent: number;
-  uptime_seconds: number;
-  uptime_human: string;
-  platform: string;
-  timestamp: string;
-}
+  ts: number;
+};

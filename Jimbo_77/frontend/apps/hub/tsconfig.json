@@ -3,8 +3,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@ui/*": ["../../packages/ui/src/*"],
-      "@core/*": ["../../packages/core/src/*"]
+      "@jimbo77/ui/*": ["../../packages/ui/src/*"],
+      "@jimbo77/core/*": ["../../packages/core/src/*"]
     }
   },
   "include": ["src"]

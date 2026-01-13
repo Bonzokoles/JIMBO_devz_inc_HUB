@@ -1,19 +1,18 @@
+import React from "react";
 import "../styles/ops.css";
 
 export function AppShell(props: {
   topbar: React.ReactNode;
-  sidebar: React.ReactNode;
   children: React.ReactNode;
-  footer: string;
+  footer?: React.ReactNode;
 }) {
   return (
-    <div className="app">
+    <>
       {props.topbar}
-      <div className="main">
-        <div className="sidebar">{props.sidebar}</div>
-        <div className="content">{props.children}</div>
-      </div>
-      <div className="footer">{props.footer}</div>
-    </div>
+      <main className="container">
+        {props.children}
+      </main>
+      <footer>{props.footer ?? "JIMBO UNIFIED CONTROL HUB"}</footer>
+    </>
   );
 }

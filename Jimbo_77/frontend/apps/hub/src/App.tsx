@@ -1,117 +1,113 @@
 import React from "react";
 import { AppShell } from "@jimbo77/ui/layout/AppShell";
 import { Topbar } from "@jimbo77/ui/layout/Topbar";
+import { CommandDrawer } from "@jimbo77/ui/components/CommandDrawer";
 import { api } from "@jimbo77/core/api";
-import type { Project } from "@core/types";
+import type { Project } from "@jimbo77/core/types";
+
+// Views
+import DashboardView from "./features/dashboard/DashboardView";
+import { ServicesPage } from "./features/services/ServicesPage";
 
 export default function App() {
-  const env = import.meta.env.VITE_ENV ?? "prod";
-  const [me, setMe] = React.useState<{ email: string; role: string } | null>(null);
-  const [globalOk, setGlobalOk] = React.useState(false);
   const [projects, setProjects] = React.useState<Project[]>([]);
-  const [activeView, setActiveView] = React.useState<"dashboard" | "publishing" | "operations">("dashboard");
+  const [activeTab, setActiveTab] = React.useState<"dashboards" | "services" | "agents">("dashboards");
+  // const [globalOk, setGlobalOk] = React.useState(false); // Unused for now
+  
+  // Command Drawer State
+  const [activeCommandId, setActiveCommandId] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     (async () => {
-      const [m, g, p] = await Promise.all([api.me(), api.globalStatus(), api.projects()]);
-      setMe(m);
-      setGlobalOk(g.ok);
-      setProjects(p);
+      try {
+        const [p] = await Promise.all([api.projects()]);
+        setProjects(p);
+        // setGlobalOk(g.ok);
+      } catch (e) {
+        console.error("Failed to load initial data", e);
+      }
     })().catch(console.error);
   }, []);
 
-  const sidebar = (
-    <>
-      <div className="card">
-        <div style={{ color: "var(--muted)" }}>MASTER</div>
-        <div className="kpi">HUB</div>
-      </div>
-
-      <div style={{ marginTop: 20, display: "flex", flexDirection: "column", gap: 8 }}>
-        <button 
-           className="btn" 
-           style={{ justifyContent: "flex-start", background: activeView === "dashboard" ? "rgba(255,255,255,0.05)" : "transparent" }}
-           onClick={() => setActiveView("dashboard")}
-        >
-          DASHBOARD
-        </button>
-        <button 
-           className="btn" 
-           style={{ justifyContent: "flex-start", background: activeView === "publishing" ? "rgba(255,255,255,0.05)" : "transparent" }}
-           onClick={() => setActiveView("publishing")}
-        >
-          PUBLISHING
-        </button>
-        <button 
-           className="btn" 
-           style={{ justifyContent: "flex-start", background: activeView === "operations" ? "rgba(255,255,255,0.05)" : "transparent" }}
-           onClick={() => setActiveView("operations")}
-        >
-          OPERATIONS
-        </button>
-      </div>
-
-      <div style={{ marginTop: 12, color: "var(--muted)" }}>PROJECTS</div>
-      {projects.map((p) => (
-        <a
-          key={p.id}
-          className="btn"
-          style={{ width: "100%", justifyContent: "space-between", marginTop: 8 }}
-          href={p.host}
-        >
-          <span>{p.name}</span>
-          <small style={{ color: "var(--muted)" }}>{p.id}</small>
-        </a>
-      ))}
-    </>
-  );
-
   return (
     <AppShell
-      topbar={<Topbar title="CONTROL HUB" env={env} userEmail={me?.email} role={me?.role} globalOk={globalOk} />}
-      sidebar={sidebar}
-      footer={`hub / ${new Date().toISOString()}`}
+      topbar={<Topbar title="UNIFIED OPS" />}
     >
-      {activeView === "dashboard" ? (
-      <div className="grid">
-        <div className="card" style={{ gridColumn: "span 4" }}>
-          <div style={{ color: "var(--muted)" }}>GLOBAL</div>
-          <div className="kpi">{globalOk ? "OK" : "DOWN"}</div>
-        </div>
+      <CommandDrawer commandId={activeCommandId} onClose={() => setActiveCommandId(null)} />
 
-        <div className="card" style={{ gridColumn: "span 8" }}>
-          <div style={{ color: "var(--muted)" }}>PROJECTS</div>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 10 }}>
-            {projects.map((p) => (
-              <a key={p.id} className="btn" href={p.host}>
-                {p.name}
-              </a>
-            ))}
-          </div>
-        </div>
-
-        <div className="card" style={{ gridColumn: "span 12" }}>
-          <div style={{ color: "var(--muted)" }}>RECENT</div>
-          <div style={{ color: "var(--muted)", marginTop: 8 }}>
-            tu podepniesz audit / alerty / ostatnie komendy
-          </div>
-        </div>
+      {/* TABS Navigation */}
+      <div className="tabs">
+        <button 
+          className={`tab ${activeTab === "dashboards" ? "active" : ""}`}
+          onClick={() => setActiveTab("dashboards")}
+        >
+          DASHBOARDS
+        </button>
+        <button 
+          className={`tab ${activeTab === "services" ? "active" : ""}`}
+          onClick={() => setActiveTab("services")}
+        >
+          SERVICES
+        </button>
+         <button 
+          className={`tab ${activeTab === "agents" ? "active" : ""}`}
+          onClick={() => setActiveTab("agents")}
+        >
+          AGENTS
+        </button>
       </div>
-      ) : activeView === "publishing" ? (
-        <React.Suspense fallback={<div>Loading...</div>}>
-           <PublishingView />
-        </React.Suspense>
-      ) : (
-        <React.Suspense fallback={<div>Loading...</div>}>
-           <OperationsView />
-        </React.Suspense>
+
+      {activeTab === "dashboards" && (
+        <div className="grid">
+          {/* Main Dashboard (PUMO Logic port) */}
+          <div className="panel" style={{ gridColumn: "span 12" }}>
+             <div className="panel-header">
+                <h3>MAIN DASHBOARD</h3>
+                <span className="badge active">ACTIVE</span>
+             </div>
+             <div className="panel-body">
+                <DashboardView />
+             </div>
+          </div>
+          
+          {/* Project Cards */}
+          {projects.map(p => (
+            <div key={p.id} className="panel">
+              <div className="panel-header">
+                <div>
+                  <div className="label">PROJECT</div>
+                  <h3>{p.name}</h3>
+                </div>
+                <span className="badge">LINKED</span>
+              </div>
+              <div className="panel-body">
+                <a href={p.host} target="_blank" rel="noreferrer" className="service-btn launch" style={{ display: "block", textAlign: "center" }}>
+                  OPEN COCKPIT →
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {activeTab === "services" && (
+        <ServicesPage 
+          projects={projects} 
+          // Mock ME for now - in real app this comes from api.me()
+          me={{ email: "dev@jimbo77.com", role: "owner" }} 
+          onCommand={(id) => setActiveCommandId(id)}
+        />
+      )}
+
+      {activeTab === "agents" && (
+        <div className="grid">
+           <div className="panel" style={{ gridColumn: "span 12" }}>
+             <div className="panel-body" style={{ color: "var(--muted)" }}>
+               Agents View coming soon
+             </div>
+           </div>
+        </div>
       )}
     </AppShell>
   );
 }
-
-// Lazy load to avoid cycle deps if any (though none here)
-import { PublishingView } from "./features/publishing/PublishingView";
-import { OperationsView } from "./features/operations/OperationsView";
-
-
