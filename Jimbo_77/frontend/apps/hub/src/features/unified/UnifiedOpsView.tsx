@@ -100,7 +100,13 @@ export function UnifiedOpsView() {
               <button 
                 className="btn" 
                 style={{ marginTop: 12, width: "100%", justifyContent: "center" }}
-                onClick={() => window.open('http://localhost:3002', '_blank')}
+                onClick={() => {
+                  // Smart URL: localhost in dev, production in prod
+                  const pumoUrl = window.location.hostname === 'localhost' 
+                    ? 'http://localhost:3002' 
+                    : 'https://pumo.jimbo77.com';
+                  window.open(pumoUrl, '_blank');
+                }}
               >
                 OPEN DASHBOARD →
               </button>
