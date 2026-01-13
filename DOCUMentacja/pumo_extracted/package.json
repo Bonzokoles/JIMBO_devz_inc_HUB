@@ -1,0 +1,29 @@
+{
+  "name": "pumo-whitecat-worker",
+  "version": "1.0.0",
+  "description": "Meble Pumo AI SEO & Analytics Backend",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "start": "wrangler dev"
+  },
+  "keywords": [
+    "cloudflare",
+    "worker",
+    "ai",
+    "seo",
+    "analytics"
+  ],
+  "author": "Antigravity",
+  "license": "ISC",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240208.0",
+    "typescript": "^5.3.3",
+    "wrangler": "^3.28.1"
+  },
+  "dependencies": {
+    "itty-router": "^5.0.17"
+  }
+}
