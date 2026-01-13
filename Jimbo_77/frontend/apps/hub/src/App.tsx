@@ -10,12 +10,13 @@ import DashboardView from "./features/dashboard/DashboardView";
 import { ServicesPage } from "./features/services/ServicesPage";
 import { LoginPage } from "./features/auth/LoginPage";
 import { UnifiedOpsView } from "./features/unified/UnifiedOpsView";
+import { ControlCenterView } from "./features/control/ControlCenterView";
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
   const [projects, setProjects] = React.useState<Project[]>([]);
   const [activeTab, setActiveTab] = React.useState<"dashboards" | "services" | "agents">("dashboards");
-  const [dashboardView, setDashboardView] = React.useState<"main" | "pumo">("main");
+  const [dashboardView, setDashboardView] = React.useState<"main" | "pumo" | "control-center">("main");
   
   // Command Drawer State
   const [activeCommandId, setActiveCommandId] = React.useState<string | null>(null);
@@ -67,7 +68,10 @@ export default function App() {
 
       <div style={{ padding: "20px", maxWidth: 1800, margin: "0 auto" }}>
         {activeTab === "dashboards" && dashboardView === "main" && (
-          <UnifiedOpsView onOpenPumo={() => setDashboardView("pumo")} />
+          <UnifiedOpsView 
+            onOpenPumo={() => setDashboardView("pumo")}
+            onOpenControlCenter={() => setDashboardView("control-center")}
+          />
         )}
         {activeTab === "dashboards" && dashboardView === "pumo" && (
           <div>
@@ -80,6 +84,9 @@ export default function App() {
             </button>
             <DashboardView />
           </div>
+        )}
+        {activeTab === "dashboards" && dashboardView === "control-center" && (
+          <ControlCenterView onBack={() => setDashboardView("main")} />
         )}
         {activeTab === "services" && <ServicesPage projects={projects} onCommand={(id) => setActiveCommandId(id)} />}
         {activeTab === "agents" && <div className="card">Agents view - Coming soon</div>}
