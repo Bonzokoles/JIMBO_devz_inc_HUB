@@ -19,8 +19,8 @@ const MOCK_AGENTS: Record<string, Agent> = {
 };
 
 export function ControlCenterView({ onBack }: { onBack: () => void }) {
-  const [agents, setAgents] = useState<Record<string, Agent>>(MOCK_AGENTS);
-  const [processes, setProcesses] = useState<Process[]>([]);
+  const [agents] = useState<Record<string, Agent>>(MOCK_AGENTS);
+  const [processes] = useState<Process[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
