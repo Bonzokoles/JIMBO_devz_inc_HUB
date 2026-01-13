@@ -69,6 +69,10 @@ export function LoginPage({ onLogin }: Props) {
               src="/apple-touch-icon.png" 
               alt="JIMBO Unified" 
               style={{ width: 120, height: 120, marginBottom: 20 }}
+              onError={(e) => {
+                console.error("Logo failed to load");
+                e.currentTarget.style.display = 'none';
+              }}
             />
             <h2 style={{ 
               fontSize: 32, 
