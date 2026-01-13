@@ -1,5 +1,31 @@
 import { useState, useEffect } from 'react'
+import { Line, Doughnut } from 'react-chartjs-2'
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+} from 'chart.js'
 import './index.css'
+
+// Register Chart.js components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+)
 
 // Types
 type KPIData = {
@@ -21,7 +47,7 @@ type Product = {
 };
 
 function App() {
-  const [kpis, setKpis] = useState<KPIData>({
+  const [kpis] = useState<KPIData>({
     totalRevenue: 284750,
     revenueChange: 8.3,
     aiShare: 67.2,
@@ -42,10 +68,74 @@ function App() {
   const [chatInput, setChatInput] = useState('');
   const [messages, setMessages] = useState<Array<{text: string, isAi: boolean}>>([]);
 
+  // Revenue Chart Data
+  const revenueData = {
+    labels: ['01/01', '02/01', '03/01', '04/01', '05/01', '06/01', '07/01'],
+    datasets: [
+      {
+        label: 'Total Revenue',
+        data: [15000, 22000, 18000, 25000, 30000, 28000, 35000],
+        borderColor: '#00ff41',
+        backgroundColor: 'rgba(0, 255, 65, 0.1)',
+        tension: 0.4,
+        fill: true,
+      },
+      {
+        label: 'AI Revenue',
+        data: [8000, 14000, 11000, 17000, 21000, 19000, 24000],
+        borderColor: '#0affff',
+        backgroundColor: 'rgba(10, 255, 255, 0.1)',
+        tension: 0.4,
+        fill: true,
+      }
+    ]
+  };
+
+  const revenueOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: { 
+        beginAtZero: true,
+        grid: { color: '#333' },
+        ticks: { color: '#e0e0e0' }
+      },
+      x: { 
+        grid: { color: '#333' },
+        ticks: { color: '#e0e0e0' }
+      }
+    },
+    plugins: {
+      legend: { 
+        labels: { color: '#e0e0e0' }
+      }
+    }
+  };
+
+  // Traffic Pie Data
+  const trafficData = {
+    labels: ['AI SEO', 'Organic', 'Paid', 'Direct'],
+    datasets: [{
+      data: [45, 30, 15, 10],
+      backgroundColor: ['#00ff41', '#0affff', '#ffaa00', '#ff4444']
+    }]
+  };
+
+  const trafficOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom' as const,
+        labels: { color: '#e0e0e0' }
+      }
+    }
+  };
+
   useEffect(() => {
     // Auto-refresh KPIs every 30 seconds
     const interval = setInterval(() => {
-      // In production: fetch from API
+      // TODO: Fetch from API
       console.log('Refreshing KPIs...');
     }, 30000);
 
@@ -60,7 +150,7 @@ function App() {
     
     // Simulate AI response
     setTimeout(() => {
-      setMessages(prev => [...prev, { 
+      setMessages((prev: Array<{text: string, isAi: boolean}>) => [...prev, { 
         text: 'AI Analyst is analyzing your query...', 
         isAi: true 
       }]);
@@ -106,14 +196,14 @@ function App() {
       <div className="charts-row">
         <div className="chart-container">
           <h3>💰 Revenue Trend (30 days)</h3>
-          <div style={{ height: 300, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--muted)' }}>
-            Chart.js integration - Coming soon
+          <div style={{ height: 300 }}>
+            <Line data={revenueData} options={revenueOptions} />
           </div>
         </div>
         <div className="chart-container">
           <h3>📊 Traffic Sources</h3>
-          <div style={{ height: 300, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--muted)' }}>
-            Pie chart - Coming soon
+          <div style={{ height: 300 }}>
+            <Doughnut data={trafficData} options={trafficOptions} />
           </div>
         </div>
       </div>
