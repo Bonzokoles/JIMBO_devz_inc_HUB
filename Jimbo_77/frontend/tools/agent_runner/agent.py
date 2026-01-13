@@ -6,7 +6,7 @@ import os
 import platform
 
 # Configuration
-PUMO_API_URL = "http://localhost:8000"  # Local API instead of cloud
+PUMO_API_URL = "http://localhost:8001"  # Local API on correct port
 AGENT_ID = platform.node() # Hostname
 POLL_INTERVAL = 5 # seconds
 
