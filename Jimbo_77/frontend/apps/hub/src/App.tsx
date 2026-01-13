@@ -8,8 +8,10 @@ import type { Project } from "@jimbo77/core/types";
 // Views
 import DashboardView from "./features/dashboard/DashboardView";
 import { ServicesPage } from "./features/services/ServicesPage";
+import { LoginPage } from "./features/auth/LoginPage";
 
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
   const [projects, setProjects] = React.useState<Project[]>([]);
   const [activeTab, setActiveTab] = React.useState<"dashboards" | "services" | "agents">("dashboards");
   // const [globalOk, setGlobalOk] = React.useState(false); // Unused for now
@@ -18,6 +20,8 @@ export default function App() {
   const [activeCommandId, setActiveCommandId] = React.useState<string | null>(null);
 
   React.useEffect(() => {
+    if (!isAuthenticated) return;
+    
     (async () => {
       try {
         const [p] = await Promise.all([api.projects()]);
@@ -27,7 +31,11 @@ export default function App() {
         console.error("Failed to load initial data", e);
       }
     })().catch(console.error);
-  }, []);
+  }, [isAuthenticated]);
+
+  if (!isAuthenticated) {
+    return <LoginPage onLogin={() => setIsAuthenticated(true)} />;
+  }
 
   return (
     <AppShell
