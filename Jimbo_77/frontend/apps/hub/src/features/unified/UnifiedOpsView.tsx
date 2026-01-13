@@ -99,10 +99,10 @@ export function UnifiedOpsView() {
               </p>
               <button 
                 className="btn" 
-                style={{ marginTop: 12, width: "100%", justifyContent: "center", opacity: 0.5, cursor: "not-allowed" }}
-                disabled
+                style={{ marginTop: 12, width: "100%", justifyContent: "center" }}
+                onClick={() => window.open('http://localhost:3002', '_blank')}
               >
-                COMING SOON
+                OPEN DASHBOARD →
               </button>
             </div>
           </div>
