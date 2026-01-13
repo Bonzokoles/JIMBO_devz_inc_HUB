@@ -1,4 +1,8 @@
-export function UnifiedOpsView() {
+type Props = {
+  onOpenPumo: () => void;
+};
+
+export function UnifiedOpsView({ onOpenPumo }: Props) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20, paddingBottom: 50 }}>
       {/* Header */}
@@ -86,7 +90,7 @@ export function UnifiedOpsView() {
               <button 
                 className="btn" 
                 style={{ marginTop: 12, width: "100%", justifyContent: "center" }}
-                onClick={() => window.location.hash = "#pumo"}
+                onClick={onOpenPumo}
               >
                 OPEN DASHBOARD →
               </button>
