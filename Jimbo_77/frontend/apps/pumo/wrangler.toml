@@ -1,0 +1,53 @@
+name = "pumo-analytics"
+main = "src/index.ts"
+compatibility_date = "2026-01-13"
+workers_dev = true
+
+# D1 Database
+[[d1_databases]]
+binding = "DB"
+database_name = "pumo-analytics"
+database_id = "YOUR_D1_DATABASE_ID"
+
+# KV for cache
+[[kv_namespaces]]
+binding = "CACHE"
+id = "YOUR_KV_NAMESPACE_ID"
+
+# R2 bucket for backups
+[[r2_buckets]]
+binding = "BACKUP_BUCKET"
+bucket_name = "pumo-backups"
+
+# AI binding
+[ai]
+binding = "AI"
+
+# Vectorize for RAG
+[[vectorize]]
+binding = "VECTORIZE"
+index_name = "pumo_embeddings"
+
+# Environment variables
+[vars]
+ALLOWED_ORIGINS = "https://pumo.jimbo77.com,http://localhost:3002"
+PUMO_API_BASE_URL = "https://api.meblepumo.pl/v1"
+
+# Cron triggers - Every 6 hours + daily cleanup
+[triggers]
+crons = [
+  "0 */6 * * *",      # Sync every 6h
+  "0 3 * * *"         # Daily cleanup at 3:00 AM
+]
+
+# Secrets (set via: wrangler secret put SECRET_NAME)
+# - DASHBOARD_PASSWORD
+# - ANTHROPIC_API_KEY
+# - OPENAI_API_KEY
+# - GA4_SERVICE_ACCOUNT_JSON
+# - PUMO_API_KEY
+
+# Routes (custom domain)
+# routes = [
+#   { pattern = "pumo.jimbo77.com/*", zone_name = "jimbo77.com" }
+# ]

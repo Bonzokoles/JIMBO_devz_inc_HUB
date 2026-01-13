@@ -12,6 +12,7 @@ import {
   Legend,
   Filler
 } from 'chart.js'
+import { api } from './api'
 import './index.css'
 
 // Register Chart.js components
@@ -46,8 +47,15 @@ type Product = {
   revenue: number;
 };
 
+type AgentStatus = {
+  id: string;
+  name: string;
+  status: 'active' | 'idle' | 'error';
+  lastRun?: string;
+};
+
 function App() {
-  const [kpis] = useState<KPIData>({
+  const [kpis, setKpis] = useState<KPIData>({
     totalRevenue: 284750,
     revenueChange: 8.3,
     aiShare: 67.2,
@@ -57,41 +65,89 @@ function App() {
     apiUptime: 99.8,
   });
 
-  const [products] = useState<Product[]>([
-    { name: 'Materac Comfort Plus', category: 'Materace', clicks: 1250, ctr: 4.8, revenue: 45000 },
-    { name: 'Szafa Classic Oak', category: 'Szafy', clicks: 980, ctr: 3.2, revenue: 32000 },
-    { name: 'Fotel Relax Pro', category: 'Fotele', clicks: 856, ctr: 5.1, revenue: 28500 },
-    { name: 'Stół Family', category: 'Stoły', clicks: 743, ctr: 3.9, revenue: 22000 },
-    { name: 'Łóżko Dream', category: 'Łóżka', clicks: 682, ctr: 4.3, revenue: 38000 },
-  ]);
-
+  const [products, setProducts] = useState<Product[]>([]);
   const [chatInput, setChatInput] = useState('');
   const [messages, setMessages] = useState<Array<{text: string, isAi: boolean}>>([]);
+  const [revenueData, setRevenueData] = useState<any>(null);
+  const [trafficData, setTrafficData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Revenue Chart Data
-  const revenueData = {
-    labels: ['01/01', '02/01', '03/01', '04/01', '05/01', '06/01', '07/01'],
-    datasets: [
-      {
-        label: 'Total Revenue',
-        data: [15000, 22000, 18000, 25000, 30000, 28000, 35000],
-        borderColor: '#00ff41',
-        backgroundColor: 'rgba(0, 255, 65, 0.1)',
-        tension: 0.4,
-        fill: true,
-      },
-      {
-        label: 'AI Revenue',
-        data: [8000, 14000, 11000, 17000, 21000, 19000, 24000],
-        borderColor: '#0affff',
-        backgroundColor: 'rgba(10, 255, 255, 0.1)',
-        tension: 0.4,
-        fill: true,
-      }
-    ]
+  // Agent statuses
+  const [agents] = useState<AgentStatus[]>([
+    { id: 'a1', name: 'Uptime Agent', status: 'active', lastRun: '2 min ago' },
+    { id: 'a3', name: 'Error Budget', status: 'active', lastRun: '1 min ago' },
+    { id: 'a6', name: 'Conversion', status: 'active', lastRun: '5 min ago' },
+    { id: 'a2', name: 'Performance', status: 'idle', lastRun: '1 hour ago' },
+    { id: 'a4', name: 'Security', status: 'idle', lastRun: '15 min ago' },
+  ]);
+
+  // Load initial data
+  useEffect(() => {
+    loadAllData();
+  }, []);
+
+  // Auto-refresh every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      loadAllData();
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const loadAllData = async () => {
+    setLoading(true);
+    try {
+      // Load KPIs
+      const kpiData = await api.getKPIs();
+      setKpis(kpiData);
+
+      // Load revenue trend
+      const revenueTrend = await api.getRevenueTrend(7);
+      setRevenueData({
+        labels: revenueTrend.map(d => new Date(d.date).toLocaleDateString('pl')),
+        datasets: [
+          {
+            label: 'Total Revenue',
+            data: revenueTrend.map(d => d.totalRevenue),
+            borderColor: '#00ff41',
+            backgroundColor: 'rgba(0, 255, 65, 0.1)',
+            tension: 0.4,
+            fill: true,
+          },
+          {
+            label: 'AI Revenue',
+            data: revenueTrend.map(d => d.aiRevenue),
+            borderColor: '#0affff',
+            backgroundColor: 'rgba(10, 255, 255, 0.1)',
+            tension: 0.4,
+            fill: true,
+          }
+        ]
+      });
+
+      // Load traffic sources
+      const traffic = await api.getTrafficSources();
+      setTrafficData({
+        labels: ['AI SEO', 'Organic', 'Paid', 'Direct'],
+        datasets: [{
+          data: [traffic.aiSeo, traffic.organic, traffic.paid, traffic.direct],
+          backgroundColor: ['#00ff41', '#0affff', '#ffaa00', '#ff4444']
+        }]
+      });
+
+      // Load products
+      const productsData = await api.getTopProducts(5);
+      setProducts(productsData);
+
+    } catch (error) {
+      console.error('Failed to load data:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const revenueOptions = {
+  const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
     scales: {
@@ -112,15 +168,6 @@ function App() {
     }
   };
 
-  // Traffic Pie Data
-  const trafficData = {
-    labels: ['AI SEO', 'Organic', 'Paid', 'Direct'],
-    datasets: [{
-      data: [45, 30, 15, 10],
-      backgroundColor: ['#00ff41', '#0affff', '#ffaa00', '#ff4444']
-    }]
-  };
-
   const trafficOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -132,34 +179,52 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    // Auto-refresh KPIs every 30 seconds
-    const interval = setInterval(() => {
-      // TODO: Fetch from API
-      console.log('Refreshing KPIs...');
-    }, 30000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!chatInput.trim()) return;
     
     setMessages([...messages, { text: chatInput, isAi: false }]);
+    const query = chatInput;
     setChatInput('');
     
-    // Simulate AI response
-    setTimeout(() => {
-      setMessages((prev: Array<{text: string, isAi: boolean}>) => [...prev, { 
-        text: 'AI Analyst is analyzing your query...', 
-        isAi: true 
-      }]);
-    }, 500);
+    // Query AI
+    const response = await api.queryAI(query);
+    setMessages((prev: Array<{text: string, isAi: boolean}>) => [...prev, { 
+      text: response.response, 
+      isAi: true 
+    }]);
   };
 
   return (
     <div className="container">
-      <h1 className="header">🧪 PUMO Diagnosis Hub</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+        <h1 className="header" style={{ margin: 0 }}>🧪 PUMO Diagnosis Hub</h1>
+        {loading && <div style={{ color: 'var(--cold)', fontSize: 12 }}>⟳ Refreshing...</div>}
+      </div>
+
+      {/* Agent Status Bar */}
+      <div style={{ 
+        background: 'var(--panel)', 
+        border: '1px solid var(--line)', 
+        padding: 15, 
+        marginBottom: 20,
+        display: 'flex',
+        gap: 20,
+        flexWrap: 'wrap'
+      }}>
+        <div style={{ fontSize: 11, color: 'var(--muted)', fontWeight: 'bold' }}>AGENTS:</div>
+        {agents.map(agent => (
+          <div key={agent.id} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ 
+              width: 8, 
+              height: 8, 
+              borderRadius: '50%', 
+              background: agent.status === 'active' ? 'var(--hot)' : agent.status === 'error' ? 'var(--bad)' : 'var(--muted)' 
+            }} />
+            <span style={{ fontSize: 11, color: 'var(--text)' }}>{agent.name}</span>
+            <span style={{ fontSize: 9, color: 'var(--faint)' }}>({agent.lastRun})</span>
+          </div>
+        ))}
+      </div>
 
       {/* KPIs */}
       <div className="kpi-grid">
@@ -195,15 +260,27 @@ function App() {
       {/* Charts Row */}
       <div className="charts-row">
         <div className="chart-container">
-          <h3>💰 Revenue Trend (30 days)</h3>
+          <h3>💰 Revenue Trend (7 days)</h3>
           <div style={{ height: 300 }}>
-            <Line data={revenueData} options={revenueOptions} />
+            {revenueData ? (
+              <Line data={revenueData} options={chartOptions} />
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--muted)' }}>
+                Loading chart...
+              </div>
+            )}
           </div>
         </div>
         <div className="chart-container">
           <h3>📊 Traffic Sources</h3>
           <div style={{ height: 300 }}>
-            <Doughnut data={trafficData} options={trafficOptions} />
+            {trafficData ? (
+              <Doughnut data={trafficData} options={trafficOptions} />
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--muted)' }}>
+                Loading chart...
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -223,18 +300,26 @@ function App() {
             </tr>
           </thead>
           <tbody>
-            {products.map((p, i) => (
-              <tr key={i}>
-                <td><strong>{i + 1}</strong></td>
-                <td>{p.name}</td>
-                <td>{p.category}</td>
-                <td>{p.clicks.toLocaleString()}</td>
-                <td>{p.ctr.toFixed(1)}%</td>
-                <td style={{ color: 'var(--hot)', fontWeight: 'bold' }}>
-                  {p.revenue.toLocaleString()}
+            {products.length > 0 ? (
+              products.map((p, i) => (
+                <tr key={i}>
+                  <td><strong>{i + 1}</strong></td>
+                  <td>{p.name}</td>
+                  <td>{p.category}</td>
+                  <td>{p.clicks.toLocaleString()}</td>
+                  <td>{p.ctr.toFixed(1)}%</td>
+                  <td style={{ color: 'var(--hot)', fontWeight: 'bold' }}>
+                    {p.revenue.toLocaleString()}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={6} style={{ textAlign: 'center', color: 'var(--muted)' }}>
+                  Loading products...
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
