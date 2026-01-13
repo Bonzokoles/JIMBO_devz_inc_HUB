@@ -37,6 +37,13 @@ export function UnifiedOpsView({ onOpenPumo }: Props) {
               <p style={{ margin: "4px 0 0", fontSize: 12, color: "var(--muted)" }}>
                 Main control panel with system cards and component status
               </p>
+              <button 
+                className="btn" 
+                style={{ marginTop: 12, width: "100%", justifyContent: "center", opacity: 0.5, cursor: "not-allowed" }}
+                disabled
+              >
+                COMING SOON
+              </button>
             </div>
           </div>
         </div>
@@ -62,6 +69,13 @@ export function UnifiedOpsView({ onOpenPumo }: Props) {
               <p style={{ margin: "4px 0 0", fontSize: 12, color: "var(--muted)" }}>
                 Process management, service restart and system control
               </p>
+              <button 
+                className="btn" 
+                style={{ marginTop: 12, width: "100%", justifyContent: "center", opacity: 0.5, cursor: "not-allowed" }}
+                disabled
+              >
+                COMING SOON
+              </button>
             </div>
           </div>
         </div>
@@ -119,6 +133,13 @@ export function UnifiedOpsView({ onOpenPumo }: Props) {
               <p style={{ margin: "4px 0 0", fontSize: 12, color: "var(--muted)" }}>
                 Advanced system view with GPU monitoring and visualizations
               </p>
+              <button 
+                className="btn" 
+                style={{ marginTop: 12, width: "100%", justifyContent: "center", opacity: 0.5, cursor: "not-allowed" }}
+                disabled
+              >
+                COMING SOON
+              </button>
             </div>
           </div>
         </div>
@@ -144,6 +165,13 @@ export function UnifiedOpsView({ onOpenPumo }: Props) {
               <p style={{ margin: "4px 0 0", fontSize: 12, color: "var(--muted)" }}>
                 Catalog of all 60 libraries (51k+ files) - Control Center + Eastwood DEVZ
               </p>
+              <button 
+                className="btn" 
+                style={{ marginTop: 12, width: "100%", justifyContent: "center", opacity: 0.5, cursor: "not-allowed" }}
+                disabled
+              >
+                COMING SOON
+              </button>
             </div>
           </div>
         </div>
@@ -169,6 +197,77 @@ export function UnifiedOpsView({ onOpenPumo }: Props) {
               <p style={{ margin: "4px 0 0", fontSize: 12, color: "var(--muted)" }}>
                 Specialized business intelligence libraries and tools
               </p>
+              <button 
+                className="btn" 
+                style={{ marginTop: 12, width: "100%", justifyContent: "center", opacity: 0.5, cursor: "not-allowed" }}
+                disabled
+              >
+                COMING SOON
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Agent Manager - NEW */}
+        <div className="card">
+          <div style={{ borderBottom: "1px solid var(--line)", paddingBottom: 12, marginBottom: 12 }}>
+            <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>AUTOMATION</div>
+            <h3 style={{ margin: 0, fontSize: 14, fontWeight: 900, letterSpacing: 1 }}>AGENT MANAGER</h3>
+          </div>
+          <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+            <div style={{
+              width: 42, height: 42, minWidth: 42,
+              border: "1px solid var(--line)",
+              background: "repeating-linear-gradient(45deg, rgba(106, 166, 255, .12) 0px, rgba(106, 166, 255, .12) 1px, transparent 1px, transparent 4px)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: 16, fontWeight: 900, color: "var(--cold)"
+            }}>
+              🤖
+            </div>
+            <div style={{ flex: 1 }}>
+              <h4 style={{ margin: 0, fontSize: 13, fontWeight: 800 }}>AI Agents Control</h4>
+              <p style={{ margin: "4px 0 0", fontSize: 12, color: "var(--muted)" }}>
+                Manage and monitor AI agents, scrapers, and automation tasks
+              </p>
+              <button 
+                className="btn" 
+                style={{ marginTop: 12, width: "100%", justifyContent: "center", opacity: 0.5, cursor: "not-allowed" }}
+                disabled
+              >
+                COMING SOON
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* System Monitor - NEW */}
+        <div className="card">
+          <div style={{ borderBottom: "1px solid var(--line)", paddingBottom: 12, marginBottom: 12 }}>
+            <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>MONITORING</div>
+            <h3 style={{ margin: 0, fontSize: 14, fontWeight: 900, letterSpacing: 1 }}>SYSTEM MONITOR</h3>
+          </div>
+          <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+            <div style={{
+              width: 42, height: 42, minWidth: 42,
+              border: "1px solid var(--line)",
+              background: "repeating-linear-gradient(45deg, rgba(124, 255, 178, .12) 0px, rgba(124, 255, 178, .12) 1px, transparent 1px, transparent 4px)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: 16, fontWeight: 900, color: "var(--hot)"
+            }}>
+              📊
+            </div>
+            <div style={{ flex: 1 }}>
+              <h4 style={{ margin: 0, fontSize: 13, fontWeight: 800 }}>Real-time Monitoring</h4>
+              <p style={{ margin: "4px 0 0", fontSize: 12, color: "var(--muted)" }}>
+                CPU, RAM, disk usage, network traffic, and service health
+              </p>
+              <button 
+                className="btn" 
+                style={{ marginTop: 12, width: "100%", justifyContent: "center", opacity: 0.5, cursor: "not-allowed" }}
+                disabled
+              >
+                COMING SOON
+              </button>
             </div>
           </div>
         </div>
