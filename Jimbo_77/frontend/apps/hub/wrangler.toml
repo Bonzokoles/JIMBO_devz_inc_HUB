@@ -1,8 +1,11 @@
-name = "jimbo77-ops-hub"
-compatibility_date = "2024-04-01"
+name = "jimbo-devz-inc-hub"
+compatibility_date = "2026-01-13"
 pages_build_output_dir = "./dist"
 
-
+# Wrangler v4 compatible config
+[env.production]
+compatibility_date = "2026-01-13"
 
 [vars]
 VITE_API_BASE = "https://jimbo-like-pumo-api.stolarnia-ams.workers.dev"
+VITE_ENV = "production"

@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite --port 5173",
     "build": "tsc -p tsconfig.json && vite build",
+    "deploy": "pnpm build && wrangler pages deploy dist --project-name=jimbo-devz-inc-hub",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint ."
   },

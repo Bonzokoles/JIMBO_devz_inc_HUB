@@ -4,7 +4,7 @@ on:
   push:
     branches: ["main"]
     paths:
-      - "Jimbo_77/frontend/**"  # Trigger only on frontend changes
+      - "Jimbo_77/frontend/**" # Trigger only on frontend changes
   workflow_dispatch:
 
 jobs:
@@ -34,11 +34,11 @@ jobs:
         working-directory: Jimbo_77/frontend
 
       - name: Build Frontend (Hub)
-        run: pnpm --filter @apps/hub build
+        run: pnpm --filter @jimbo77/hub build
         working-directory: Jimbo_77/frontend
         env:
           # Inject secrets into build process (needed for Vite envs)
-          VITE_API_BASE: ${{ vars.VITE_API_BASE || 'https://api.ops.jimbo77.org' }}
+          VITE_API_BASE: ${{ vars.VITE_API_BASE || 'https://jimbo-like-pumo-api.stolarnia-ams.workers.dev' }}
           VITE_ENV: "production"
 
       - name: Publish to Cloudflare Pages
@@ -46,6 +46,6 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: "jimbo-devz-inc-hub" 
+          projectName: "jimbo-devz-inc-hub"
           directory: "Jimbo_77/frontend/apps/hub/dist"
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
