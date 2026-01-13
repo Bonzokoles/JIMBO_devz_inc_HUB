@@ -3,7 +3,7 @@ interface UnifiedOpsViewProps {
   onOpenControlCenter?: () => void;
 }
 
-export function UnifiedOpsView({ onOpenPumo, onOpenControlCenter }: UnifiedOpsViewProps) {
+export function UnifiedOpsView({ onOpenPumo }: UnifiedOpsViewProps) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20, paddingBottom: 50 }}>
       {/* Header */}
