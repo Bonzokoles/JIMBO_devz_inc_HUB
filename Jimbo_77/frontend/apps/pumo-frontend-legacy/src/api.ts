@@ -1,8 +1,18 @@
 // API Base URL - points to existing Cloudflare Worker
 const API_BASE = import.meta.env.VITE_API_BASE || 
-  'https://jimbo-like-pumo-api.stolarnia-ams.workers.dev';
+  'http://localhost:8001';  // Lokalny FastAPI backend
 
 // Types
+export type KPIData = {
+  totalRevenue: number;
+  revenueChange: number;
+  aiShare: number;
+  conversionRate: number;
+  totalClicks: number;
+  ragHitrate: number;
+  apiUptime: number;
+};
+
 export type KPIResponse = {
   totalRevenue: number;
   revenueChange: number;
@@ -34,6 +44,37 @@ export type ProductResponse = {
   revenue: number;
 }[];
 
+export type Product = {
+  name: string;
+  category: string;
+  clicks: number;
+  ctr: number;
+  revenue: number;
+  units_sold?: number;
+};
+
+export type Customer = {
+  email: string;
+  orders_count: number;
+  total_spent: number;
+  first_order?: string;
+  last_order?: string;
+  is_vip?: boolean;
+};
+
+export type AIAnalysis = {
+  revenue_forecast: {
+    next_7_days: number;
+    next_30_days: number;
+    confidence: number;
+  };
+  trends: {
+    revenue_trend: string;
+    seasonal_pattern: string;
+  };
+  recommendations: string[];
+};
+
 export type AIQueryRequest = {
   query: string;
 };
@@ -42,6 +83,30 @@ export type AIQueryResponse = {
   response: string;
   confidence?: number;
   sources?: string[];
+};
+
+export type AIInsight = {
+  category: string;
+  insight: string;
+  confidence: number;
+  action?: string;
+  impact?: 'low' | 'medium' | 'high';
+};
+
+export type AIAnalysisResponse = {
+  success: boolean;
+  question: string;
+  answer: string;
+  insights: AIInsight[];
+  data_points?: Array<{ label: string; value: number }>;
+  recommendations?: string[];
+  confidence?: number;
+};
+
+export type AutoInsightsResponse = {
+  success: boolean;
+  insights: AIInsight[];
+  generated_at: string;
 };
 
 // API Service

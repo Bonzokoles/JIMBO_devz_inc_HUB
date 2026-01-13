@@ -39,16 +39,16 @@ $triggers = @()
 
 # Godziny: 00:00, 02:24, 04:48, 07:12, 09:36, 12:00, 14:24, 16:48, 19:12, 21:36
 $schedules = @(
-    @{Hour=0; Minute=0},
-    @{Hour=2; Minute=24},
-    @{Hour=4; Minute=48},
-    @{Hour=7; Minute=12},
-    @{Hour=9; Minute=36},
-    @{Hour=12; Minute=0},
-    @{Hour=14; Minute=24},
-    @{Hour=16; Minute=48},
-    @{Hour=19; Minute=12},
-    @{Hour=21; Minute=36}
+    @{Hour = 0; Minute = 0 },
+    @{Hour = 2; Minute = 24 },
+    @{Hour = 4; Minute = 48 },
+    @{Hour = 7; Minute = 12 },
+    @{Hour = 9; Minute = 36 },
+    @{Hour = 12; Minute = 0 },
+    @{Hour = 14; Minute = 24 },
+    @{Hour = 16; Minute = 48 },
+    @{Hour = 19; Minute = 12 },
+    @{Hour = 21; Minute = 36 }
 )
 
 foreach ($schedule in $schedules) {
@@ -110,7 +110,8 @@ try {
     
     Write-Host "`n✅ GOTOWE! Zadanie działa w tle." -ForegroundColor Green
     
-} catch {
+}
+catch {
     Write-Host "`n❌ BŁĄD podczas instalacji: $($_.Exception.Message)" -ForegroundColor Red
     exit 1
 }

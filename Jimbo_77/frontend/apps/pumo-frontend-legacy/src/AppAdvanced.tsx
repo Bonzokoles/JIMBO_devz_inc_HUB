@@ -19,7 +19,7 @@ import {
 } from 'chart.js';
 import { Line, Doughnut, Bar } from 'react-chartjs-2';
 import api from './api';
-import type { KPIData, Product, Customer, AIAnalysis } from './api';
+import type { KPIData, Product, Customer, AIAnalysis, AIInsight, AIAnalysisResponse, AutoInsightsResponse } from './api';
 
 ChartJS.register(
     CategoryScale,
@@ -41,7 +41,7 @@ type AgentStatus = {
     lastRun?: string;
 };
 
-type TabView = 'overview' | 'products' | 'customers' | 'ai-predictions' | 'orders';
+type TabView = 'overview' | 'products' | 'customers' | 'ai-predictions' | 'orders' | 'ai-analysis';
 
 function AppAdvanced() {
     const [activeTab, setActiveTab] = useState<TabView>('overview');
@@ -58,6 +58,10 @@ function AppAdvanced() {
     const [products, setProducts] = useState<Product[]>([]);
     const [customers, setCustomers] = useState<Customer[]>([]);
     const [aiPredictions, setAIPredictions] = useState<AIAnalysis | null>(null);
+    const [aiInsights, setAIInsights] = useState<AIInsight[]>([]);
+    const [aiQuestion, setAIQuestion] = useState('');
+    const [aiAnswer, setAIAnswer] = useState<AIAnalysisResponse | null>(null);
+    const [isAIThinking, setIsAIThinking] = useState(false);
     const [chatInput, setChatInput] = useState('');
     const [messages, setMessages] = useState<Array<{ text: string, isAi: boolean }>>([]);
     const [revenueData, setRevenueData] = useState<any>(null);
@@ -78,16 +82,43 @@ function AppAdvanced() {
     // Load initial data
     useEffect(() => {
         loadAllData();
+        loadAutoInsights();
     }, []);
 
     // Auto-refresh every 60 seconds
     useEffect(() => {
         const interval = setInterval(() => {
             loadAllData();
+            loadAutoInsights();
         }, 60000);
 
         return () => clearInterval(interval);
     }, []);
+
+    const loadAutoInsights = async () => {
+        try {
+            const insightsData = await api.getAutoInsights();
+            if (insightsData.success) {
+                setAIInsights(insightsData.insights);
+            }
+        } catch (error) {
+            console.error('Failed to load auto insights:', error);
+        }
+    };
+
+    const handleAskAI = async () => {
+        if (!aiQuestion.trim()) return;
+        
+        setIsAIThinking(true);
+        try {
+            const response = await api.askAI(aiQuestion);
+            setAIAnswer(response);
+        } catch (error) {
+            console.error('AI question failed:', error);
+        } finally {
+            setIsAIThinking(false);
+        }
+    };
 
     const loadAllData = async () => {
         setLoading(true);
@@ -506,6 +537,222 @@ function AppAdvanced() {
                                 <li key={i} style={{ color: 'var(--text)' }}>{rec}</li>
                             ))}
                         </ul>
+                    </div>
+                </div>
+            )}
+
+            {/* AI ANALYSIS TAB - NEW! */}
+            {activeTab === 'ai-analysis' && (
+                <div style={{ display: 'grid', gap: 20 }}>
+                    {/* AI Question Interface */}
+                    <div className="chart-container">
+                        <h3>🧠 AI Business Analyst</h3>
+                        <p style={{ color: 'var(--muted)', marginBottom: 15 }}>
+                            Zadaj pytanie o dane biznesowe - AI przeanalizuje wszystkie metryki i udzieli odpowiedzi
+                        </p>
+                        
+                        <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
+                            <input
+                                type="text"
+                                value={aiQuestion}
+                                onChange={(e) => setAIQuestion(e.target.value)}
+                                onKeyPress={(e) => e.key === 'Enter' && handleAskAI()}
+                                placeholder="Np: Dlaczego sprzedaż spadła w ostatnim tygodniu?"
+                                style={{
+                                    flex: 1,
+                                    padding: '12px 16px',
+                                    background: '#1a1a1a',
+                                    border: '1px solid #333',
+                                    borderRadius: 8,
+                                    color: '#fff',
+                                    fontSize: 14
+                                }}
+                                disabled={isAIThinking}
+                            />
+                            <button
+                                onClick={handleAskAI}
+                                disabled={isAIThinking || !aiQuestion.trim()}
+                                style={{
+                                    padding: '12px 24px',
+                                    background: isAIThinking ? '#333' : 'linear-gradient(135deg, #00ff88, #4facfe)',
+                                    border: 'none',
+                                    borderRadius: 8,
+                                    color: '#000',
+                                    fontWeight: 'bold',
+                                    cursor: isAIThinking ? 'wait' : 'pointer',
+                                    opacity: isAIThinking || !aiQuestion.trim() ? 0.5 : 1
+                                }}
+                            >
+                                {isAIThinking ? '🤔 Analizuję...' : '🔍 Analizuj'}
+                            </button>
+                        </div>
+
+                        {/* Quick Question Buttons */}
+                        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                            {[
+                                'Którzy klienci są najbardziej wartościowi?',
+                                'Jakie produkty mają najlepszą marżę?',
+                                'Dlaczego sprzedaż spadła?',
+                                'Które kategorie rosną najszybciej?'
+                            ].map((q) => (
+                                <button
+                                    key={q}
+                                    onClick={() => { setAIQuestion(q); }}
+                                    style={{
+                                        padding: '6px 12px',
+                                        background: '#1a1a1a',
+                                        border: '1px solid #333',
+                                        borderRadius: 6,
+                                        color: '#aaa',
+                                        fontSize: 12,
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    {q}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* AI Answer */}
+                        {aiAnswer && aiAnswer.success && (
+                            <div style={{ marginTop: 20, padding: 20, background: '#1a1a1a', borderRadius: 8, border: '1px solid #333' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 15 }}>
+                                    <span style={{ fontSize: 24 }}>🤖</span>
+                                    <div>
+                                        <strong style={{ color: '#00ff88' }}>AI Answer</strong>
+                                        <div style={{ fontSize: 11, color: '#666' }}>
+                                            Confidence: {((aiAnswer.confidence || 0.85) * 100).toFixed(0)}%
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style={{ whiteSpace: 'pre-line', lineHeight: 1.8, color: '#e0e0e0' }}>
+                                    {aiAnswer.answer}
+                                </div>
+
+                                {/* Insights from answer */}
+                                {aiAnswer.insights && aiAnswer.insights.length > 0 && (
+                                    <div style={{ marginTop: 15, paddingTop: 15, borderTop: '1px solid #333' }}>
+                                        <strong style={{ color: '#4facfe' }}>💡 Key Insights:</strong>
+                                        <div style={{ marginTop: 10, display: 'grid', gap: 10 }}>
+                                            {aiAnswer.insights.map((insight, i) => (
+                                                <div
+                                                    key={i}
+                                                    style={{
+                                                        padding: 12,
+                                                        background: '#0f0f0f',
+                                                        borderLeft: `3px solid ${
+                                                            insight.impact === 'high' ? '#ff6b6b' :
+                                                            insight.impact === 'medium' ? '#feca57' :
+                                                            '#4facfe'
+                                                        }`,
+                                                        borderRadius: 4
+                                                    }}
+                                                >
+                                                    <div style={{ color: '#00ff88', fontSize: 12, fontWeight: 'bold' }}>
+                                                        {insight.category.toUpperCase()}
+                                                    </div>
+                                                    <div style={{ marginTop: 5 }}>{insight.insight}</div>
+                                                    {insight.action && (
+                                                        <div style={{ marginTop: 8, color: '#feca57', fontSize: 13 }}>
+                                                            ➜ {insight.action}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Recommendations */}
+                                {aiAnswer.recommendations && aiAnswer.recommendations.length > 0 && (
+                                    <div style={{ marginTop: 15, paddingTop: 15, borderTop: '1px solid #333' }}>
+                                        <strong style={{ color: '#feca57' }}>📋 Recommendations:</strong>
+                                        <ul style={{ marginTop: 10, paddingLeft: 20 }}>
+                                            {aiAnswer.recommendations.map((rec, i) => (
+                                                <li key={i} style={{ marginBottom: 8, color: '#ccc' }}>{rec}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Auto-Generated Insights */}
+                    <div className="chart-container">
+                        <h3>🎯 Auto-Generated Insights</h3>
+                        <p style={{ color: 'var(--muted)', marginBottom: 15 }}>
+                            AI automatycznie analizuje dane co 60 sekund i generuje insighty
+                        </p>
+                        
+                        {aiInsights.length > 0 ? (
+                            <div style={{ display: 'grid', gap: 12 }}>
+                                {aiInsights.slice(0, 8).map((insight, i) => (
+                                    <div
+                                        key={i}
+                                        style={{
+                                            padding: 15,
+                                            background: '#1a1a1a',
+                                            borderRadius: 8,
+                                            border: '1px solid #333',
+                                            borderLeft: `4px solid ${
+                                                insight.impact === 'high' ? '#ff6b6b' :
+                                                insight.impact === 'medium' ? '#feca57' :
+                                                '#00ff88'
+                                            }`
+                                        }}
+                                    >
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: 8 }}>
+                                            <span style={{
+                                                fontSize: 11,
+                                                fontWeight: 'bold',
+                                                color: '#00ff88',
+                                                textTransform: 'uppercase',
+                                                letterSpacing: 1
+                                            }}>
+                                                {insight.category}
+                                            </span>
+                                            <span style={{
+                                                fontSize: 11,
+                                                color: '#666',
+                                                background: '#0f0f0f',
+                                                padding: '2px 8px',
+                                                borderRadius: 4
+                                            }}>
+                                                {(insight.confidence * 100).toFixed(0)}% confidence
+                                            </span>
+                                        </div>
+                                        <div style={{ color: '#e0e0e0', lineHeight: 1.6, marginBottom: 8 }}>
+                                            {insight.insight}
+                                        </div>
+                                        {insight.action && (
+                                            <div style={{
+                                                marginTop: 10,
+                                                padding: 10,
+                                                background: '#0f0f0f',
+                                                borderRadius: 4,
+                                                color: '#feca57',
+                                                fontSize: 13
+                                            }}>
+                                                <strong>Action:</strong> {insight.action}
+                                            </div>
+                                        )}
+                                        <div style={{
+                                            marginTop: 8,
+                                            fontSize: 11,
+                                            color: insight.impact === 'high' ? '#ff6b6b' :
+                                                   insight.impact === 'medium' ? '#feca57' : '#4facfe'
+                                        }}>
+                                            Impact: {insight.impact?.toUpperCase() || 'MEDIUM'}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div style={{ textAlign: 'center', padding: 40, color: '#666' }}>
+                                Loading insights...
+                            </div>
+                        )}
                     </div>
                 </div>
             )}

@@ -31,7 +31,7 @@ function Write-Log {
     # Console
     switch ($Level) {
         "ERROR" { Write-Host $logMessage -ForegroundColor Red }
-        "WARN"  { Write-Host $logMessage -ForegroundColor Yellow }
+        "WARN" { Write-Host $logMessage -ForegroundColor Yellow }
         "SUCCESS" { Write-Host $logMessage -ForegroundColor Green }
         default { Write-Host $logMessage -ForegroundColor White }
     }
@@ -50,17 +50,17 @@ Write-Log "========================================" "INFO"
 
 # Headers
 $headers = @{
-    'X-API-KEY' = $API_KEY
+    'X-API-KEY'    = $API_KEY
     'Content-Type' = 'application/json'
 }
 
 # Śledź metryki
 $metrics = @{
-    products_new = 0
+    products_new     = 0
     products_updated = 0
-    orders_new = 0
-    orders_updated = 0
-    errors = 0
+    orders_new       = 0
+    orders_updated   = 0
+    errors           = 0
     duration_seconds = 0
 }
 
@@ -108,15 +108,16 @@ try {
     
     try {
         $syncPayload = @{
-            products = $changedProducts
-            orders = $newOrders
+            products  = $changedProducts
+            orders    = $newOrders
             timestamp = $timestamp
         } | ConvertTo-Json -Depth 10
         
         $syncResponse = Invoke-RestMethod -Uri $localApiUrl -Method POST -Body $syncPayload -ContentType "application/json" -TimeoutSec 5 -ErrorAction SilentlyContinue
         
         Write-Log "Dane zsynchronizowane z lokalnym API" "SUCCESS"
-    } catch {
+    }
+    catch {
         Write-Log "Lokalne API niedostępne - pominięto sync (to normalne)" "WARN"
     }
     
@@ -138,7 +139,8 @@ try {
     
     exit 0
     
-} catch {
+}
+catch {
     $metrics.errors += 1
     Write-Log "BŁĄD KRYTYCZNY: $($_.Exception.Message)" "ERROR"
     Write-Log $_.ScriptStackTrace "ERROR"
