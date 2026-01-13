@@ -18,6 +18,11 @@ binding = "DB"
 database_name = "jimbo-rag-db"
 database_id = "90fe9b43-f8a4-4e78-94c5-c44aff4012e9"  # pumo_products
 
+[[d1_databases]]
+binding = "PUMO_ANALYTICS"
+database_name = "pumo-analiza"
+database_id = "7b17dccb-96bd-4bec-adc6-92b164ce10f1"  # Analytics & IdoSell export
+
 # Vectorize
 [[vectorize]]
 binding = "VECTORIZE"
@@ -40,10 +45,10 @@ bucket_name = "pumo-raw-data"
 # Environment variables
 [vars]
 ALLOWED_ORIGINS = "https://www.mybonzoaiblog.com,http://localhost:4656"
-PUMO_API_BASE_URL = "https://meblepumo.iai-shop.com/api/admin/v3"
-# Explicit configs for IdoSell debugging
+PUMO_API_BASE_URL = "/api/admin/v3"
+# IdoSell API v3 Configuration (NOWY KLUCZ application21 - 2026-01-13)
 IDOSELL_SHOP_URL = "https://meblepumo.iai-shop.com"
-IDOSELL_API_KEY = "YXBwbGljYXRpb24yMDpDcGRCOVp3cE1adG9HY2JTMWVUMXhYUTlmU1dLb0VhWWJOd2lDbG5wN3FpQzEwUkx4cStUYVE1cUFnc041dEpT"
+IDOSELL_API_KEY = "YXBwbGljYXRpb24yMTpRRnVqMXlZVWFua3ZnekZSNUFQNndRRGd6aTNuTTVJd21SVkgwbXBzcmJYM3pWZWNrZDkyMWlqZnZ3LzJZWFVn"
 DASHBOARD_API_BASE = ""
 GA4_PROPERTY_ID = ""
 CF_ACCESS_AUD = ""

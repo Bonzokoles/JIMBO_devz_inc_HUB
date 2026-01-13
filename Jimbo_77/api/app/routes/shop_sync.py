@@ -177,13 +177,16 @@ async def shop_sync_health():
         service = ShopSyncService()
         connection_test = await service.idosell_client.test_connection()
         
+        # idosell_client.test_connection() zwraca "success" nie "connected"
+        idosell_ok = connection_test.get("success", False)
+        
         return {
-            "status": "healthy",
+            "status": "healthy" if idosell_ok else "degraded",
             "timestamp": datetime.now().isoformat(),
-            "idosell_connection": connection_test["connected"],
+            "idosell_connection": idosell_ok,
             "services": {
                 "database": "connected",
-                "idosell_api": "connected" if connection_test["connected"] else "error",
+                "idosell_api": "connected" if idosell_ok else "error",
                 "redis": "connected"  # Assume Redis is working if we got here
             }
         }

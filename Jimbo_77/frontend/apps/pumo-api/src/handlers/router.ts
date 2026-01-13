@@ -7,6 +7,7 @@ import { requireDashboardAccess } from '../auth/auth';
 import { handleAnalyticsAPI } from '../endpoints/analytics';
 import { handleAIAPI } from '../endpoints/ai';
 import { handleAgentsAPI } from '../endpoints/agents';
+import { MeblePumoSyncService } from '../services/idosell-sync';
 
 export async function handleRequest(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
@@ -31,6 +32,19 @@ export async function handleRequest(request: Request, env: Env, ctx: ExecutionCo
                 status: 'healthy',
                 timestamp: new Date().toISOString(),
                 version: '2.1.0-AI-AGENTS'
+            });
+        }
+
+        // MeblePumo XML Feed Export to D1
+        if (path === '/api/idosell/export' && request.method === 'POST') {
+            const syncService = new MeblePumoSyncService(env.PUMO_ANALYTICS);
+            const result = await syncService.exportToD1();
+
+            return Response.json({
+                success: result.success,
+                products: result.products,
+                errors: result.errors,
+                timestamp: new Date().toISOString()
             });
         }
 
