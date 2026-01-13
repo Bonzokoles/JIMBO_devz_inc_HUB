@@ -1,7 +1,6 @@
-
 import { AppShell } from "@jimbo77/ui/layout/AppShell";
 import { Topbar } from "@jimbo77/ui/layout/Topbar";
-import "../../../packages/ui/src/styles/ops.css"; // Import styles directly or via index if exported
+import "@jimbo77/ui/styles/ops.css";
 
 export default function App() {
   return (
