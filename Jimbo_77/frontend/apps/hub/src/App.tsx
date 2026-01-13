@@ -11,10 +11,15 @@ import { LoginPage } from "./features/auth/LoginPage";
 import { UnifiedOpsView } from "./features/unified/UnifiedOpsView";
 import { AgentsView } from "./features/agents/AgentsView";
 
+import { PumoView } from "./features/pumo/PumoView";
+
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
   const [projects, setProjects] = React.useState<Project[]>([]);
   const [activeTab, setActiveTab] = React.useState<"dashboards" | "services" | "agents">("dashboards");
+  
+  // Dashboard Sub-navigation state
+  const [currentDashboard, setCurrentDashboard] = React.useState<"main" | "pumo" | null>("main");
   
   // Command Drawer State
   const [activeCommandId, setActiveCommandId] = React.useState<string | null>(null);
@@ -65,7 +70,13 @@ export default function App() {
       </div>
 
       <div style={{ padding: "20px", maxWidth: 1800, margin: "0 auto" }}>
-        {activeTab === "dashboards" && <UnifiedOpsView />}
+        {activeTab === "dashboards" && (
+          currentDashboard === "pumo" ? (
+            <PumoView onBack={() => setCurrentDashboard("main")} />
+          ) : (
+            <UnifiedOpsView onOpenPumo={() => setCurrentDashboard("pumo")} />
+          )
+        )}
         {activeTab === "services" && <ServicesPage projects={projects} onCommand={(id) => setActiveCommandId(id)} />}
         {activeTab === "agents" && <AgentsView />}
       </div>
