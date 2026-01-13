@@ -51,6 +51,9 @@ app.include_router(publishing.router, prefix="/v1")
 app.include_router(analytics.router, prefix="/v1")
 app.include_router(logs.router, prefix="/v1")
 
+# Agent compatibility routes (no /v1 prefix)
+app.include_router(commands.router, prefix="/api")
+
 @app.get("/")
 async def root():
     return {

@@ -5,7 +5,7 @@ interface UnifiedOpsViewProps {
   onOpenControlCenter?: () => void;
 }
 
-export function UnifiedOpsView({ onOpenPumo }: UnifiedOpsViewProps) {
+export function UnifiedOpsView({ onOpenPumo, onOpenControlCenter }: UnifiedOpsViewProps) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20, paddingBottom: 50 }}>
       {/* Header */}
@@ -73,11 +73,15 @@ export function UnifiedOpsView({ onOpenPumo }: UnifiedOpsViewProps) {
                 Process management, service restart and system control
               </p>
               <button 
+                type="button"
                 className="btn" 
-                style={{ marginTop: 12, width: "100%", justifyContent: "center", opacity: 0.5, cursor: "not-allowed" }}
-                disabled
+                style={{ marginTop: 12, width: "100%", justifyContent: "center" }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (onOpenControlCenter) onOpenControlCenter();
+                }}
               >
-                COMING SOON
+                OPEN CONTROLS →
               </button>
             </div>
           </div>

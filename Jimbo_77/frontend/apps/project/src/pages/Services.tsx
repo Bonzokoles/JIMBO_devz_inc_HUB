@@ -1,6 +1,7 @@
 import React from "react";
 import { api } from "@jimbo77/core/api";
 import { can } from "@jimbo77/core/rbac";
+import { grafanaExploreLokiUrl } from "@jimbo77/core/grafana";
 import type { CommandIn } from "@jimbo77/core/types";
 import { DangerConfirmModal } from "@jimbo77/ui";
 
@@ -115,14 +116,39 @@ export function ServicesPage(props: {
                     )}
                   </div>
 
-                  <button
-                    className="btn"
-                    style={{ borderColor: disabled ? "var(--line)" : "rgba(255,59,87,.55)" }}
-                    disabled={disabled}
-                    onClick={() => openRestart(s)}
-                  >
-                    {busyId === s.id ? "WORKING…" : left > 0 ? "COOLDOWN" : "RESTART"}
-                  </button>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <button
+                      type="button"
+                      className="btn"
+                      style={{
+                        borderColor: "rgba(106, 166, 255, .55)",
+                        fontSize: 11,
+                        padding: "4px 8px",
+                        minWidth: "auto"
+                      }}
+                      onClick={() => {
+                        const grafanaUrl = grafanaExploreLokiUrl({
+                          grafanaBase: import.meta.env.VITE_GRAFANA_BASE || "https://grafana.jimbo77.com",
+                          host: s.agentId, // używamy agentId jako host label
+                          container: s.target, // nazwa kontenera
+                          timeRangeMs: 30 * 60 * 1000 // ostatnie 30 min
+                        });
+                        window.open(grafanaUrl, '_blank');
+                      }}
+                      title={`Open logs in Grafana for ${s.target}`}
+                    >
+                      GRAFANA
+                    </button>
+
+                    <button
+                      className="btn"
+                      style={{ borderColor: disabled ? "var(--line)" : "rgba(255,59,87,.55)" }}
+                      disabled={disabled}
+                      onClick={() => openRestart(s)}
+                    >
+                      {busyId === s.id ? "WORKING…" : left > 0 ? "COOLDOWN" : "RESTART"}
+                    </button>
+                  </div>
                 </div>
               );
             })}

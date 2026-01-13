@@ -5,6 +5,8 @@ import App from './App.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <div style={{ background: '#0a0a0a', minHeight: '100vh', color: '#fff' }}>
+      <App />
+    </div>
   </StrictMode>,
 )
