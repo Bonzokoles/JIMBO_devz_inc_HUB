@@ -56,15 +56,15 @@ async function handleRAG(request: Request, env: Env): Promise<Response> {
         const vector = embeddings.data[0];
 
         // 2. Search in Vectorize
-        // Note: Check if VECTORIZE binding exists, if not mock or fail
-        if (!env.VECTORIZE_INDEX) {
+        // Note: Check if VECTORIZE binding exists
+        if (!env.VECTORIZE) {
             return Response.json({ 
-                error: 'Vectorize index not configured',
+                error: 'Vectorize binding (VECTORIZE) not found',
                 mock_answer: 'RAG is ready but Vectorize binding is missing.' 
             }, { status: 503 });
         }
 
-        const matches = await env.VECTORIZE_INDEX.query(vector, { topK, returnMetadata: true });
+        const matches = await env.VECTORIZE.query(vector, { topK, returnMetadata: true });
 
         // 3. Generate Answer using LLM + Context
         const context = matches.matches.map(m => m.metadata?.text || '').join('\n---\n');
