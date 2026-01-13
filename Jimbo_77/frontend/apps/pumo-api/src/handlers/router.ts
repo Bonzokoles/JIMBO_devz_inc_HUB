@@ -30,7 +30,7 @@ export async function handleRequest(request: Request, env: Env, ctx: ExecutionCo
             return Response.json({
                 status: 'healthy',
                 timestamp: new Date().toISOString(),
-                version: '2.0.0-modular'
+                version: '2.1.0-AI-AGENTS'
             });
         }
 
