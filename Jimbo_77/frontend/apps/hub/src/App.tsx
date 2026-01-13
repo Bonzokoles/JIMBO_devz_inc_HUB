@@ -6,15 +6,14 @@ import { api } from "@jimbo77/core/api";
 import type { Project } from "@jimbo77/core/types";
 
 // Views
-import DashboardView from "./features/dashboard/DashboardView";
 import { ServicesPage } from "./features/services/ServicesPage";
 import { LoginPage } from "./features/auth/LoginPage";
+import { UnifiedOpsView } from "./features/unified/UnifiedOpsView";
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
   const [projects, setProjects] = React.useState<Project[]>([]);
   const [activeTab, setActiveTab] = React.useState<"dashboards" | "services" | "agents">("dashboards");
-  // const [globalOk, setGlobalOk] = React.useState(false); // Unused for now
   
   // Command Drawer State
   const [activeCommandId, setActiveCommandId] = React.useState<string | null>(null);
@@ -26,7 +25,6 @@ export default function App() {
       try {
         const [p] = await Promise.all([api.projects()]);
         setProjects(p);
-        // setGlobalOk(g.ok);
       } catch (e) {
         console.error("Failed to load initial data", e);
       }
@@ -65,57 +63,11 @@ export default function App() {
         </button>
       </div>
 
-      {activeTab === "dashboards" && (
-        <div className="grid">
-          {/* Main Dashboard (PUMO Logic port) */}
-          <div className="panel" style={{ gridColumn: "span 12" }}>
-             <div className="panel-header">
-                <h3>MAIN DASHBOARD</h3>
-                <span className="badge active">ACTIVE</span>
-             </div>
-             <div className="panel-body">
-                <DashboardView />
-             </div>
-          </div>
-          
-          {/* Project Cards */}
-          {projects.map(p => (
-            <div key={p.id} className="panel">
-              <div className="panel-header">
-                <div>
-                  <div className="label">PROJECT</div>
-                  <h3>{p.name}</h3>
-                </div>
-                <span className="badge">LINKED</span>
-              </div>
-              <div className="panel-body">
-                <a href={p.host} target="_blank" rel="noreferrer" className="service-btn launch" style={{ display: "block", textAlign: "center" }}>
-                  OPEN COCKPIT →
-                </a>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {activeTab === "services" && (
-        <ServicesPage 
-          projects={projects} 
-          // Mock ME for now - in real app this comes from api.me()
-          me={{ email: "dev@jimbo77.com", role: "owner" }} 
-          onCommand={(id) => setActiveCommandId(id)}
-        />
-      )}
-
-      {activeTab === "agents" && (
-        <div className="grid">
-           <div className="panel" style={{ gridColumn: "span 12" }}>
-             <div className="panel-body" style={{ color: "var(--muted)" }}>
-               Agents View coming soon
-             </div>
-           </div>
-        </div>
-      )}
+      <div style={{ padding: "20px", maxWidth: 1800, margin: "0 auto" }}>
+        {activeTab === "dashboards" && <UnifiedOpsView />}
+        {activeTab === "services" && <ServicesPage projects={projects} onCommand={(id) => setActiveCommandId(id)} />}
+        {activeTab === "agents" && <div className="card">Agents view - Coming soon</div>}
+      </div>
     </AppShell>
   );
 }

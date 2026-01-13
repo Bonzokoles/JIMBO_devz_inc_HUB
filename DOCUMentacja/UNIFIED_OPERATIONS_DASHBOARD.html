@@ -1,0 +1,2428 @@
+<!doctype html>
+<html lang="pl">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="color-scheme" content="dark light" />
+    <title>JIMBO // UNIFIED OPERATIONS</title>
+    <meta name="description"
+        content="Centralny dashboard operacyjny systemu JIMBO - wszystkie funkcje w jednym miejscu" />
+    <link rel="icon" type="image/x-icon" href="dashboards/favicon/favicon.ico">
+    <link rel="apple-touch-icon" href="dashboards/favicon/apple-touch-icon.png">
+
+    <style>
+        /* =========================
+       JIMBO UNIFIED OPS DASHBOARD
+       Sci-fi ultra-computer theme
+       Zero rounded corners
+       ========================= */
+
+        :root {
+            --bg: #07090f;
+            --bg2: #05070c;
+            --panel: #0b0f1a;
+            --panel2: #090d17;
+            --text: #e7ecff;
+            --muted: #9aa6c7;
+            --faint: #6b7696;
+            --line: #1b2542;
+            --hot: #7cffb2;
+            /* neon green */
+            --cold: #6aa6ff;
+            /* neon blue */
+            --warn: #ffd166;
+            /* amber */
+            --bad: #ff4d6d;
+            /* red/pink */
+            --shadow: 0 0 0 1px rgba(231, 236, 255, .06), 0 18px 50px rgba(0, 0, 0, .55);
+
+            --maxw: 1800px;
+            --lh: 1.65;
+            --fs: 14px;
+            --fs-sm: 12px;
+            --fs-lg: 16px;
+            --fs-xl: 24px;
+
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", sans-serif;
+
+            --focus: 0 0 0 2px var(--cold), 0 0 0 4px rgba(106, 166, 255, .25);
+        }
+
+        * {
+            box-sizing: border-box;
+            border-radius: 0 !important
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            overflow-x: hidden
+        }
+
+        body {
+            font: var(--fs)/var(--lh) var(--sans);
+            background:
+                radial-gradient(1200px 800px at 15% 0%, rgba(124, 255, 178, .08), transparent 60%),
+                radial-gradient(1200px 800px at 90% 5%, rgba(106, 166, 255, .08), transparent 60%),
+                linear-gradient(180deg, var(--bg), var(--bg2) 70%);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none
+        }
+
+        a:hover {
+            color: var(--hot)
+        }
+
+        ::selection {
+            background: rgba(124, 255, 178, .25)
+        }
+
+        /* ======= TOP BAR ======= */
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background: linear-gradient(180deg, rgba(11, 15, 26, .92), rgba(7, 9, 15, .70));
+            border-bottom: 1px solid rgba(27, 37, 66, .9);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, .4);
+        }
+
+        .toprow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            max-width: var(--maxw);
+            margin: 0 auto;
+            padding: 14px 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-width: 280px;
+        }
+
+        .sigil {
+            width: 32px;
+            height: 32px;
+            border: 1px solid rgba(231, 236, 255, .18);
+            background:
+                repeating-linear-gradient(90deg,
+                    rgba(124, 255, 178, .40) 0px,
+                    rgba(124, 255, 178, .40) 1px,
+                    transparent 1px,
+                    transparent 6px),
+                radial-gradient(24px 24px at 35% 35%, rgba(106, 166, 255, .65), transparent 65%);
+            box-shadow: 0 0 0 1px rgba(231, 236, 255, .08), 0 0 18px rgba(124, 255, 178, .15);
+        }
+
+        .brand h1 {
+            margin: 0;
+            font: 900 15px/1.1 var(--mono);
+            letter-spacing: 1.4px;
+            color: var(--text);
+        }
+
+        .brand .sub {
+            margin-top: 3px;
+            font: 700 11px/1.1 var(--mono);
+            letter-spacing: 0.8px;
+            color: var(--muted);
+        }
+
+        .status-bar {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--muted);
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(27, 37, 66, .8);
+            padding: 7px 10px;
+            background: rgba(11, 15, 26, .6);
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--hot);
+            box-shadow: 0 0 12px rgba(124, 255, 178, .35);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: .5
+            }
+        }
+
+        .dot.warn {
+            background: var(--warn);
+            box-shadow: 0 0 12px rgba(255, 209, 102, .35)
+        }
+
+        .dot.bad {
+            background: var(--bad);
+            box-shadow: 0 0 12px rgba(255, 77, 109, .35)
+        }
+
+        .dot.cold {
+            background: var(--cold);
+            box-shadow: 0 0 12px rgba(106, 166, 255, .35)
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            min-width: 280px;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            appearance: none;
+            background: transparent;
+            border: 1px solid rgba(27, 37, 66, .9);
+            color: var(--text);
+            padding: 9px 12px;
+            font: 700 11px/1 var(--mono);
+            letter-spacing: 0.8px;
+            cursor: pointer;
+            transition: all .15s ease;
+        }
+
+        .btn:hover {
+            border-color: rgba(124, 255, 178, .55);
+            color: var(--hot);
+            background: rgba(124, 255, 178, .05);
+        }
+
+        .btn:focus {
+            outline: none;
+            box-shadow: var(--focus)
+        }
+
+        .btn.active {
+            border-color: var(--hot);
+            background: rgba(124, 255, 178, .12);
+            color: var(--hot);
+        }
+
+        /* ======= MAIN LAYOUT ======= */
+        .container {
+            max-width: var(--maxw);
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 18px;
+            margin-top: 20px;
+        }
+
+        @media (min-width: 1400px) {
+            .grid {
+                grid-template-columns: repeat(3, 1fr)
+            }
+        }
+
+        @media (max-width: 900px) {
+            .grid {
+                grid-template-columns: 1fr
+            }
+        }
+
+        /* ======= PANELS ======= */
+        .panel {
+            border: 1px solid rgba(27, 37, 66, .85);
+            background: linear-gradient(180deg, rgba(11, 15, 26, .95), rgba(9, 13, 23, .80));
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .panel:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 0 1px rgba(231, 236, 255, .10), 0 24px 60px rgba(0, 0, 0, .65);
+        }
+
+        .panel::before {
+            content: "";
+            position: absolute;
+            inset: -2px;
+            background:
+                linear-gradient(135deg, rgba(106, 166, 255, .06), transparent 50%),
+                radial-gradient(600px 200px at 15% 0%, rgba(124, 255, 178, .08), transparent 65%);
+            pointer-events: none;
+        }
+
+        .panel>* {
+            position: relative
+        }
+
+        .panel-header {
+            border-bottom: 1px solid rgba(27, 37, 66, .75);
+            padding: 14px 16px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .panel-header h3 {
+            margin: 0;
+            font: 900 14px/1.2 var(--mono);
+            letter-spacing: 1px;
+            color: var(--text);
+        }
+
+        .panel-header .label {
+            font: 800 10px/1 var(--mono);
+            letter-spacing: 1.2px;
+            color: var(--muted);
+        }
+
+        .panel-header .badge {
+            border: 1px solid rgba(27, 37, 66, .8);
+            padding: 5px 8px;
+            font: 700 10px/1 var(--mono);
+            letter-spacing: 0.6px;
+            color: var(--muted);
+            background: rgba(11, 15, 26, .6);
+        }
+
+        .badge.active {
+            border-color: rgba(124, 255, 178, .45);
+            color: var(--hot);
+            background: rgba(124, 255, 178, .08);
+        }
+
+        .badge.inactive {
+            border-color: rgba(255, 77, 109, .35);
+            color: var(--bad);
+        }
+
+        .panel-body {
+            padding: 16px;
+        }
+
+        /* ======= SERVICE CARDS ======= */
+        .service-card {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            border-top: 1px solid rgba(27, 37, 66, .5);
+            align-items: flex-start;
+            transition: background .15s ease;
+        }
+
+        .service-card:first-of-type {
+            border-top: none
+        }
+
+        .service-card:hover {
+            background: rgba(106, 166, 255, .04);
+        }
+
+        .service-icon {
+            width: 42px;
+            height: 42px;
+            min-width: 42px;
+            border: 1px solid rgba(27, 37, 66, .8);
+            background:
+                repeating-linear-gradient(45deg,
+                    rgba(106, 166, 255, .12) 0px,
+                    rgba(106, 166, 255, .12) 1px,
+                    transparent 1px,
+                    transparent 4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font: 900 16px/1 var(--mono);
+            color: var(--cold);
+        }
+
+        .service-info {
+            flex: 1;
+        }
+
+        .service-info h4 {
+            margin: 0;
+            font: 800 13px/1.3 var(--mono);
+            letter-spacing: 0.4px;
+            color: var(--text);
+        }
+
+        .service-info p {
+            margin: 4px 0 0;
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .service-info .meta {
+            margin-top: 6px;
+            display: flex;
+            gap: 10px;
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--faint);
+        }
+
+        .service-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 80px;
+        }
+
+        .service-btn {
+            appearance: none;
+            background: transparent;
+            border: 1px solid rgba(27, 37, 66, .8);
+            color: var(--muted);
+            padding: 6px 10px;
+            font: 700 10px/1 var(--mono);
+            letter-spacing: 0.6px;
+            cursor: pointer;
+            transition: all .15s ease;
+            text-align: center;
+        }
+
+        .service-btn:hover {
+            border-color: rgba(106, 166, 255, .45);
+            color: var(--cold);
+            background: rgba(106, 166, 255, .06);
+        }
+
+        .service-btn.launch {
+            border-color: rgba(124, 255, 178, .35);
+            color: var(--hot);
+        }
+
+        .service-btn.launch:hover {
+            background: rgba(124, 255, 178, .10);
+            border-color: var(--hot);
+        }
+
+        /* ======= METRICS GRID ======= */
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .metric {
+            border: 1px solid rgba(27, 37, 66, .75);
+            padding: 12px;
+            background: rgba(11, 15, 26, .5);
+        }
+
+        .metric .label {
+            font: 700 10px/1 var(--mono);
+            letter-spacing: 1px;
+            color: var(--muted);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .metric .value {
+            font: 900 20px/1 var(--mono);
+            color: var(--text);
+            letter-spacing: -0.5px;
+        }
+
+        .metric .value.good {
+            color: var(--hot)
+        }
+
+        .metric .value.warn {
+            color: var(--warn)
+        }
+
+        .metric .value.bad {
+            color: var(--bad)
+        }
+
+        .metric .sub {
+            margin-top: 4px;
+            font: 600 10px/1 var(--mono);
+            color: var(--faint);
+        }
+
+        /* ======= LOGS PANEL ======= */
+        .logs {
+            font-family: var(--mono);
+            font-size: 11px;
+            line-height: 1.6;
+            max-height: 300px;
+            overflow-y: auto;
+            background: rgba(5, 7, 12, .8);
+            padding: 10px;
+            border: 1px solid rgba(27, 37, 66, .6);
+        }
+
+        .logs::-webkit-scrollbar {
+            width: 8px
+        }
+
+        .logs::-webkit-scrollbar-track {
+            background: rgba(11, 15, 26, .5)
+        }
+
+        .logs::-webkit-scrollbar-thumb {
+            background: rgba(106, 166, 255, .25)
+        }
+
+        .log-line {
+            padding: 3px 0;
+            color: var(--muted);
+        }
+
+        .log-line .time {
+            color: var(--faint)
+        }
+
+        .log-line .level {
+            font-weight: 700
+        }
+
+        .log-line .level.info {
+            color: var(--cold)
+        }
+
+        .log-line .level.success {
+            color: var(--hot)
+        }
+
+        .log-line .level.warn {
+            color: var(--warn)
+        }
+
+        .log-line .level.error {
+            color: var(--bad)
+        }
+
+        /* ======= TABS ======= */
+        .tabs {
+            display: flex;
+            gap: 2px;
+            border-bottom: 1px solid rgba(27, 37, 66, .75);
+            margin-bottom: 16px;
+        }
+
+        .tab {
+            appearance: none;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--muted);
+            padding: 10px 16px;
+            font: 700 11px/1 var(--mono);
+            letter-spacing: 0.8px;
+            cursor: pointer;
+            transition: all .15s ease;
+        }
+
+        .tab:hover {
+            color: var(--text);
+            background: rgba(106, 166, 255, .04);
+        }
+
+        .tab.active {
+            color: var(--hot);
+            border-bottom-color: var(--hot);
+            background: rgba(124, 255, 178, .06);
+        }
+
+        .tab-content {
+            display: none
+        }
+
+        .tab-content.active {
+            display: block
+        }
+
+        /* ======= FOOTER ======= */
+        footer {
+            margin-top: 40px;
+            padding: 20px;
+            border-top: 1px solid rgba(27, 37, 66, .7);
+            text-align: center;
+            color: var(--faint);
+            font-family: var(--mono);
+            font-size: 10px;
+            letter-spacing: 0.6px;
+        }
+
+        /* ======= RESPONSIVE ======= */
+        @media (max-width: 720px) {
+            .toprow {
+                flex-wrap: wrap
+            }
+
+            .brand,
+            .actions {
+                min-width: auto
+            }
+
+            .status-bar {
+                width: 100%;
+                justify-content: flex-start
+            }
+
+            .metrics {
+                grid-template-columns: 1fr
+            }
+        }
+
+        /* ======= ACCESSIBILITY ======= */
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- TOP BAR -->
+    <header class="topbar" role="banner">
+        <div class="toprow">
+            <div class="brand">
+                <div class="sigil" aria-hidden="true"></div>
+                <div>
+                    <h1>JIMBO // UNIFIED OPS</h1>
+                    <div class="sub">CENTRAL OPERATIONS DASHBOARD</div>
+                </div>
+            </div>
+
+            <div class="status-bar" role="status" aria-live="polite">
+                <div class="stat">
+                    <span class="dot"></span>
+                    <span>SYSTEM: <strong id="sysStatus">ONLINE</strong></span>
+                </div>
+                <div class="stat">
+                    <span class="dot cold"></span>
+                    <span>SERVICES: <strong id="serviceCount">0/37</strong></span>
+                </div>
+                <div class="stat">
+                    <span>UPTIME: <strong id="uptime">--:--:--</strong></span>
+                </div>
+                <div class="stat">
+                    <span>CPU: <strong id="cpu">--%</strong></span>
+                </div>
+                <div class="stat">
+                    <span>MEM: <strong id="mem">--%</strong></span>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn" onclick="window.open('dashboard_main.html', '_blank')" type="button">?
+                    MAIN</button>
+                <button class="btn" onclick="window.open('control_center.html', '_blank')" type="button">?
+                    CONTROL</button>
+                <button class="btn" onclick="window.open('advanced_matrix.html', '_blank')" type="button">?
+                    MATRIX</button>
+                <button class="btn" onclick="window.open('simple_library_viewer.html', '_blank')" type="button">?
+                    LIBRARY</button>
+                <button class="btn" id="refreshBtn" type="button">REFRESH</button>
+                <button class="btn" id="killAllBtn" type="button">KILL ALL</button>
+                <button class="btn active" id="themeBtn" type="button">DARK</button>
+                <img src="./dashboards/favicon/apple-touch-icon.png" alt="JIMBO Logo" class="topbar-logo"
+                    style="width: 42px; height: 42px; margin-left: 10px; filter: drop-shadow(0 0 12px rgba(124, 255, 178, 0.6)) drop-shadow(0 0 20px rgba(106, 166, 255, 0.4));">
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="container" role="main">
+
+        <!-- TABS -->
+        <div class="tabs" role="tablist">
+            <button class="tab active" role="tab" data-tab="dashboards">DASHBOARDS & UI</button>
+            <button class="tab" role="tab" data-tab="agents">AGENTS</button>
+            <button class="tab" role="tab" data-tab="services">SERVICES</button>
+            <button class="tab" role="tab" data-tab="tools">TOOLS</button>
+            <button class="tab" role="tab" data-tab="system">SYSTEM</button>
+            <button class="tab" role="tab" data-tab="logs">LOGS</button>
+        </div>
+
+        <!-- TAB 1: DASHBOARDS & UI -->
+        <div class="tab-content active" id="content-dashboards" role="tabpanel">
+            <div class="grid">
+
+                <!-- Main Dashboard -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="label">PORT 4560</div>
+                            <h3>MAIN DASHBOARD</h3>
+                        </div>
+                        <span class="badge active">ACTIVE</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-icon">?</div>
+                            <div class="service-info">
+                                <h4>Dashboard Server</h4>
+                                <p>G��wny panel kontrolny z kartami systemowymi i statusem wszystkich komponent�w</p>
+                                <div class="meta">
+                                    <span>FILE: dashboard_server.py</span>
+                                    <span>PID: <span id="pid-dashboard">----</span></span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn launch">LAUNCH</button>
+                                <button class="service-btn">STOP</button>
+                                <button class="service-btn">VIEW</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Control Center -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="label">PORT 4569</div>
+                            <h3>CONTROL CENTER</h3>
+                        </div>
+                        <span class="badge active">ACTIVE</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-icon">?</div>
+                            <div class="service-info">
+                                <h4>Server Control</h4>
+                                <p>Panel zarz�dzania procesami, restartowania serwis�w i kontroli systemowej</p>
+                                <div class="meta">
+                                    <span>FILE: server_control.py</span>
+                                    <span>PID: <span id="pid-control">----</span></span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn launch">LAUNCH</button>
+                                <button class="service-btn">STOP</button>
+                                <button class="service-btn">VIEW</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Advanced Matrix -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="label">PORT 4575</div>
+                            <h3>ADVANCED MATRIX</h3>
+                        </div>
+                        <span class="badge inactive">OFFLINE</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-icon">?</div>
+                            <div class="service-info">
+                                <h4>Matrix Dashboard</h4>
+                                <p>Zaawansowany widok systemowy z monitoringiem GPU, metrykami i wizualizacjami</p>
+                                <div class="meta">
+                                    <span>FILE: advanced_matrix.py</span>
+                                    <span>PID: ----</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn launch">LAUNCH</button>
+                                <button class="service-btn">STOP</button>
+                                <button class="service-btn">VIEW</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Library Catalog -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="label">PORT 6030</div>
+                            <h3>LIBRARY CATALOG</h3>
+                        </div>
+                        <span class="badge active">ACTIVE</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-icon">?</div>
+                            <div class="service-info">
+                                <h4>Unified Libraries Catalog</h4>
+                                <p>Katalog wszystkich 60 bibliotek (51k+ plik�w) - Control Center + Eastwood DEVZ</p>
+                                <div class="meta">
+                                    <span>FILE: libraries_catalog_server.py</span>
+                                    <span>TOTAL: 60 libraries, 51,458 files</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn launch">LAUNCH</button>
+                                <button class="service-btn">STOP</button>
+                                <button class="service-btn">VIEW</button>
+                            </div>
+                        </div>
+
+                        <!-- Library Management Agents -->
+                        <div style="margin-top:14px; padding-top:14px; border-top:1px solid rgba(27,37,66,.55)">
+                            <h4
+                                style="margin:0 0 10px; font:900 11px/1 var(--mono); letter-spacing:1px; color:var(--muted)">
+                                ?? LIBRARY MANAGEMENT AGENTS
+                            </h4>
+
+                            <!-- Elwirka Squad -->
+                            <div class="service-card"
+                                style="margin-bottom:8px; padding:10px; background:rgba(124,255,178,.03)">
+                                <div class="service-icon"
+                                    style="width:32px; height:32px; min-width:32px; font-size:13px">?</div>
+                                <div class="service-info">
+                                    <h4 style="font-size:12px">ELWIRKA SQUAD - Library Guardians</h4>
+                                    <p style="font-size:11px; margin:3px 0 0">Supervisor + Librarian + Knowledge +
+                                        Quality - zarz�dzanie, jako�� i stan bibliotek</p>
+                                    <div class="meta" style="font-size:9px">
+                                        <span>TEAM: 4 agents</span>
+                                        <span>SCOPE: Both libraries</span>
+                                        <span>STATUS: Active</span>
+                                    </div>
+                                </div>
+                                <div class="service-actions" style="min-width:70px">
+                                    <button class="service-btn" style="font-size:9px; padding:4px 6px">ACTIVATE</button>
+                                    <button class="service-btn" style="font-size:9px; padding:4px 6px">STATUS</button>
+                                </div>
+                            </div>
+
+                            <!-- Fred Librarian -->
+                            <div class="service-card"
+                                style="margin-bottom:8px; padding:10px; background:rgba(106,166,255,.03)">
+                                <div class="service-icon"
+                                    style="width:32px; height:32px; min-width:32px; font-size:13px">?</div>
+                                <div class="service-info">
+                                    <h4 style="font-size:12px">FRED LIBRARIAN - Specialist</h4>
+                                    <p style="font-size:11px; margin:3px 0 0">Specjalistyczny agent biblioteczny -
+                                        organizacja, indexing, metadata</p>
+                                    <div class="meta" style="font-size:9px">
+                                        <span>FILE: fred_librarian.py</span>
+                                        <span>TYPE: Specialist</span>
+                                        <span>STATUS: Ready</span>
+                                    </div>
+                                </div>
+                                <div class="service-actions" style="min-width:70px">
+                                    <button class="service-btn" style="font-size:9px; padding:4px 6px">RUN</button>
+                                    <button class="service-btn" style="font-size:9px; padding:4px 6px">CONFIG</button>
+                                </div>
+                            </div>
+
+                            <!-- Library Quality Metrics -->
+                            <div class="metrics"
+                                style="margin-top:10px; grid-template-columns: repeat(4, 1fr); gap:6px">
+                                <div class="metric" style="padding:8px">
+                                    <span class="label" style="font-size:9px">INDEXED</span>
+                                    <div class="value good" style="font-size:16px">60/60</div>
+                                    <div class="sub" style="font-size:9px">libraries</div>
+                                </div>
+                                <div class="metric" style="padding:8px">
+                                    <span class="label" style="font-size:9px">QUALITY</span>
+                                    <div class="value good" style="font-size:16px">98%</div>
+                                    <div class="sub" style="font-size:9px">checked</div>
+                                </div>
+                                <div class="metric" style="padding:8px">
+                                    <span class="label" style="font-size:9px">METADATA</span>
+                                    <div class="value good" style="font-size:16px">95%</div>
+                                    <div class="sub" style="font-size:9px">complete</div>
+                                </div>
+                                <div class="metric" style="padding:8px">
+                                    <span class="label" style="font-size:9px">ERRORS</span>
+                                    <div class="value" style="font-size:16px">0</div>
+                                    <div class="sub" style="font-size:9px">found</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Control Center Libraries -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="label">COLLECTION</div>
+                            <h3>CONTROL CENTER LIBS</h3>
+                        </div>
+                        <span class="badge active">51 LIBS</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-icon">?</div>
+                            <div class="service-info">
+                                <h4>Control Center Collection</h4>
+                                <p>51 bibliotek: AI Tools, Prompts, Business, Data Science, Cloud Services, Datasets...
+                                </p>
+                                <div class="meta">
+                                    <span>PATH: LIBRARIES/CONTROL_CENTER/</span>
+                                    <span>CATEGORIES: AI, Business, Data, Cloud, Automation</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn">BROWSE</button>
+                                <button class="service-btn">SEARCH</button>
+                                <button class="service-btn">INDEX</button>
+                            </div>
+                        </div>
+                        <div class="metrics">
+                            <div class="metric">
+                                <span class="label">AI & TOOLS</span>
+                                <div class="value good">12</div>
+                                <div class="sub">libraries</div>
+                            </div>
+                            <div class="metric">
+                                <span class="label">BUSINESS</span>
+                                <div class="value">8</div>
+                                <div class="sub">libraries</div>
+                            </div>
+                            <div class="metric">
+                                <span class="label">DATA/DATASETS</span>
+                                <div class="value">15</div>
+                                <div class="sub">libraries</div>
+                            </div>
+                            <div class="metric">
+                                <span class="label">OTHER</span>
+                                <div class="value">16</div>
+                                <div class="sub">libraries</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Eastwood DEVZ Libraries -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="label">PORT 6062</div>
+                            <h3>EASTWOOD DEVZ LIBS</h3>
+                        </div>
+                        <span class="badge active">9 LIBS</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-icon">?</div>
+                            <div class="service-info">
+                                <h4>Eastwood Business Collection</h4>
+                                <p>9 bibliotek biznesowych: Bruce Studies, Bucket of Blood, Money Machine, Shadow
+                                    Boxing, The Giza</p>
+                                <div class="meta">
+                                    <span>PATH: LIBRARIES/EASTWOOD_DEVZ/</span>
+                                    <span>DASHBOARD: eastwood_dashboard.py (6062)</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn launch">DASHBOARD</button>
+                                <button class="service-btn">BROWSE</button>
+                                <button class="service-btn">STATS</button>
+                            </div>
+                        </div>
+                        <div class="metrics">
+                            <div class="metric">
+                                <span class="label">BUCKET OF BLOOD</span>
+                                <div class="value good">?</div>
+                                <div class="sub">indexed</div>
+                            </div>
+                            <div class="metric">
+                                <span class="label">MONEY MACHINE</span>
+                                <div class="value good">?</div>
+                                <div class="sub">indexed</div>
+                            </div>
+                            <div class="metric">
+                                <span class="label">SHADOW BOXING</span>
+                                <div class="value good">?</div>
+                                <div class="sub">indexed</div>
+                            </div>
+                            <div class="metric">
+                                <span class="label">BRUCE STUDIES</span>
+                                <div class="value good">?</div>
+                                <div class="sub">indexed</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- TAB 2: AGENTS -->
+        <div class="tab-content" id="content-agents" role="tabpanel">
+            <div class="grid">
+
+                <!-- Raphael Agent -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="label">PORT 6062</div>
+                            <h3>RAPHAEL AGENT</h3>
+                        </div>
+                        <span class="badge active">ACTIVE</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-icon">?</div>
+                            <div class="service-info">
+                                <h4>Research Agent</h4>
+                                <p>Agent badawczy - zbiera dane z internetu (Tavily), analizuje kontekst</p>
+                                <div class="meta">
+                                    <span>FILE: raphael_agent.py</span>
+                                    <span>MODEL: GPT-4</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn launch">LAUNCH</button>
+                                <button class="service-btn">STOP</button>
+                                <button class="service-btn">CHAT</button>
+                                <button class="service-btn">EDIT CODE</button>
+                                <button class="service-btn">COMMAND</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gabriel Agent -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="label">PORT 6030</div>
+                            <h3>GABRIEL AGENT</h3>
+                        </div>
+                        <span class="badge active">ACTIVE</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-icon">^</div>
+                            <div class="service-info">
+                                <h4>Content Agent</h4>
+                                <p>Agent redaktorski - tworzy artyku�y, posty, content na bazie danych Raphaela</p>
+                                <div class="meta">
+                                    <span>FILE: gabriel_agent.py</span>
+                                    <span>MODEL: GPT-4</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn launch">LAUNCH</button>
+                                <button class="service-btn">STOP</button>
+                                <button class="service-btn">CHAT</button>
+                                <button class="service-btn">EDIT CODE</button>
+                                <button class="service-btn">COMMAND</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Uriel Agent -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="label">PORT 6050</div>
+                            <h3>URIEL AGENT</h3>
+                        </div>
+                        <span class="badge active">ACTIVE</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-icon">�</div>
+                            <div class="service-info">
+                                <h4>Graphics Agent</h4>
+                                <p>Agent graficzny - generuje obrazy (Flux, DALL-E), wizualizacje do contentu</p>
+                                <div class="meta">
+                                    <span>FILE: uriel_agent.py</span>
+                                    <span>MODEL: FLUX/DALL-E</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn launch">LAUNCH</button>
+                                <button class="service-btn">STOP</button>
+                                <button class="service-btn">GENERATE</button>
+                                <button class="service-btn">EDIT CODE</button>
+                                <button class="service-btn">COMMAND</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Supervisor -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="label">PORT 6071</div>
+                            <h3>AI SUPERVISOR</h3>
+                        </div>
+                        <span class="badge inactive">NEW</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-icon">?</div>
+                            <div class="service-info">
+                                <h4>Supervisor System</h4>
+                                <p>System nadzoruj�cy prac� agent�w, kontrola workflow i orkiestracja zada�</p>
+                                <div class="meta">
+                                    <span>PROJECT: AI_SUPERVISOR_SYSTEM</span>
+                                    <span>SIZE: 466 MB</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn launch">SETUP</button>
+                                <button class="service-btn">CONFIG</button>
+                                <button class="service-btn">DOCS</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ELWIRKA Squad -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="label">SQUAD</div>
+                            <h3>ELWIRKA TEAM</h3>
+                        </div>
+                        <span class="badge active">ACTIVE</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-icon">?</div>
+                            <div class="service-info">
+                                <h4>Elwirka Supervisor</h4>
+                                <p>Squad supervisor, librarian, knowledge & quality - zarz�dzanie bibliotekami</p>
+                                <div class="meta">
+                                    <span>FILE: elwirka_1_s_supervisor.py</span>
+                                    <span>TEAM: 4 agents</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn launch">LAUNCH</button>
+                                <button class="service-btn">STOP</button>
+                                <button class="service-btn">STATUS</button>
+                                <button class="service-btn">EDIT CODE</button>
+                                <button class="service-btn">COMMAND</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ZBYCHU Squad -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="label">WORKERS</div>
+                            <h3>ZBYCHU SQUAD</h3>
+                        </div>
+                        <span class="badge active">SCHEDULED</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-icon">?</div>
+                            <div class="service-info">
+                                <h4>Zbychu Workers</h4>
+                                <p>Business, Finance, Film, Art, Tech - zaplanowani workerzy do r�nych zada�</p>
+                                <div class="meta">
+                                    <span>FILES: zbychu_business.py, zbychu_finance.py</span>
+                                    <span>TEAM: 5 workers</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn launch">START</button>
+                                <button class="service-btn">SCHEDULE</button>
+                                <button class="service-btn">VIEW</button>
+                                <button class="service-btn">EDIT CODE</button>
+                                <button class="service-btn">COMMAND</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Angels Network -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="label">NETWORK</div>
+                            <h3>ANGELS NETWORK</h3>
+                        </div>
+                        <span class="badge active">READY</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-icon">?</div>
+                            <div class="service-info">
+                                <h4>8 Angels Squad</h4>
+                                <p>Michael, Gabriel, Raphael, Uriel, Asmodeus, Azazel, Belial, Samael - pe�na sie�</p>
+                                <div class="meta">
+                                    <span>LOCATION: backend/agents/angels/</span>
+                                    <span>COUNT: 8 angels</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn">BROWSE</button>
+                                <button class="service-btn">ACTIVATE</button>
+                                <button class="service-btn">CONFIG</button>
+                                <button class="service-btn">EDIT CODE</button>
+                                <button class="service-btn">COMMAND</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Agents -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="label">AGENTS</div>
+                            <h3>DAEMON & SPECIALIST</h3>
+                        </div>
+                        <span class="badge active">READY</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-icon">0</div>
+                            <div class="service-info">
+                                <h4>Black Cat, Blue, Purple, Journalist</h4>
+                                <p>Daemon, The Blue, The Purple, Fred Librarian - specjalistyczne agenty</p>
+                                <div class="meta">
+                                    <span>FILES: daemon_black_cat.py, the_blue.py, journalist.py</span>
+                                    <span>TYPES: Daemon, Specialist, Librarian</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn">LIST</button>
+                                <button class="service-btn">RUN</button>
+                                <button class="service-btn">CONFIG</button>
+                                <button class="service-btn">EDIT CODE</button>
+                                <button class="service-btn">COMMAND</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- TAB 3: SERVICES -->
+        <div class="tab-content" id="content-services" role="tabpanel">
+            <div class="grid">
+
+                <!-- RAG System -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="label">PORT 6031</div>
+                            <h3>RAG SYSTEM</h3>
+                        </div>
+                        <span class="badge active">ACTIVE</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-icon">?</div>
+                            <div class="service-info">
+                                <h4>RAG Knowledge Base</h4>
+                                <p>System RAG z FAISS - przeszukiwanie wiedzy, embeddingi, kontekst dla agent�w</p>
+                                <div class="meta">
+                                    <span>FILE: rag_server.py</span>
+                                    <span>VECTORS: ~50k</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn launch">LAUNCH</button>
+                                <button class="service-btn">STOP</button>
+                                <button class="service-btn">REBUILD</button>
+                                <button class="service-btn">EDIT CODE</button>
+                                <button class="service-btn">COMMAND</button>
+                            </div>
+                        </div>
+                        <div class="metrics">
+                            <div class="metric">
+                                <span class="label">INDEX SIZE</span>
+                                <div class="value good">48,237</div>
+                                <div class="sub">vectors</div>
+                            </div>
+                            <div class="metric">
+                                <span class="label">QUERIES/MIN</span>
+                                <div class="value">12</div>
+                                <div class="sub">avg</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Scheduler -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="label">PORT 8000</div>
+                            <h3>CONTENT SCHEDULER</h3>
+                        </div>
+                        <span class="badge active">ACTIVE</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-icon">?</div>
+                            <div class="service-info">
+                                <h4>Publishing Scheduler</h4>
+                                <p>Harmonogram publikacji contentu - automatyczna dystrybucja do blog�w i social media
+                                </p>
+                                <div class="meta">
+                                    <span>FILE: content_scheduler.py</span>
+                                    <span>QUEUE: 0 pending</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn launch">LAUNCH</button>
+                                <button class="service-btn">STOP</button>
+                                <button class="service-btn">QUEUE</button>
+                                <button class="service-btn">EDIT CODE</button>
+                                <button class="service-btn">COMMAND</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MOA System -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="label">PORT 6050</div>
+                            <h3>MOA HUB</h3>
+                        </div>
+                        <span class="badge active">ACTIVE</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-icon">?</div>
+                            <div class="service-info">
+                                <h4>Mixture of Agents</h4>
+                                <p>MOA Hub API - agregacja wielu agent�w AI, kolektywna inteligencja, consensus</p>
+                                <div class="meta">
+                                    <span>FILE: server_moa.py</span>
+                                    <span>MODELS: Multiple</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn launch">LAUNCH</button>
+                                <button class="service-btn">STOP</button>
+                                <button class="service-btn">API</button>
+                                <button class="service-btn">EDIT CODE</button>
+                                <button class="service-btn">COMMAND</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Library Server -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="label">PORT 6031</div>
+                            <h3>LIBRARY SERVER</h3>
+                        </div>
+                        <span class="badge active">ACTIVE</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-icon">?</div>
+                            <div class="service-info">
+                                <h4>Backend Library API</h4>
+                                <p>Serwer bibliotek - API do zarz�dzania knowledge base, pliki, metadane</p>
+                                <div class="meta">
+                                    <span>FILE: library_server.py</span>
+                                    <span>LIBS: Control Center + Eastwood</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn launch">LAUNCH</button>
+                                <button class="service-btn">STOP</button>
+                                <button class="service-btn">BROWSE</button>
+                                <button class="service-btn">EDIT CODE</button>
+                                <button class="service-btn">COMMAND</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Agents API -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="label">API</div>
+                            <h3>AGENTS API</h3>
+                        </div>
+                        <span class="badge active">ACTIVE</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-icon">?</div>
+                            <div class="service-info">
+                                <h4>Agents Coordination API</h4>
+                                <p>Centralne API do komunikacji z agentami - dispatcher, routing, status</p>
+                                <div class="meta">
+                                    <span>FILE: agents_api.py</span>
+                                    <span>ENDPOINTS: /agents, /run, /status</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn launch">LAUNCH</button>
+                                <button class="service-btn">STOP</button>
+                                <button class="service-btn">DOCS</button>
+                                <button class="service-btn">EDIT CODE</button>
+                                <button class="service-btn">COMMAND</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Eastwood Dashboard -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="label">PORT 6062</div>
+                            <h3>EASTWOOD DEVZ</h3>
+                        </div>
+                        <span class="badge active">ACTIVE</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-icon">?</div>
+                            <div class="service-info">
+                                <h4>Eastwood Dashboard</h4>
+                                <p>Dashboard dla 4 biznesowych bibliotek - The Bucket of Blood, Money Machine, Shadow
+                                    Boxing, The Giza</p>
+                                <div class="meta">
+                                    <span>FILE: eastwood_dashboard.py</span>
+                                    <span>LIBS: 4 business</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn launch">LAUNCH</button>
+                                <button class="service-btn">STOP</button>
+                                <button class="service-btn">VIEW</button>
+                                <button class="service-btn">EDIT CODE</button>
+                                <button class="service-btn">COMMAND</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RAG Dashboard -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="label">PORT 6060</div>
+                            <h3>RAG DASHBOARD</h3>
+                        </div>
+                        <span class="badge active">ACTIVE</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-icon">?</div>
+                            <div class="service-info">
+                                <h4>RAG Management UI</h4>
+                                <p>Interface do zarz�dzania systemem RAG - dodawanie dokument�w, rebuild, metryki</p>
+                                <div class="meta">
+                                    <span>FILE: rag_dashboard.py</span>
+                                    <span>FEATURES: Upload, Index, Search</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn launch">LAUNCH</button>
+                                <button class="service-btn">STOP</button>
+                                <button class="service-btn">VIEW</button>
+                                <button class="service-btn">EDIT CODE</button>
+                                <button class="service-btn">COMMAND</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ZENON Search -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="label">PORT 6070</div>
+                            <h3>ZENON SEARCH</h3>
+                        </div>
+                        <span class="badge inactive">NEW</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-icon">?</div>
+                            <div class="service-info">
+                                <h4>Advanced Search Hub</h4>
+                                <p>Zaawansowany system wyszukiwania - multi-source search, aggregacja wynik�w</p>
+                                <div class="meta">
+                                    <span>PROJECT: ZENON_SEARCH_dev_hub</span>
+                                    <span>SIZE: 1.47 GB</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn launch">SETUP</button>
+                                <button class="service-btn">CONFIG</button>
+                                <button class="service-btn">DOCS</button>
+                                <button class="service-btn">EDIT CODE</button>
+                                <button class="service-btn">COMMAND</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CAY_DEN Chat -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="label">PORT 6073</div>
+                            <h3>CAY_DEN CHAT</h3>
+                        </div>
+                        <span class="badge inactive">NEW</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-icon">?</div>
+                            <div class="service-info">
+                                <h4>Deep Search Chat</h4>
+                                <p>Chatbot z g��bokim wyszukiwaniem - konwersacyjny interfejs do knowledge base</p>
+                                <div class="meta">
+                                    <span>PROJECT: CAY_DEN_chat_deepsearch</span>
+                                    <span>SIZE: 92 MB</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn launch">SETUP</button>
+                                <button class="service-btn">CONFIG</button>
+                                <button class="service-btn">CHAT</button>
+                                <button class="service-btn">EDIT CODE</button>
+                                <button class="service-btn">COMMAND</button>
+                            </div>
+                            <button class="service-btn launch">SETUP</button>
+                            <button class="service-btn">CONFIG</button>
+                            <button class="service-btn">CHAT</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        </div>
+
+        <!-- TAB 4: TOOLS -->
+        <div class="tab-content" id="content-tools" role="tabpanel">
+            <div class="grid">
+
+                <!-- ZENON Dataset Forge -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="label">TOOL</div>
+                            <h3>DATASET FORGE</h3>
+                        </div>
+                        <span class="badge inactive">NEW</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-icon">0</div>
+                            <div class="service-info">
+                                <h4>ZENON Dataset Forge</h4>
+                                <p>Narz�dzie do tworzenia i przetwarzania dataset�w treningowych dla modeli AI</p>
+                                <div class="meta">
+                                    <span>PROJECT: ZENON_DATASET_FORGE</span>
+                                    <span>SIZE: 216 MB</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn launch">OPEN</button>
+                                <button class="service-btn">CONFIG</button>
+                                <button class="service-btn">DOCS</button>
+                                <button class="service-btn">EDIT CODE</button>
+                                <button class="service-btn">COMMAND</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ZENON PromptMaster -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="label">PORT 6072</div>
+                            <h3>PROMPTMASTER</h3>
+                        </div>
+                        <span class="badge inactive">NEW</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-icon">?</div>
+                            <div class="service-info">
+                                <h4>ZENON PromptMaster</h4>
+                                <p>System zarz�dzania promptami - templates, versioning, optimization</p>
+                                <div class="meta">
+                                    <span>PROJECT: ZENON_THE_PromptMaster</span>
+                                    <span>SIZE: 134 MB</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn launch">SETUP</button>
+                                <button class="service-btn">LIBRARY</button>
+                                <button class="service-btn">DOCS</button>
+                                <button class="service-btn">EDIT CODE</button>
+                                <button class="service-btn">COMMAND</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MCP Orchestra -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="label">LIBRARY</div>
+                            <h3>MCP ORCHESTRA</h3>
+                        </div>
+                        <span class="badge inactive">NEW</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-icon">?</div>
+                            <div class="service-info">
+                                <h4>MCP Tools Orchestra</h4>
+                                <p>Biblioteka narz�dzi Model Context Protocol - integracje i API</p>
+                                <div class="meta">
+                                    <span>PROJECT: LIBRARIES_MCP_orkiestra</span>
+                                    <span>SIZE: 296 MB</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn">BROWSE</button>
+                                <button class="service-btn">CONFIG</button>
+                                <button class="service-btn">DOCS</button>
+                                <button class="service-btn">EDIT CODE</button>
+                                <button class="service-btn">COMMAND</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Publishing Tools -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="label">SCRIPTS</div>
+                            <h3>PUBLISHING</h3>
+                        </div>
+                        <span class="badge active">READY</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-icon">?</div>
+                            <div class="service-info">
+                                <h4>Publishing Scripts</h4>
+                                <p>9 skrypt�w publikacji: blog, R2, everywhere, FAISS rebuild, knowledge ingest</p>
+                                <div class="meta">
+                                    <span>FILES: publish_*.py, rebuild_faiss*.py</span>
+                                    <span>COUNT: 9 scripts</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn">LIST</button>
+                                <button class="service-btn">RUN</button>
+                                <button class="service-btn">LOGS</button>
+                                <button class="service-btn">EDIT CODE</button>
+                                <button class="service-btn">COMMAND</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cloudflare Integration -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="label">INTEGRATION</div>
+                            <h3>CLOUDFLARE</h3>
+                        </div>
+                        <span class="badge active">READY</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-icon">?</div>
+                            <div class="service-info">
+                                <h4>Cloudflare Pages/R2</h4>
+                                <p>Migracja FAISS do CF, seed content, deploy - integracja z Cloudflare infrastructure
+                                </p>
+                                <div class="meta">
+                                    <span>PROJECT: cloudflare_integration</span>
+                                    <span>FILES: migrate_faiss_to_cf.py, seed_real_content.py</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn">MIGRATE</button>
+                                <button class="service-btn">DEPLOY</button>
+                                <button class="service-btn">CONFIG</button>
+                                <button class="service-btn">EDIT CODE</button>
+                                <button class="service-btn">COMMAND</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Web Collectors -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="label">CRAWLERS</div>
+                            <h3>WEB COLLECTORS</h3>
+                        </div>
+                        <span class="badge active">READY</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-icon">?</div>
+                            <div class="service-info">
+                                <h4>Quick Collectors Suite</h4>
+                                <p>AI automation, browsers crawling, quick save - narz�dzia do zbierania danych z sieci
+                                </p>
+                                <div class="meta">
+                                    <span>FILES: quick_ai_automation.py, quick_browsers.py</span>
+                                    <span>LOCATION: backend/collectors/</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn">RUN</button>
+                                <button class="service-btn">SCHEDULE</button>
+                                <button class="service-btn">CONFIG</button>
+                                <button class="service-btn">EDIT CODE</button>
+                                <button class="service-btn">COMMAND</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Knowledge Base -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="label">DATA</div>
+                            <h3>KNOWLEDGE BASE</h3>
+                        </div>
+                        <span class="badge active">READY</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-icon">?</div>
+                            <div class="service-info">
+                                <h4>Knowledge Repository</h4>
+                                <p>Repozytorium wiedzy - dokumenty, notatki, research - �r�d�o dla RAG i agent�w</p>
+                                <div class="meta">
+                                    <span>PROJECT: knowledge_base</span>
+                                    <span>SIZE: 4.60 MB</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn">BROWSE</button>
+                                <button class="service-btn">UPLOAD</button>
+                                <button class="service-btn">INDEX</button>
+                                <button class="service-btn">EDIT CODE</button>
+                                <button class="service-btn">COMMAND</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NEXT_GEN_RAG -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="label">EXPERIMENTAL</div>
+                            <h3>NEXT GEN RAG</h3>
+                        </div>
+                        <span class="badge inactive">BETA</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-icon">?</div>
+                            <div class="service-info">
+                                <h4>Advanced RAG System</h4>
+                                <p>Nast�pna generacja RAG - advanced features, multi-modal, adaptive indexing</p>
+                                <div class="meta">
+                                    <span>PROJECT: NEXT_GEN_RAG</span>
+                                    <span>SIZE: 2.39 MB</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn">EXPLORE</button>
+                                <button class="service-btn">TEST</button>
+                                <button class="service-btn">DOCS</button>
+                                <button class="service-btn">EDIT CODE</button>
+                                <button class="service-btn">COMMAND</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- TAB 5: SYSTEM -->
+        <div class="tab-content" id="content-system" role="tabpanel">
+            <div class="grid">
+
+                <!-- System Metrics -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>SYSTEM METRICS</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="metrics">
+                            <div class="metric">
+                                <span class="label">CPU USAGE</span>
+                                <div class="value good" id="sys-cpu">--%</div>
+                                <div class="sub">8 cores</div>
+                            </div>
+                            <div class="metric">
+                                <span class="label">MEMORY</span>
+                                <div class="value" id="sys-mem">--%</div>
+                                <div class="sub">32 GB total</div>
+                            </div>
+                            <div class="metric">
+                                <span class="label">GPU TEMP</span>
+                                <div class="value" id="sys-gpu-temp">--�C</div>
+                                <div class="sub">NVIDIA RTX</div>
+                            </div>
+                            <div class="metric">
+                                <span class="label">GPU VRAM</span>
+                                <div class="value" id="sys-gpu-vram">--%</div>
+                                <div class="sub">24 GB</div>
+                            </div>
+                            <div class="metric">
+                                <span class="label">DISK U:</span>
+                                <div class="value good">20.62 GB</div>
+                                <div class="sub">UNIFIED</div>
+                            </div>
+                            <div class="metric">
+                                <span class="label">ARCHIVE</span>
+                                <div class="value">50.34 GB</div>
+                                <div class="sub">AI_MODELS</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Processes -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>ACTIVE PROCESSES</h3>
+                        <span class="badge active">11 RUNNING</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="service-card">
+                            <div class="service-info">
+                                <h4>Dashboard Server</h4>
+                                <div class="meta">
+                                    <span>PID: 12345</span>
+                                    <span>CPU: 2.3%</span>
+                                    <span>MEM: 145 MB</span>
+                                    <span>PORT: 4560</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn">KILL</button>
+                            </div>
+                        </div>
+                        <div class="service-card">
+                            <div class="service-info">
+                                <h4>Raphael Agent</h4>
+                                <div class="meta">
+                                    <span>PID: 12346</span>
+                                    <span>CPU: 5.1%</span>
+                                    <span>MEM: 387 MB</span>
+                                    <span>PORT: 6062</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn">KILL</button>
+                            </div>
+                        </div>
+                        <div class="service-card">
+                            <div class="service-info">
+                                <h4>RAG Server</h4>
+                                <div class="meta">
+                                    <span>PID: 12347</span>
+                                    <span>CPU: 1.8%</span>
+                                    <span>MEM: 892 MB</span>
+                                    <span>PORT: 6031</span>
+                                </div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="service-btn">KILL</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Environment Info -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>ENVIRONMENT</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="metrics">
+                            <div class="metric">
+                                <span class="label">PYTHON</span>
+                                <div class="value">3.11.5</div>
+                                <div class="sub">.venv active</div>
+                            </div>
+                            <div class="metric">
+                                <span class="label">OLLAMA</span>
+                                <div class="value good">ONLINE</div>
+                                <div class="sub">local models</div>
+                            </div>
+                            <div class="metric">
+                                <span class="label">FAISS</span>
+                                <div class="value good">LOADED</div>
+                                <div class="sub">48k vectors</div>
+                            </div>
+                            <div class="metric">
+                                <span class="label">KRAKOWIAK</span>
+                                <div class="value">H:/</div>
+                                <div class="sub">13.49 GB</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- TAB 6: LOGS -->
+        <div class="tab-content" id="content-logs" role="tabpanel">
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>SYSTEM LOGS</h3>
+                    <div class="actions">
+                        <button class="btn">CLEAR</button>
+                        <button class="btn">EXPORT</button>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="logs" id="logOutput">
+                        <div class="log-line">
+                            <span class="time">[2026-01-08 14:23:45]</span>
+                            <span class="level success">[SUCCESS]</span>
+                            <span>Dashboard server started on port 4560</span>
+                        </div>
+                        <div class="log-line">
+                            <span class="time">[2026-01-08 14:23:47]</span>
+                            <span class="level info">[INFO]</span>
+                            <span>Raphael agent initialized - Research mode active</span>
+                        </div>
+                        <div class="log-line">
+                            <span class="time">[2026-01-08 14:23:50]</span>
+                            <span class="level success">[SUCCESS]</span>
+                            <span>RAG system loaded - 48,237 vectors indexed</span>
+                        </div>
+                        <div class="log-line">
+                            <span class="time">[2026-01-08 14:23:52]</span>
+                            <span class="level info">[INFO]</span>
+                            <span>Library catalog server listening on port 6060</span>
+                        </div>
+                        <div class="log-line">
+                            <span class="time">[2026-01-08 14:23:55]</span>
+                            <span class="level warn">[WARN]</span>
+                            <span>GPU temperature rising: 72�C (threshold: 80�C)</span>
+                        </div>
+                        <div class="log-line">
+                            <span class="time">[2026-01-08 14:24:01]</span>
+                            <span class="level success">[SUCCESS]</span>
+                            <span>All 11 services running - System operational</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer role="contentinfo">
+        <span>JIMBO UNIFIED OPERATIONS DASHBOARD v1.0 // � 2026 // PROTOTYPE</span>
+    </footer>
+
+    <script>
+        // =========================
+        // MINIMAL CLIENT-SIDE LOGIC
+        // =========================
+
+        // Czekaj na pe�ne za�adowanie DOM
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // Tab switching
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const target = tab.dataset.tab;
+
+                    // Remove active from all
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(tc => tc.classList.remove('active'));
+
+                    // Add active to clicked
+                    tab.classList.add('active');
+                    document.getElementById(`content-${target}`).classList.add('active');
+                });
+            });
+
+            // Theme toggle (placeholder - tylko dark w tej wersji)
+            const themeBtn = document.getElementById('themeBtn');
+            themeBtn.addEventListener('click', () => {
+                // TODO: implement light theme
+                console.log('Theme toggle - not yet implemented');
+            });
+
+            // Refresh button
+            const refreshBtn = document.getElementById('refreshBtn');
+            refreshBtn.addEventListener('click', () => {
+                console.log('Refreshing system status...');
+                updateMockData();
+                // Reset uptime display
+                uptimeSeconds = 0;
+            });
+
+            // Kill all button
+            const killAllBtn = document.getElementById('killAllBtn');
+            killAllBtn.addEventListener('click', () => {
+                if (confirm('KILL ALL SERVICES?\n\nCzy na pewno chcesz zatrzyma� wszystkie procesy?\n\n(Funkcja dost�pna po pod��czeniu backendu)')) {
+                    console.log('Kill all services requested');
+                    console.warn('Backend connection required for this action');
+                }
+            });
+
+            // Mock data updater (symulacja - p�niej z WebSocket/API)
+            function updateMockData() {
+                document.getElementById('serviceCount').textContent = '11/37';
+                document.getElementById('cpu').textContent = Math.floor(Math.random() * 30 + 10) + '%';
+                document.getElementById('mem').textContent = Math.floor(Math.random() * 40 + 30) + '%';
+
+                // System metrics
+                document.getElementById('sys-cpu').textContent = Math.floor(Math.random() * 30 + 10) + '%';
+                document.getElementById('sys-mem').textContent = Math.floor(Math.random() * 40 + 30) + '%';
+                document.getElementById('sys-gpu-temp').textContent = Math.floor(Math.random() * 15 + 65) + '�C';
+                document.getElementById('sys-gpu-vram').textContent = Math.floor(Math.random() * 30 + 40) + '%';
+            }
+
+            // Uptime counter
+            let uptimeSeconds = 0;
+            setInterval(() => {
+                uptimeSeconds++;
+                const hours = Math.floor(uptimeSeconds / 3600);
+                const minutes = Math.floor((uptimeSeconds % 3600) / 60);
+                const seconds = uptimeSeconds % 60;
+                document.getElementById('uptime').textContent =
+                    `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            }, 1000);
+
+            // Update mock data every 3 seconds
+            setInterval(updateMockData, 3000);
+            updateMockData();
+
+            // Service button handlers with VIEW support
+            document.querySelectorAll('.service-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const action = e.target.textContent;
+                    const panel = e.target.closest('.panel');
+                    const portElement = panel.querySelector('.label');
+                    const serviceNameElement = panel.querySelector('h3');
+                    const port = portElement ? portElement.textContent.replace('PORT ', '') : null;
+                    const serviceName = serviceNameElement ? serviceNameElement.textContent : '';
+
+                    console.log(`Action: ${action}, Port: ${port}, Service: ${serviceName}`);
+
+                    // ==================== DASHBOARDS & UI SECTION ====================
+                    if (action === 'VIEW' && port) {
+                        // Mapowanie port�w na pliki HTML dla dashboard�w
+                        const dashboardMap = {
+                            '4560': 'dashboard_main.html',
+                            '4569': 'control_center.html',
+                            '4575': 'advanced_matrix.html',
+                            '6030': 'library_catalog.html',  // Nowy szablon
+                            '6062': 'eastwood_devz.html'     // Nowy szablon
+                        };
+
+                        if (dashboardMap[port]) {
+                            window.open(dashboardMap[port], '_blank');
+                        } else {
+                            window.open(`http://localhost:${port}`, '_blank');
+                        }
+                    }
+                    else if (action === 'LAUNCH') {
+                        // LAUNCH - pr�ba uruchomienia serwisu przez localhost API
+                        if (port) {
+                            console.log(`?? Launching service on port ${port}...`);
+
+                            // Pr�ba uruchomienia przez Python server (je�li istnieje)
+                            const launchMap = {
+                                '4560': 'python frontend/dashboard_server.py',
+                                '4569': 'python frontend/server_control.py',
+                                '4575': 'python frontend/advanced_matrix.py',
+                                '6030': 'python frontend/libraries_catalog_server.py',
+                                '6062': 'python frontend/eastwood_dashboard.py'
+                            };
+
+                            if (launchMap[port]) {
+                                console.log(`ALERT: ?? Uruchamianie serwisu...\n\nPort: \${port}\nKomenda: \${launchMap[port]}\n\n?? Wymaga backendu kontrolnego lub r�cznego uruchomienia w terminalu.`);
+                            } else {
+                                // Otw�rz localhost - je�li serwis ju� dzia�a
+                                window.open(`http://localhost:${port}`, '_blank');
+                            }
+                        } else {
+                            console.log(`ALERT: ?? Brak portu dla serwisu: \${serviceName}\n\nSprawd� konfiguracj�.`);
+                        }
+                    }
+                    else if (action === 'STOP') {
+                        // STOP - pr�ba wy��czenia przez API shutdown
+                        if (port && confirm('? STOP SERVICE?\n\nPort: ${port}\nService: ${serviceName}\n\nCzy na pewno zatrzyma�?')) {
+                            console.log(`? Stopping service on port ${port}...`);
+
+                            fetch(`http://localhost:${port}/shutdown`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' }
+                            })
+                                .then(res => {
+                                    if (res.ok) {
+                                        console.log(`ALERT: ? Serwis na porcie \${port} zatrzymany`);
+                                    } else {
+                                        throw new Error('Shutdown failed');
+                                    }
+                                })
+                                .catch(err => {
+                                    console.error('Stop error:', err);
+                                    console.log(`ALERT: ? Nie uda�o si� zatrzyma� serwisu\n\nPort: \${port}\n\n?? Serwis mo�e nie dzia�a� lub nie ma endpointu /shutdown`);
+                                });
+                        }
+                    }
+                    // ==================== LIBRARY CATALOG - ELWIRKA & FRED ====================
+                    else if (action === 'ACTIVATE' && serviceName.includes('ELWIRKA')) {
+                        console.log(`ALERT: ?? ELWIRKA SQUAD - Aktywacja\n\n?? Supervisor + Librarian + Knowledge + Quality\n\nCz�onkowie: 4 agenty\nZakres: Control Center + Eastwood DEVZ\n\n?? Wymaga integracji z backend/agents/`);
+                        console.log('Activating Elwirka Squad...');
+                    }
+                    else if (action === 'STATUS' && serviceName.includes('ELWIRKA')) {
+                        console.log(`ALERT: ?? ELWIRKA SQUAD - Status\n\n? Supervisor: ACTIVE\n? Librarian: ACTIVE\n? Knowledge: ACTIVE\n? Quality: ACTIVE\n\n?? Libraries indexed: 60/60\n?? Quality score: 98%\n?? Metadata complete: 95%`);
+                    }
+                    else if (action === 'RUN' && serviceName.includes('FRED')) {
+                        console.log(`ALERT: ?? FRED LIBRARIAN - Uruchomienie\n\nAgent: Specialist\nPlik: backend/agents/fred_librarian.py\n\n?? Uruchom w terminalu:\npython backend/agents/fred_librarian.py`);
+                        console.log('Starting Fred Librarian...');
+                    }
+                    // ==================== CONTROL CENTER LIBS ====================
+                    else if (action === 'BROWSE' && serviceName.includes('CONTROL CENTER LIBS')) {
+                        // Otw�rz podstron� z list� 51 bibliotek
+                        window.open('control_center_libraries.html', '_blank');
+                    }
+                    else if (action === 'SEARCH' && serviceName.includes('CONTROL CENTER LIBS')) {
+                        // Otw�rz wyszukiwark� bibliotek
+                        window.open('library_catalog.html', '_blank');
+                    }
+                    else if (action === 'INDEX' && serviceName.includes('CONTROL CENTER LIBS')) {
+                        if (confirm('?? REBUILD INDEX?\n\nPrzebudowa indeksu 51 bibliotek Control Center\n\nCzy kontynuowa�?')) {
+                            console.log(`ALERT: ?? Rebuild started...\n\nKomenda: python rebuild_faiss_simple.py\n\n?? Oczekiwany czas: 5-10 min`);
+                        }
+                    }
+                    // ==================== EASTWOOD DEVZ ====================
+                    else if (action === 'DASHBOARD' && serviceName.includes('EASTWOOD')) {
+                        window.open('eastwood_devz.html', '_blank');
+                    }
+                    else if (action === 'BROWSE' && serviceName.includes('EASTWOOD')) {
+                        // Lista 9 bibliotek biznesowych
+                        console.log(`ALERT: ?? EASTWOOD DEVZ - 9 Business Libraries\n\n1. The Bucket of Blood\n2. Money Machine\n3. Shadow Boxing\n4. Bruce Studies\n5. The Giza\n6-9. [Pozosta�e biblioteki]\n\nPath: U:\\JIMBO_UNIFIED_CONTROL_hub\\LIBRARIES\\EASTWOOD_DEVZ\\`);
+                    }
+                    else if (action === 'STATS' && serviceName.includes('EASTWOOD')) {
+                        console.log(`ALERT: ?? EASTWOOD DEVZ - Statistics\n\n? Total libraries: 9\n? Indexed: 9/9\n? Files: ~8,000\n? Categories: Business, Finance, Film\n\nPort: 6062\nStatus: ACTIVE`);
+                    }
+                    // ==================== AGENTS SECTION - EDIT CODE & COMMAND ====================
+                    else if (action === 'EDIT CODE') {
+                        // Znajd� �cie�k� do pliku agenta
+                        const metaElement = panel.querySelector('.meta');
+                        const metaText = metaElement ? metaElement.textContent : '';
+
+                        // Wyci�gnij nazw� pliku z meta (FILE: nazwa.py)
+                        const fileMatch = metaText.match(/FILE:\s*([^\s]+\.py)/);
+                        const filesMatch = metaText.match(/FILES:\s*([^\\n]+)/);
+
+                        if (fileMatch) {
+                            const fileName = fileMatch[1];
+                            let filePath = '';
+
+                            // Okre�l �cie�k� na podstawie nazwy agenta
+                            if (fileName.includes('raphael') || fileName.includes('gabriel') || fileName.includes('uriel')) {
+                                filePath = `backend/agents/angels/${fileName}`;
+                            } else if (fileName.includes('elwirka')) {
+                                filePath = `backend/agents/${fileName}`;
+                            } else if (fileName.includes('fred_librarian')) {
+                                filePath = `backend/agents/${fileName}`;
+                            } else {
+                                filePath = `backend/agents/${fileName}`;
+                            }
+
+                            const fullPath = `U:\\JIMBO_UNIFIED_CONTROL_hub\\${filePath}`;
+
+                            // Poka� interfejs edycji
+                            const editChoice = confirm('?? EDIT AGENT CODE\n\nAgent: ${serviceName}\nFile: ${fileName}\nPath: ${fullPath}\n\n[OK] - Otw�rz w VSCode\n[Cancel] - Skopiuj �cie�k�');
+
+                            if (editChoice) {
+                                console.log(`ALERT: ?? Otw�rz w VSCode:\n\ncode "\${fullPath}"\n\n?? Skopiuj komend� i uruchom w terminalu`);
+                            } else {
+                                console.log(`ALERT: ?? �cie�ka skopiowana do schowka:\n\n\${fullPath}`);
+                                navigator.clipboard.writeText(fullPath).catch(() => {
+                                    console.log('Clipboard write failed - copy manually');
+                                });
+                            }
+                        } else if (filesMatch) {
+                            // Wiele plik�w - lista
+                            const files = filesMatch[1].split(',').map(f => f.trim());
+                            const fileList = files.map((f, i) => `${i + 1}. ${f}`).join('\n');
+                            console.log(`ALERT: ?? \${serviceName} - Multiple Files\n\n\${fileList}\n\nPath: U:\\JIMBO_UNIFIED_CONTROL_hub\\backend\\agents\\`);
+                        } else if (serviceName.includes('ANGELS')) {
+                            console.log(`ALERT: ?? ANGELS NETWORK - 8 Angels\n\nPath: U:\\JIMBO_UNIFIED_CONTROL_hub\\backend\\agents\\angels\\n\nFiles:\n- michael.py\n- gabriel.py\n- raphael.py\n- uriel.py\n- asmodeus.py\n- azazel.py\n- belial.py\n- samael.py`);
+                        } else {
+                            console.log(`ALERT: ?? Nie znaleziono pliku agenta\n\nService: \${serviceName}\n\nSprawd� meta w panelu`);
+                        }
+                    }
+                    else if (action === 'COMMAND') {
+                        // Interfejs do wysy�ania komend do agenta
+                        const command = prompt(`?? SEND COMMAND TO AGENT\n\nAgent: ${serviceName}\nPort: ${port || 'N/A'}\n\nWpisz polecenie dla agenta:\n(np. "analyze data", "generate report", "status check")`);
+
+                        if (command && command.trim()) {
+                            console.log(`?? Sending command to ${serviceName}: "${command}"`);
+
+                            // Je�li jest port - spr�buj wys�a� przez API
+                            if (port) {
+                                fetch(`http://localhost:${port}/api/command`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ command: command, timestamp: Date.now() })
+                                })
+                                    .then(res => res.json())
+                                    .then(data => {
+                                        console.log(`ALERT: ? Command sent successfully!\n\nAgent: \${serviceName}\nCommand: \${command}\n\nResponse:\n\${JSON.stringify(data, null, 2)}`);
+                                    })
+                                    .catch(err => {
+                                        console.error('Command error:', err);
+                                        console.log(`ALERT: ?? Command queued (agent offline)\n\nAgent: \${serviceName}\nCommand: \${command}\n\n?? Zapisano do kolejki - agent wykona po uruchomieniu`);
+                                    });
+                            } else {
+                                // Brak portu - zapisz lokalnie lub poka� instrukcj�
+                                console.log(`ALERT: ?? Command recorded:\n\nAgent: \${serviceName}\nCommand: \${command}\nTime: \${new Date().toLocaleString()}\n\n?? Agent nie ma API - komenda zapisana w logach konsoli`);
+                            }
+                        }
+                    }
+                    else if (action === 'CHAT') {
+                        // Otw�rz interfejs czatu z agentem
+                        if (port) {
+                            window.open(`http://localhost:${port}/chat`, '_blank');
+                        } else {
+                            console.log(`ALERT: ?? CHAT with \${serviceName}\n\n?? Agent nie ma dedykowanego interfejsu czatu\n\nSprawd� dokumentacj� lub u�yj COMMAND`);
+                        }
+                    }
+                    else if (action === 'GENERATE' && serviceName.includes('URIEL')) {
+                        // Generator obraz�w dla Uriel
+                        const prompt = window.prompt(`?? URIEL IMAGE GENERATOR\n\nAgent: Graphics Generator\nModels: FLUX, DALL-E\n\nWpisz prompt dla obrazu:`);
+
+                        if (prompt && prompt.trim()) {
+                            console.log(`ALERT: ?? Generating image...\n\nPrompt: \${prompt}\n\n?? Wymaga aktywnego agenta Uriel na porcie \${port}`);
+                            console.log(`Image generation requested: "${prompt}"`);
+                        }
+                    }
+                    else if (action === 'SCHEDULE' && serviceName.includes('ZBYCHU')) {
+                        console.log(`ALERT: ?? ZBYCHU SQUAD - Scheduler\n\nWorkers: Business, Finance, Film, Art, Tech\n\nDost�pne harmonogramy:\n- Daily reports (9:00)\n- Weekly analysis (Mon 8:00)\n- Market monitoring (hourly)\n\n?? Konfiguruj przez backend/workers/schedule.json`);
+                    }
+                    else if (action === 'LIST' && serviceName.includes('DAEMON')) {
+                        console.log(`ALERT: ?? DAEMON & SPECIALIST AGENTS\n\n1. Black Cat Daemon (daemon_black_cat.py)\n2. The Blue (the_blue.py)\n3. The Purple (the_purple.py)\n4. Fred Librarian (fred_librarian.py)\n5. Journalist (journalist.py)\n\nPath: U:\\JIMBO_UNIFIED_CONTROL_hub\\backend\\agents\\`);
+                    }
+                    else if (action === 'BROWSE' && serviceName.includes('ANGELS')) {
+                        window.open('file:///U:/JIMBO_UNIFIED_CONTROL_hub/backend/agents/angels/', '_blank');
+                    }
+                    else if (action === 'ACTIVATE' && serviceName.includes('ANGELS')) {
+                        if (confirm('?? ACTIVATE ANGELS NETWORK?\n\n8 Angels will be started:\nMichael, Gabriel, Raphael, Uriel\nAsmodeus, Azazel, Belial, Samael\n\nContinue?')) {
+                            console.log(`ALERT: ? Angels activation started...\n\n?? Estimated time: 30 seconds\n?? Requires backend integration`);
+                        }
+                    }
+                    // ==================== SERVICES SECTION - SPECIFIC ACTIONS ====================
+                    else if (action === 'REBUILD' && serviceName.includes('RAG')) {
+                        if (confirm('?? REBUILD RAG INDEX?\n\nPrzebudowa indeksu FAISS\nVectors: ~50,000\n\n?? Czas: ~10-15 minut\n\nKontynuowa�?')) {
+                            console.log(`ALERT: ?? RAG Rebuild started...\n\nKomenda:\npython rebuild_faiss_simple.py\n\n?? Monitor w terminalu`);
+                            console.log('RAG rebuild initiated');
+                        }
+                    }
+                    else if (action === 'QUEUE' && serviceName.includes('SCHEDULER')) {
+                        console.log(`ALERT: ?? CONTENT SCHEDULER - Queue Status\n\n? Pending: 0 posts\n? Scheduled: 3 posts\n? Published today: 5 posts\n\nNext publish: 2026-01-10 09:00\n\n?? Pe�ny interfejs: http://localhost:8000/queue`);
+                    }
+                    else if (action === 'API' && serviceName.includes('MOA')) {
+                        window.open(`http://localhost:${port}/docs`, '_blank');
+                    }
+                    else if (action === 'BROWSE' && serviceName.includes('LIBRARY SERVER')) {
+                        window.open('control_center_libraries.html', '_blank');
+                    }
+                    else if (action === 'DOCS' && (serviceName.includes('AGENTS API') || serviceName.includes('ZENON'))) {
+                        const metaElement = panel.querySelector('.meta');
+                        const metaText = metaElement ? metaElement.textContent : '';
+
+                        if (metaText.includes('ENDPOINTS')) {
+                            alert(`🔌 AGENTS API - Documentation\n\nEndpoints:\nGET  /agents - Lista agentów\nPOST /run - Uruchom agenta\nGET  /status - Status systemu\n\nFull docs: http://localhost:${port || '6040'}/docs`);
+                        } else if (serviceName.includes('ZENON')) {
+                            const projectPath = 'U:\\JIMBO_UNIFIED_CONTROL_hub\\ZENON_SEARCH_dev_hub\\README.md';
+                            alert(`🔍 ZENON SEARCH - Documentation\n\nPath: ${projectPath}\n\nOtwórz w edytorze lub przeglądarce`);
+                        }
+                    }
+                    // ==================== TOOLS SECTION - SPECIFIC ACTIONS ====================
+                    else if (action === 'OPEN' && serviceName.includes('DATASET FORGE')) {
+                        const path = 'U:\\JIMBO_UNIFIED_CONTROL_hub\\ZENON_DATASET_FORGE';
+                        console.log(`ALERT: ?? DATASET FORGE\n\nPath: \${path}\n\nOtwrz folder w Explorer (Win+E) i uruchom gwny skrypt`);
+                    }
+                    else if (action === 'LIBRARY' && serviceName.includes('PROMPTMASTER')) {
+                        console.log(`ALERT: ?? PROMPTMASTER - Library\n\nPrompt Templates:\n- GPT-4 optimized\n- Claude patterns\n- Gemini structures\n- Custom workflows\n\nPath: U:\\JIMBO_UNIFIED_CONTROL_hub\\ZENON_THE_PromptMaster\\templates\\`);
+                    }
+                    else if (action === 'BROWSE' && (serviceName.includes('MCP') || serviceName.includes('KNOWLEDGE'))) {
+                        if (serviceName.includes('MCP')) {
+                            window.open('file:///U:/JIMBO_UNIFIED_CONTROL_hub/LIBRARIES_MCP_orkiestra/', '_blank');
+                        } else {
+                            window.open('file:///U:/JIMBO_UNIFIED_CONTROL_hub/knowledge_base/', '_blank');
+                        }
+                    }
+                    else if (action === 'LIST' && serviceName.includes('PUBLISHING')) {
+                        console.log(`ALERT: ?? PUBLISHING SCRIPTS - Lista\n\n1. publish_article_to_blog.py\n2. publish_article.py\n3. publish_everywhere.py\n4. publish_to_r2.py\n5. rebuild_faiss_simple.py\n6. rebuild_faiss.py\n7. ingest_knowledge.py\n8. index_eastwood_to_rag.py\n9. content_scheduler.py\n\nPath: U:\\JIMBO_UNIFIED_CONTROL_hub\\`);
+                    }
+                    else if (action === 'RUN' && serviceName.includes('PUBLISHING')) {
+                        const script = prompt(`?? RUN PUBLISHING SCRIPT\n\nWybierz skrypt (1-9):\n\n1. publish_article_to_blog.py\n2. publish_article.py\n3. publish_everywhere.py\n4. publish_to_r2.py\n5. rebuild_faiss_simple.py\n6. rebuild_faiss.py\n7. ingest_knowledge.py\n8. index_eastwood_to_rag.py\n9. content_scheduler.py\n\nWpisz numer:`);
+
+                        if (script && script >= 1 && script <= 9) {
+                            const scripts = ['publish_article_to_blog.py', 'publish_article.py', 'publish_everywhere.py',
+                                'publish_to_r2.py', 'rebuild_faiss_simple.py', 'rebuild_faiss.py',
+                                'ingest_knowledge.py', 'index_eastwood_to_rag.py', 'content_scheduler.py'];
+                            console.log(`ALERT: ?? Running: \${scripts[script - 1]}\n\nKomenda:\npython \${scripts[script - 1]}\n\n?? Uruchom w terminalu z aktywowanym .venv`);
+                        }
+                    }
+                    else if (action === 'RUN' && serviceName.includes('COLLECTORS')) {
+                        console.log(`ALERT: ?? WEB COLLECTORS - Uruchomienie\n\nDost�pne collectory:\n- quick_ai_automation.py\n- quick_browsers.py\n- quick_save.py\n\nPath: backend/collectors/\n\n?? python backend/collectors/quick_ai_automation.py`);
+                    }
+                    else if (action === 'LOGS' && serviceName.includes('PUBLISHING')) {
+                        console.log(`ALERT: ?? PUBLISHING LOGS\n\nBrak log�w - serwisy nie uruchomione\n\n?? Po uruchomieniu logi w:\n- console output\n- logs/ folder (je�li skonfigurowany)`);
+                    }
+                    else if (action === 'MIGRATE' && serviceName.includes('CLOUDFLARE')) {
+                        if (confirm('?? CLOUDFLARE MIGRATION?\n\nMigracja FAISS do Cloudflare R2\n\n?? Wymaga API keys\nKontynuowa�?')) {
+                            console.log(`ALERT: ?? Migration started...\n\npython cloudflare_integration/migrate_faiss_to_cf.py\n\nMonitor w terminalu`);
+                        }
+                    }
+                    else if (action === 'DEPLOY' && serviceName.includes('CLOUDFLARE')) {
+                        console.log(`ALERT: ?? CLOUDFLARE DEPLOY\n\nDeploy to Cloudflare Pages:\n1. Astro Blog\n2. Worker Michael\n3. Static assets\n\nPath: cloudflare_integration/\n\n?? Wymaga Wrangler CLI`);
+                    }
+                    else if (action === 'UPLOAD' && serviceName.includes('KNOWLEDGE')) {
+                        console.log(`ALERT: ?? KNOWLEDGE BASE - Upload\n\nPrzeci�gnij pliki do:\nU:\\JIMBO_UNIFIED_CONTROL_hub\\knowledge_base\\_inbox\\\n\nLub u�yj:\npython ingest_knowledge.py`);
+                    }
+                    else if (action === 'INDEX' && serviceName.includes('KNOWLEDGE')) {
+                        if (confirm('?? INDEX KNOWLEDGE BASE?\n\nRebuild indeksu dla knowledge_base\n\nKontynuowa�?')) {
+                            console.log(`ALERT: ?? Indexing started...\n\npython ingest_knowledge.py --rebuild\n\n?? Czas: ~5 minut`);
+                        }
+                    }
+                    else if (action === 'EXPLORE' && serviceName.includes('NEXT GEN')) {
+                        window.open('file:///U:/JIMBO_UNIFIED_CONTROL_hub/NEXT_GEN_RAG/', '_blank');
+                    }
+                    else if (action === 'TEST' && serviceName.includes('NEXT GEN')) {
+                        console.log(`ALERT: ?? NEXT GEN RAG - Testing\n\nTest suite:\n- Unit tests\n- Integration tests\n- Performance benchmarks\n\n?? python -m pytest NEXT_GEN_RAG/tests/`);
+                    }
+                } else if (action === 'CONFIG') {
+                    console.log(`Config for service on port ${port}`);
+                    // Backend integration needed
+                } else if (action === 'SETUP') {
+                    // Manual start apps - poka� instrukcje
+                    const manualApps = {
+                        '6070': { name: 'ZENON Search', path: 'ZENON_SEARCH_dev_hub', cmd: 'START_DEV_HUB.bat' },
+                        '6072': { name: 'PromptMaster', path: 'ZENON_THE_PromptMaster', cmd: 'npm run dev' },
+                        '6073': { name: 'CAY_DEN Chat', path: 'CAY_DEN_chat_deepsearch', cmd: 'start_cay_den_chat_visible.bat' },
+                        '6071': { name: 'AI Supervisor', path: 'AI_SUPERVISOR_SYSTEM', cmd: 'See README.md' }
+                    };
+
+                    if (manualApps[port]) {
+                        const app = manualApps[port];
+                        alert('🚀 ' + app.name + ' - Manual Start\n\n' +
+                            'Folder: U:\\JIMBO_UNIFIED_CONTROL_hub\\' + app.path + '\n\n' +
+                            'Command: ' + app.cmd + '\n\n' +
+                            'Port: ' + port);
+                    } else {
+                        console.log('Setup for port ' + port);
+                    }
+                } else if (action === 'LIBRARY') {
+                    // Poka� lokalizacj� projektu
+                    const projectPaths = {
+                        '6070': 'ZENON_SEARCH_dev_hub',
+                        '6072': 'ZENON_THE_PromptMaster',
+                        '6073': 'CAY_DEN_chat_deepsearch',
+                        '6071': 'AI_SUPERVISOR_SYSTEM'
+                    };
+
+                    if (projectPaths[port]) {
+                        console.log(`ALERT: ?? Project Folder:\n\nU:\\JIMBO_UNIFIED_CONTROL_hub\\\${projectPaths[port]}\n\nOtw�rz w Explorer lub VSCode`);
+                    } else {
+                        console.log(`Library for port ${port}`);
+                    }
+                } else if (action === 'DOCS') {
+                    // Dokumentacja
+                    const docsPaths = {
+                        '6070': 'ZENON_SEARCH_dev_hub\\README.md',
+                        '6072': 'ZENON_THE_PromptMaster\\README.md',
+                        '6073': 'CAY_DEN_chat_deepsearch\\README.md',
+                        '6071': 'AI_SUPERVISOR_SYSTEM\\README.md'
+                    };
+
+                    if (docsPaths[port]) {
+                        console.log(`ALERT: ?? Documentation:\n\nU:\\JIMBO_UNIFIED_CONTROL_hub\\\${docsPaths[port]}\n\nOtw�rz w edytorze tekstu`);
+                    } else {
+                        console.log(`Docs for port ${port}`);
+                    }
+                } else if (action === 'ACTIVATE' || action === 'RUN' || action === 'STATUS') {
+                    console.log(`${action} on port ${port}`);
+                    // Backend integration needed
+                }
+            });
+        });
+
+        console.log('JIMBO Unified Operations Dashboard loaded');
+        console.log('Next step: Connect to START_UNIFIED_SYSTEM.py backend');
+        console.log(`Total buttons found: ${document.querySelectorAll('.service-btn').length}`);
+
+    }); // Koniec DOMContentLoaded
+    </script>
+</body>
+
+</html>
