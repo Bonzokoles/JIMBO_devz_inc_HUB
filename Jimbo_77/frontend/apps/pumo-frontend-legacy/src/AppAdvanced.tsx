@@ -4,6 +4,8 @@
  */
 
 import { useState, useEffect } from 'react';
+import { AppShell } from '@jimbo77/ui/layout/AppShell';
+import { Topbar } from '@jimbo77/ui/layout/Topbar';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -305,36 +307,36 @@ function AppAdvanced() {
     };
 
     return (
-        <div className="container">
-            {/* Header with Tabs */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-                <h1 className="header" style={{ margin: 0 }}>🧪 PUMO Diagnosis Hub - Advanced Analytics</h1>
-                {loading && <div style={{ color: 'var(--cold)', fontSize: 12 }}>⟳ Refreshing...</div>}
-            </div>
+        <AppShell
+            topbar={<Topbar title="PUMO DIAGNOSIS HUB" />}
+        >
+            {/* Loading Indicator */}
+            {loading && (
+                <div style={{
+                    position: 'fixed',
+                    top: 70,
+                    right: 20,
+                    background: 'var(--panel)',
+                    border: '1px solid var(--line)',
+                    padding: '8px 16px',
+                    borderRadius: 4,
+                    fontSize: 12,
+                    color: 'var(--cold)',
+                    zIndex: 1000
+                }}>
+                    ⟳ Refreshing...
+                </div>
+            )}
 
             {/* Navigation Tabs */}
-            <div style={{
-                display: 'flex',
-                gap: 10,
-                marginBottom: 20,
-                borderBottom: '1px solid var(--line)',
-                paddingBottom: 10
-            }}>
-                {(['overview', 'products', 'customers', 'orders', 'ai-predictions'] as TabView[]).map(tab => (
+            <div className="tabs" style={{ marginBottom: 20 }}>
+                {(['overview', 'products', 'customers', 'orders', 'ai-predictions', 'ai-analysis', 'buying-guides'] as TabView[]).map(tab => (
                     <button
                         key={tab}
+                        className={`tab ${activeTab === tab ? 'active' : ''}`}
                         onClick={() => setActiveTab(tab)}
-                        style={{
-                            background: activeTab === tab ? 'var(--hot)' : 'var(--panel)',
-                            color: activeTab === tab ? '#000' : 'var(--text)',
-                            border: '1px solid var(--line)',
-                            padding: '8px 16px',
-                            cursor: 'pointer',
-                            borderRadius: 4,
-                            fontWeight: activeTab === tab ? 'bold' : 'normal'
-                        }}
                     >
-                        {tab.charAt(0).toUpperCase() + tab.slice(1).replace('-', ' ')}
+                        {tab.toUpperCase().replace(/-/g, ' ')}
                     </button>
                 ))}
             </div>
@@ -1089,8 +1091,9 @@ function AppAdvanced() {
                     Analizuj ➤
                 </button>
             </div>
-        </div>
+        </AppShell>
     )
 }
 
+export default AppAdvanced;
 export default AppAdvanced
