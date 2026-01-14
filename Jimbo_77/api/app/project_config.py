@@ -15,6 +15,7 @@ PROJECTS = [
             {"id": "hub-api", "label": "Hub API", "target": "jimbo_hub_api", "agentId": "hub-agent-1", "kind": "python_process"},
             {"id": "hub-worker", "label": "Hub Worker", "target": "jimbo_hub_worker", "agentId": "hub-agent-1", "kind": "python_process"},
             {"id": "lucjan-moa", "label": "LUCJAN MOA v3.0 🤖", "target": "lucjan-moa", "agentId": "hub-agent-1", "kind": "cloudflare_worker", "url": "https://lucjan-moa.stolarnia-ams.workers.dev"},
+            {"id": "cay-feed-converter", "label": "CAY Feed Converter 🔄", "target": "cay_feed_converter", "agentId": "hub-agent-1", "kind": "local_app", "path": "t:/M_PUMO_PROJEKT/CAY_FEED_conventer", "launcher": "run_windows.bat", "ports": [4656, 4657], "features": ["XML/JSON/CSV/YAML converter", "Large file splitter", "Stream processing", "URL download support"], "description": "Universal file converter and splitter for large XML/JSON/CSV feeds"},
         ],
         "links": {
             "repo": "https://github.com/Bonzokoles/JIMBO_devz_inc_HUB",
