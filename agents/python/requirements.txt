@@ -1,0 +1,41 @@
+# Python Agent Dependencies
+
+# Core Framework
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.4.0
+
+# Process Management
+psutil>=5.9.0
+
+# HTTP Client (for research agent)
+aiohttp>=3.9.0
+requests>=2.31.0
+
+# Optional - Install based on agent needs:
+
+# Database Drivers (database-query agent)
+# psycopg2-binary>=2.9.9  # PostgreSQL
+# pymysql>=1.1.0  # MySQL
+# pymongo>=4.6.0  # MongoDB
+# better-sqlite3  # SQLite (TypeScript)
+
+# Email Services (email-handler agent)
+# sendgrid>=6.11.0
+# mailgun>=0.1.1
+# python-email-validator>=2.1.0
+
+# Content Moderation (content-guardian agent)
+# openai>=1.3.0  # For Moderation API
+
+# Marketing Automation (marketing-maestro agent)
+# facebook-business>=18.0.0
+# google-ads>=22.1.0
+
+# SEO Tools (seo-agent)
+# beautifulsoup4>=4.12.0
+# lxml>=4.9.0
+
+# Graphics (graphics-agent)
+# Pillow>=10.1.0
+# openai>=1.3.0  # For DALL-E

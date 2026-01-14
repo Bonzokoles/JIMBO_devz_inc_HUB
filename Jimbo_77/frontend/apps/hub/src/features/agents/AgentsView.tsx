@@ -14,23 +14,81 @@ export function AgentsView() {
   const [selectedType, setSelectedType] = useState<AgentType | "all">("all");
   const [agents] = useState<Agent[]>(AGENT_REGISTRY);
 
-  const filteredAgents = selectedType === "all" 
-    ? agents 
+  const filteredAgents = selectedType === "all"
+    ? agents
     : agents.filter(a => a.type === selectedType);
 
-  const handleStart = (id: string) => {
-    console.log("Start agent:", id);
-    // TODO: API call to start agent
+  const handleStart = async (id: string) => {
+    try {
+      const response = await fetch(`http://localhost:8001/api/agents/start/${id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Agent started:', result);
+        alert(`Agent ${id} started successfully`);
+        // TODO: Update agents state to reflect new status
+      } else {
+        const error = await response.json();
+        alert(`Failed to start agent: ${error.detail}`);
+      }
+    } catch (error) {
+      console.error('Error starting agent:', error);
+      alert('Failed to start agent - check if API is running');
+    }
   };
 
-  const handleStop = (id: string) => {
-    console.log("Stop agent:", id);
-    // TODO: API call to stop agent
+  const handleStop = async (id: string) => {
+    try {
+      const response = await fetch(`http://localhost:8001/api/agents/stop/${id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Agent stopped:', result);
+        alert(`Agent ${id} stopped successfully`);
+        // TODO: Update agents state to reflect new status
+      } else {
+        const error = await response.json();
+        alert(`Failed to stop agent: ${error.detail}`);
+      }
+    } catch (error) {
+      console.error('Error stopping agent:', error);
+      alert('Failed to stop agent - check if API is running');
+    }
   };
 
-  const handleConfigure = (id: string) => {
-    console.log("Configure agent:", id);
-    // TODO: Open config modal
+  const handleConfigure = async (id: string) => {
+    // Simple prompt-based config (in production use modal)
+    const configJson = prompt(`Enter configuration for ${id} (JSON format):`);
+
+    if (!configJson) return;
+
+    try {
+      const config = JSON.parse(configJson);
+
+      const response = await fetch(`http://localhost:8001/api/agents/configure/${id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ agent_id: id, config })
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Agent configured:', result);
+        alert(`Agent ${id} configured successfully`);
+      } else {
+        const error = await response.json();
+        alert(`Failed to configure agent: ${error.detail}`);
+      }
+    } catch (error) {
+      console.error('Error configuring agent:', error);
+      alert('Invalid JSON or API error');
+    }
   };
 
   return (
@@ -46,11 +104,11 @@ export function AgentsView() {
       </div>
 
       {/* Filter Tabs */}
-      <div style={{ 
-        display: "flex", 
-        gap: 10, 
-        marginBottom: 20, 
-        flexWrap: "wrap" 
+      <div style={{
+        display: "flex",
+        gap: 10,
+        marginBottom: 20,
+        flexWrap: "wrap"
       }}>
         <button
           className="btn"
@@ -81,28 +139,28 @@ export function AgentsView() {
       </div>
 
       {/* Agent Grid */}
-      <div style={{ 
-        display: "grid", 
-        gridTemplateColumns: "repeat(auto-fill, minmax(350px, 1fr))", 
-        gap: 20 
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fill, minmax(350px, 1fr))",
+        gap: 20
       }}>
         {filteredAgents.map((agent) => (
           <div key={agent.id} className="card">
             {/* Agent Header */}
-            <div style={{ 
-              background: "var(--panel2)", 
-              padding: "12px 16px", 
+            <div style={{
+              background: "var(--panel2)",
+              padding: "12px 16px",
               borderBottom: "1px solid var(--line)",
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center"
             }}>
               <div>
-                <h3 style={{ 
-                  fontSize: 12, 
-                  fontWeight: 900, 
-                  letterSpacing: 1.5, 
-                  margin: 0 
+                <h3 style={{
+                  fontSize: 12,
+                  fontWeight: 900,
+                  letterSpacing: 1.5,
+                  margin: 0
                 }}>
                   {agent.name}
                 </h3>
@@ -115,11 +173,11 @@ export function AgentsView() {
                   padding: "3px 8px",
                   fontSize: 9,
                   fontWeight: 700,
-                  background: 
+                  background:
                     agent.status === "active" ? "var(--hot)" :
-                    agent.status === "error" ? "var(--bad)" :
-                    agent.status === "disabled" ? "var(--faint)" :
-                    "var(--cold)",
+                      agent.status === "error" ? "var(--bad)" :
+                        agent.status === "disabled" ? "var(--faint)" :
+                          "var(--cold)",
                   color: agent.status === "disabled" ? "var(--text)" : "var(--bg)",
                 }}
               >
@@ -129,9 +187,9 @@ export function AgentsView() {
 
             {/* Agent Body */}
             <div style={{ padding: 16 }}>
-              <p style={{ 
-                fontSize: 11, 
-                color: "var(--muted)", 
+              <p style={{
+                fontSize: 11,
+                color: "var(--muted)",
                 margin: "0 0 12px 0",
                 lineHeight: 1.5
               }}>
@@ -140,9 +198,9 @@ export function AgentsView() {
 
               {/* Capabilities */}
               <div style={{ marginBottom: 12 }}>
-                <div style={{ 
-                  fontSize: 9, 
-                  color: "var(--faint)", 
+                <div style={{
+                  fontSize: 9,
+                  color: "var(--faint)",
                   marginBottom: 6,
                   letterSpacing: 1
                 }}>
@@ -183,7 +241,7 @@ export function AgentsView() {
                   className="btn"
                   onClick={() => handleStart(agent.id)}
                   disabled={agent.status === "active" || agent.status === "disabled"}
-                  style={{ 
+                  style={{
                     flex: 1,
                     opacity: agent.status === "active" || agent.status === "disabled" ? 0.5 : 1,
                     cursor: agent.status === "active" || agent.status === "disabled" ? "not-allowed" : "pointer"
@@ -195,7 +253,7 @@ export function AgentsView() {
                   className="btn"
                   onClick={() => handleStop(agent.id)}
                   disabled={agent.status !== "active"}
-                  style={{ 
+                  style={{
                     flex: 1,
                     background: agent.status === "active" ? "var(--bad)" : "var(--panel2)",
                     borderColor: agent.status === "active" ? "var(--bad)" : "var(--line)",
@@ -216,9 +274,9 @@ export function AgentsView() {
 
               {/* Port Info */}
               {agent.port && (
-                <div style={{ 
-                  marginTop: 12, 
-                  fontSize: 9, 
+                <div style={{
+                  marginTop: 12,
+                  fontSize: 9,
                   color: "var(--faint)",
                   textAlign: "center"
                 }}>
