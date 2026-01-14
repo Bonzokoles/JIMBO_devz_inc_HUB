@@ -18,17 +18,17 @@ export function ServicesPage(props: {
   const [selectedService, setSelectedService] = React.useState<{ projectId: string; service: any } | null>(null);
 
   const handleRestartClick = (projectId: string, service: any) => {
-      setSelectedService({ projectId, service });
-      setModalOpen(true);
+    setSelectedService({ projectId, service });
+    setModalOpen(true);
   };
 
   const confirmRestart = async (reason: string) => {
     if (!selectedService || !props.me) return;
     const { projectId, service } = selectedService;
-    
+
     setModalOpen(false);
     setBusyId(service.id);
-    
+
     try {
       const payload: CommandIn = {
         projectId,
@@ -40,8 +40,8 @@ export function ServicesPage(props: {
       const out = await api.command(payload, idemKey());
       props.onCommand(out.id);
     } catch (e) {
-        console.error(e);
-        alert("Failed to send command");
+      console.error(e);
+      alert("Failed to send command");
     } finally {
       setBusyId(null);
       setSelectedService(null);
@@ -50,8 +50,8 @@ export function ServicesPage(props: {
 
   return (
     <div className="grid">
-      <DangerConfirmModal 
-        open={modalOpen} 
+      <DangerConfirmModal
+        open={modalOpen}
         title={`Restart ${selectedService?.service.label}?`}
         warning={`This will restart the service '${selectedService?.service.id}' on agent '${selectedService?.service.agentId}'.`}
         confirmWord="RESTART"
@@ -62,40 +62,50 @@ export function ServicesPage(props: {
 
       <div className="panel" style={{ gridColumn: "span 12" }}>
         <div className="panel-header">
-           <h3>ALL SERVICES</h3>
-           <span className="badge active">Unified View</span>
+          <h3>ALL SERVICES</h3>
+          <span className="badge active">Unified View</span>
         </div>
         <div className="panel-body">
-           <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
-             {props.projects.flatMap(p => 
-                p.services.map(s => (
-                    <div key={`${p.id}-${s.id}`} className="service-card">
-                       <div className="service-icon">?</div>
-                       <div className="service-info">
-                           <h4>{s.label}</h4>
-                           <p>Project: {p.name}</p>
-                           <div style={{ fontSize: 10, color: "var(--faint)", fontFamily: "var(--mono)", marginTop: 4 }}>
-                               ID: {s.id} · AGENT: {s.agentId} · TARGET: {s.target}
-                           </div>
-                       </div>
-                       <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                           <button 
-                             className="service-btn"
-                             disabled={busyId === s.id || !props.me || !can(props.me.role, "service.restart")}
-                             onClick={() => handleRestartClick(p.id, s)}
-                           >
-                              {busyId === s.id ? "WORKING..." : "RESTART"}
-                           </button>
-                       </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+            {props.projects.flatMap(p =>
+              p.services.map(s => (
+                <div key={`${p.id}-${s.id}`} className="service-card">
+                  <div className="service-icon">{s.id.includes('moa') ? '🤖' : '📦'}</div>
+                  <div className="service-info">
+                    <h4>{s.label}</h4>
+                    <p>Project: {p.name}</p>
+                    <div style={{ fontSize: 10, color: "var(--faint)", fontFamily: "var(--mono)", marginTop: 4 }}>
+                      ID: {s.id} · AGENT: {s.agentId} · TARGET: {s.target}
+                      {(s as any).url && ` · URL: ${(s as any).url}`}
                     </div>
-                ))
-             )}
-             {props.projects.every(p => p.services.length === 0) && (
-                 <div style={{ padding: 20, textAlign: "center", color: "var(--muted)" }}>
-                     No services found in configuration.
-                 </div>
-             )}
-           </div>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                    {(s as any).url && (
+                      <button
+                        className="service-btn"
+                        onClick={() => window.open((s as any).url, '_blank')}
+                        style={{ background: "var(--accent)", borderColor: "var(--accent)" }}
+                      >
+                        OPEN
+                      </button>
+                    )}
+                    <button
+                      className="service-btn"
+                      disabled={busyId === s.id || !props.me || !can(props.me.role, "service.restart")}
+                      onClick={() => handleRestartClick(p.id, s)}
+                    >
+                      {busyId === s.id ? "WORKING..." : "RESTART"}
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+            {props.projects.every(p => p.services.length === 0) && (
+              <div style={{ padding: 20, textAlign: "center", color: "var(--muted)" }}>
+                No services found in configuration.
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
