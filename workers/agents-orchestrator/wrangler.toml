@@ -1,0 +1,37 @@
+name = "jimbo77-agents-orchestrator"
+main = "src/index.ts"
+compatibility_date = "2026-01-13"
+workers_dev = true
+
+# Production route
+[env.production]
+name = "jimbo77-agents-orchestrator"
+route = { pattern = "orchestrator.jimbo77.com/*", zone_name = "jimbo77.com" }
+
+# KV for task state
+[[kv_namespaces]]
+binding = "AGENT_STATE"
+id = "YOUR_KV_NAMESPACE_ID"  # wrangler kv:namespace create AGENT_STATE
+
+# Environment variables (set via wrangler secret)
+# OPENROUTER_API_KEY - OpenRouter API key
+# DEEPSEEK_API_KEY - DeepSeek API key (backup)
+# AGENTS_API_BASE - Backend API URL (e.g., https://api.jimbo77.com)
+
+[vars]
+# Default model (can be overridden per request)
+DEFAULT_MODEL = "deepseek/deepseek-r1"
+
+# Available models through OpenRouter:
+# - deepseek/deepseek-r1 (best reasoning, cheap)
+# - deepseek/deepseek-chat (fast, cheap)
+# - anthropic/claude-3.5-sonnet (best quality)
+# - openai/gpt-4-turbo (reliable)
+# - meta-llama/llama-3.1-70b-instruct (open source)
+# - google/gemini-pro-1.5 (multimodal)
+
+[build]
+command = "npm install && npm run build"
+
+[build.upload]
+format = "service-worker"

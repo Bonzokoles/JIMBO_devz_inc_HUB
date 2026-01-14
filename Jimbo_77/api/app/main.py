@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 from .metrics import setup_metrics
 from .otel import setup_otel
 from .logging_setup import setup_logging
-from .routes import projects, commands, audit, publishing, analytics, logs, shop_sync, meble_pumo, analytics_ai, ai_analysis, guides, converter, agents
+from .routes import projects, commands, audit, publishing, analytics, logs, shop_sync, meble_pumo, analytics_ai, ai_analysis, guides, converter, agents, execute
 from .security.rbac import current_actor
 
 # Mock current_actor for testing
@@ -62,6 +62,7 @@ app.include_router(ai_analysis.router, prefix="/v1")  # AI Analysis Engine
 app.include_router(guides.router, prefix="/api")  # Buying Guides (MOA integration)
 app.include_router(converter.router, prefix="/api")  # File Converter (CAY integration)
 app.include_router(agents.router, prefix="/api/agents")  # Agent Management
+app.include_router(execute.router, prefix="/api/agents")  # Agent Execution (for Orchestrator)
 
 # Agent compatibility routes (no /v1 prefix)
 app.include_router(commands.router, prefix="/api")

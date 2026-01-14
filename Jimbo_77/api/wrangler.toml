@@ -1,0 +1,45 @@
+name = "jimbo77-api"
+main = "src/index.js"
+compatibility_date = "2026-01-13"
+
+# Worker configuration
+workers_dev = true
+route = { pattern = "api.jimbo77.com/*", zone_name = "jimbo77.com" }
+
+[env.production]
+name = "jimbo77-api"
+workers_dev = false
+
+# Environment variables
+[vars]
+ENVIRONMENT = "production"
+API_VERSION = "v1"
+CORS_ORIGIN = "https://hub.jimbo77.com"
+
+# KV Namespaces for agent state
+[[kv_namespaces]]
+binding = "AGENT_STATE"
+id = "YOUR_KV_NAMESPACE_ID"
+
+# D1 Database for agent logs
+[[d1_databases]]
+binding = "AGENT_LOGS"
+database_name = "jimbo77-agent-logs"
+database_id = "YOUR_D1_DATABASE_ID"
+
+# Durable Objects for agent processes (future)
+# [[durable_objects.bindings]]
+# name = "AGENT_PROCESS"
+# class_name = "AgentProcess"
+
+# Triggers (optional - for scheduled tasks)
+# [triggers]
+# crons = ["0 */4 * * *"]  # Every 4 hours
+
+# Build configuration
+[build]
+command = "echo 'No build needed for Python API'"
+
+# Development
+[dev]
+port = 8001
