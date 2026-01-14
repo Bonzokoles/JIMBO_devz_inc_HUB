@@ -18,7 +18,7 @@ import {
     Filler
 } from 'chart.js';
 import { Line, Doughnut, Bar } from 'react-chartjs-2';
-import api from './api';
+import { api } from './api';
 import type { KPIData, Product, Customer, AIAnalysis, AIInsight, AIAnalysisResponse, AutoInsightsResponse } from './api';
 
 ChartJS.register(
@@ -41,7 +41,7 @@ type AgentStatus = {
     lastRun?: string;
 };
 
-type TabView = 'overview' | 'products' | 'customers' | 'ai-predictions' | 'orders' | 'ai-analysis';
+type TabView = 'overview' | 'products' | 'customers' | 'ai-predictions' | 'orders' | 'ai-analysis' | 'buying-guides';
 
 function AppAdvanced() {
     const [activeTab, setActiveTab] = useState<TabView>('overview');
@@ -69,6 +69,14 @@ function AppAdvanced() {
     const [paymentMethodsData, setPaymentMethodsData] = useState<any>(null);
     const [orderSourcesData, setOrderSourcesData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+
+    // Buying Guides state
+    const [buyingGuides, setBuyingGuides] = useState<any[]>([]);
+    const [guideProductName, setGuideProductName] = useState('');
+    const [guideCategory, setGuideCategory] = useState('');
+    const [guideContext, setGuideContext] = useState('');
+    const [isGeneratingGuide, setIsGeneratingGuide] = useState(false);
+    const [selectedGuide, setSelectedGuide] = useState<any>(null);
 
     // Agent statuses
     const [agents] = useState<AgentStatus[]>([
@@ -108,7 +116,7 @@ function AppAdvanced() {
 
     const handleAskAI = async () => {
         if (!aiQuestion.trim()) return;
-        
+
         setIsAIThinking(true);
         try {
             const response = await api.askAI(aiQuestion);
@@ -200,6 +208,54 @@ function AppAdvanced() {
             setLoading(false);
         }
     };
+
+    // Buying Guides Functions
+    const loadBuyingGuides = async () => {
+        try {
+            const guides = await api.getBuyingGuides();
+            setBuyingGuides(guides);
+        } catch (error) {
+            console.error('Failed to load buying guides:', error);
+        }
+    };
+
+    const handleGenerateGuide = async () => {
+        if (!guideProductName.trim() || !guideCategory.trim()) {
+            alert('Podaj nazwę produktu i kategorię');
+            return;
+        }
+
+        setIsGeneratingGuide(true);
+        try {
+            const newGuide = await api.generateBuyingGuide({
+                product_name: guideProductName,
+                category: guideCategory,
+                additional_context: guideContext || undefined
+            });
+
+            setSelectedGuide(newGuide);
+            setBuyingGuides([newGuide, ...buyingGuides]);
+
+            // Clear form
+            setGuideProductName('');
+            setGuideCategory('');
+            setGuideContext('');
+
+            alert('Poradnik wygenerowany! 🎉');
+        } catch (error) {
+            console.error('Failed to generate guide:', error);
+            alert('Błąd generowania poradnika');
+        } finally {
+            setIsGeneratingGuide(false);
+        }
+    };
+
+    // Load guides when tab changes
+    useEffect(() => {
+        if (activeTab === 'buying-guides') {
+            loadBuyingGuides();
+        }
+    }, [activeTab]);
 
     const chartOptions = {
         responsive: true,
@@ -550,7 +606,7 @@ function AppAdvanced() {
                         <p style={{ color: 'var(--muted)', marginBottom: 15 }}>
                             Zadaj pytanie o dane biznesowe - AI przeanalizuje wszystkie metryki i udzieli odpowiedzi
                         </p>
-                        
+
                         <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
                             <input
                                 type="text"
@@ -640,11 +696,10 @@ function AppAdvanced() {
                                                     style={{
                                                         padding: 12,
                                                         background: '#0f0f0f',
-                                                        borderLeft: `3px solid ${
-                                                            insight.impact === 'high' ? '#ff6b6b' :
+                                                        borderLeft: `3px solid ${insight.impact === 'high' ? '#ff6b6b' :
                                                             insight.impact === 'medium' ? '#feca57' :
-                                                            '#4facfe'
-                                                        }`,
+                                                                '#4facfe'
+                                                            }`,
                                                         borderRadius: 4
                                                     }}
                                                 >
@@ -684,7 +739,7 @@ function AppAdvanced() {
                         <p style={{ color: 'var(--muted)', marginBottom: 15 }}>
                             AI automatycznie analizuje dane co 60 sekund i generuje insighty
                         </p>
-                        
+
                         {aiInsights.length > 0 ? (
                             <div style={{ display: 'grid', gap: 12 }}>
                                 {aiInsights.slice(0, 8).map((insight, i) => (
@@ -695,11 +750,10 @@ function AppAdvanced() {
                                             background: '#1a1a1a',
                                             borderRadius: 8,
                                             border: '1px solid #333',
-                                            borderLeft: `4px solid ${
-                                                insight.impact === 'high' ? '#ff6b6b' :
+                                            borderLeft: `4px solid ${insight.impact === 'high' ? '#ff6b6b' :
                                                 insight.impact === 'medium' ? '#feca57' :
-                                                '#00ff88'
-                                            }`
+                                                    '#00ff88'
+                                                }`
                                         }}
                                     >
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: 8 }}>
@@ -741,7 +795,7 @@ function AppAdvanced() {
                                             marginTop: 8,
                                             fontSize: 11,
                                             color: insight.impact === 'high' ? '#ff6b6b' :
-                                                   insight.impact === 'medium' ? '#feca57' : '#4facfe'
+                                                insight.impact === 'medium' ? '#feca57' : '#4facfe'
                                         }}>
                                             Impact: {insight.impact?.toUpperCase() || 'MEDIUM'}
                                         </div>
@@ -751,6 +805,259 @@ function AppAdvanced() {
                         ) : (
                             <div style={{ textAlign: 'center', padding: 40, color: '#666' }}>
                                 Loading insights...
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
+
+            {/* BUYING GUIDES TAB */}
+            {activeTab === 'buying-guides' && (
+                <div style={{ display: 'grid', gap: 20 }}>
+                    {/* Generator Form */}
+                    <div className="chart-container">
+                        <h3>🤖 Generuj Poradnik Zakupowy (LUCJAN MOA v3.0)</h3>
+                        <p style={{ color: 'var(--muted)', marginBottom: 20 }}>
+                            Wykorzystuje Multi-Agent Orchestration (GPT-4 + DeepSeek + Gemini 2.0) do stworzenia kompletnego przewodnika zakupowego
+                        </p>
+
+                        <div style={{ display: 'grid', gap: 15, marginBottom: 20 }}>
+                            <div>
+                                <label style={{ display: 'block', marginBottom: 8, color: '#00ff88', fontSize: 13 }}>
+                                    Nazwa produktu *
+                                </label>
+                                <input
+                                    type="text"
+                                    value={guideProductName}
+                                    onChange={(e) => setGuideProductName(e.target.value)}
+                                    placeholder="Np: Materac piankowy 160x200"
+                                    style={{
+                                        width: '100%',
+                                        padding: '12px 16px',
+                                        background: '#1a1a1a',
+                                        border: '1px solid #333',
+                                        borderRadius: 8,
+                                        color: '#fff',
+                                        fontSize: 14
+                                    }}
+                                />
+                            </div>
+
+                            <div>
+                                <label style={{ display: 'block', marginBottom: 8, color: '#00ff88', fontSize: 13 }}>
+                                    Kategoria *
+                                </label>
+                                <input
+                                    type="text"
+                                    value={guideCategory}
+                                    onChange={(e) => setGuideCategory(e.target.value)}
+                                    placeholder="Np: Materace"
+                                    style={{
+                                        width: '100%',
+                                        padding: '12px 16px',
+                                        background: '#1a1a1a',
+                                        border: '1px solid #333',
+                                        borderRadius: 8,
+                                        color: '#fff',
+                                        fontSize: 14
+                                    }}
+                                />
+                            </div>
+
+                            <div>
+                                <label style={{ display: 'block', marginBottom: 8, color: '#4facfe', fontSize: 13 }}>
+                                    Dodatkowy kontekst (opcjonalnie)
+                                </label>
+                                <textarea
+                                    value={guideContext}
+                                    onChange={(e) => setGuideContext(e.target.value)}
+                                    placeholder="Dodatkowe informacje, wymagania specjalne, target audience..."
+                                    rows={3}
+                                    style={{
+                                        width: '100%',
+                                        padding: '12px 16px',
+                                        background: '#1a1a1a',
+                                        border: '1px solid #333',
+                                        borderRadius: 8,
+                                        color: '#fff',
+                                        fontSize: 14,
+                                        resize: 'vertical'
+                                    }}
+                                />
+                            </div>
+
+                            <button
+                                onClick={handleGenerateGuide}
+                                disabled={isGeneratingGuide || !guideProductName || !guideCategory}
+                                style={{
+                                    padding: '14px 24px',
+                                    background: isGeneratingGuide ? '#333' : 'linear-gradient(135deg, #00ff88, #4facfe)',
+                                    border: 'none',
+                                    borderRadius: 8,
+                                    color: '#000',
+                                    fontSize: 15,
+                                    fontWeight: 'bold',
+                                    cursor: isGeneratingGuide ? 'wait' : 'pointer',
+                                    opacity: isGeneratingGuide || !guideProductName || !guideCategory ? 0.5 : 1
+                                }}
+                            >
+                                {isGeneratingGuide ? '🤖 Generuję z MOA... (może potrwać ~1 min)' : '✨ Generuj Poradnik (MOA v3.0)'}
+                            </button>
+                        </div>
+
+                        {isGeneratingGuide && (
+                            <div style={{
+                                padding: 15,
+                                background: '#1a1a1a',
+                                borderRadius: 8,
+                                border: '1px solid #333',
+                                textAlign: 'center'
+                            }}>
+                                <div style={{ marginBottom: 10 }}>🔄 Multi-Agent Orchestration w toku...</div>
+                                <div style={{ fontSize: 12, color: '#666' }}>
+                                    Agent 1 (GPT-4): Analiza trendy rynkowe<br />
+                                    Agent 2 (DeepSeek): Szczegóły techniczne<br />
+                                    Synthesis (Gemini 2.0): Kompletny poradnik
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Selected Guide Display */}
+                    {selectedGuide && (
+                        <div className="chart-container">
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15 }}>
+                                <h3>📖 {selectedGuide.product_name}</h3>
+                                <button
+                                    onClick={() => setSelectedGuide(null)}
+                                    style={{
+                                        padding: '6px 12px',
+                                        background: '#333',
+                                        border: 'none',
+                                        borderRadius: 6,
+                                        color: '#aaa',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    ✕ Zamknij
+                                </button>
+                            </div>
+
+                            <div style={{
+                                padding: 15,
+                                background: '#1a1a1a',
+                                borderRadius: 8,
+                                border: '1px solid #333',
+                                marginBottom: 15
+                            }}>
+                                <div style={{ marginBottom: 10 }}>
+                                    <span style={{ color: '#00ff88', fontSize: 12 }}>Kategoria:</span>{' '}
+                                    {selectedGuide.category}
+                                </div>
+                                {selectedGuide.confidence_score && (
+                                    <div style={{ marginBottom: 10 }}>
+                                        <span style={{ color: '#4facfe', fontSize: 12 }}>Confidence:</span>{' '}
+                                        {(selectedGuide.confidence_score * 100).toFixed(0)}%
+                                    </div>
+                                )}
+                                {selectedGuide.metadata?.moa_model && (
+                                    <div style={{ fontSize: 11, color: '#666' }}>
+                                        Model: {selectedGuide.metadata.moa_model} |
+                                        Czas: {selectedGuide.metadata.processing_time}ms
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Guide Content */}
+                            <div style={{ whiteSpace: 'pre-line', lineHeight: 1.8, marginBottom: 20 }}>
+                                {selectedGuide.guide_content}
+                            </div>
+
+                            {/* Key Features */}
+                            {selectedGuide.key_features?.length > 0 && (
+                                <div style={{ marginBottom: 20 }}>
+                                    <h4 style={{ color: '#00ff88', marginBottom: 10 }}>🔑 Kluczowe Cechy</h4>
+                                    <ul style={{ paddingLeft: 20 }}>
+                                        {selectedGuide.key_features.map((feature: string, i: number) => (
+                                            <li key={i} style={{ marginBottom: 8 }}>{feature}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+
+                            {/* Buying Tips */}
+                            {selectedGuide.buying_tips?.length > 0 && (
+                                <div style={{ marginBottom: 20 }}>
+                                    <h4 style={{ color: '#feca57', marginBottom: 10 }}>💡 Wskazówki Zakupowe</h4>
+                                    <ul style={{ paddingLeft: 20 }}>
+                                        {selectedGuide.buying_tips.map((tip: string, i: number) => (
+                                            <li key={i} style={{ marginBottom: 8 }}>{tip}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+
+                            {/* Recommended Products */}
+                            {selectedGuide.recommended_products?.length > 0 && (
+                                <div>
+                                    <h4 style={{ color: '#4facfe', marginBottom: 10 }}>⭐ Polecane Produkty</h4>
+                                    <ul style={{ paddingLeft: 20 }}>
+                                        {selectedGuide.recommended_products.map((product: string, i: number) => (
+                                            <li key={i} style={{ marginBottom: 8 }}>{product}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Guides List */}
+                    <div className="chart-container">
+                        <h3>📚 Wygenerowane Poradniki ({buyingGuides.length})</h3>
+
+                        {buyingGuides.length === 0 ? (
+                            <div style={{ textAlign: 'center', padding: 40, color: '#666' }}>
+                                Brak poradników. Wygeneruj pierwszy powyżej!
+                            </div>
+                        ) : (
+                            <div style={{ display: 'grid', gap: 12 }}>
+                                {buyingGuides.map((guide) => (
+                                    <div
+                                        key={guide.id}
+                                        onClick={() => setSelectedGuide(guide)}
+                                        style={{
+                                            padding: 15,
+                                            background: selectedGuide?.id === guide.id ? '#2a2a2a' : '#1a1a1a',
+                                            border: selectedGuide?.id === guide.id ? '1px solid #00ff88' : '1px solid #333',
+                                            borderRadius: 8,
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s'
+                                        }}
+                                    >
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+                                            <div>
+                                                <div style={{ fontWeight: 'bold', marginBottom: 5 }}>
+                                                    {guide.product_name}
+                                                </div>
+                                                <div style={{ fontSize: 12, color: '#00ff88' }}>
+                                                    {guide.category}
+                                                </div>
+                                            </div>
+                                            <div style={{ fontSize: 11, color: '#666' }}>
+                                                {new Date(guide.created_at).toLocaleDateString('pl')}
+                                            </div>
+                                        </div>
+                                        {guide.confidence_score && (
+                                            <div style={{
+                                                marginTop: 10,
+                                                fontSize: 11,
+                                                color: '#4facfe'
+                                            }}>
+                                                Confidence: {(guide.confidence_score * 100).toFixed(0)}%
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
                             </div>
                         )}
                     </div>

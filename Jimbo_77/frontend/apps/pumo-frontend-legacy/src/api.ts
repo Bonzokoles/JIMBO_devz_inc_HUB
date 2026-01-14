@@ -1,5 +1,5 @@
 // API Base URL - points to existing Cloudflare Worker
-const API_BASE = import.meta.env.VITE_API_BASE || 
+const API_BASE = import.meta.env.VITE_API_BASE ||
   'http://localhost:8001';  // Lokalny FastAPI backend
 
 // Types
@@ -109,6 +109,30 @@ export type AutoInsightsResponse = {
   generated_at: string;
 };
 
+// Buying Guides Types
+export type GenerateGuideRequest = {
+  product_name: string;
+  category: string;
+  additional_context?: string;
+};
+
+export type BuyingGuide = {
+  id: string;
+  product_name: string;
+  category: string;
+  guide_content: string;
+  key_features: string[];
+  buying_tips: string[];
+  recommended_products: string[];
+  created_at: string;
+  confidence_score?: number;
+  metadata?: {
+    moa_model?: string;
+    processing_time?: number;
+    additional_context?: string;
+  };
+};
+
 // API Service
 class PumoAPI {
   private baseUrl: string;
@@ -210,6 +234,79 @@ class PumoAPI {
         response: 'AI Analyst is currently unavailable. Please try again later.',
         confidence: 0,
       };
+    }
+  }
+
+  // Buying Guides API
+  async generateBuyingGuide(request: GenerateGuideRequest): Promise<BuyingGuide> {
+    try {
+      const response = await fetch(`${this.baseUrl}/api/guides/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(request),
+      });
+      if (!response.ok) {
+        const error = await response.text();
+        throw new Error(`Failed to generate guide: ${error}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Generate guide error:', error);
+      throw error;
+    }
+  }
+
+  async getBuyingGuides(category?: string, limit: number = 50): Promise<BuyingGuide[]> {
+    try {
+      const params = new URLSearchParams();
+      if (category) params.append('category', category);
+      params.append('limit', limit.toString());
+
+      const response = await fetch(`${this.baseUrl}/api/guides?${params}`);
+      if (!response.ok) throw new Error('Failed to fetch guides');
+      return await response.json();
+    } catch (error) {
+      console.error('Get guides error:', error);
+      return [];
+    }
+  }
+
+  async getBuyingGuide(id: string): Promise<BuyingGuide | null> {
+    try {
+      const response = await fetch(`${this.baseUrl}/api/guides/${id}`);
+      if (!response.ok) {
+        if (response.status === 404) return null;
+        throw new Error('Failed to fetch guide');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Get guide error:', error);
+      return null;
+    }
+  }
+
+  async deleteBuyingGuide(id: string): Promise<boolean> {
+    try {
+      const response = await fetch(`${this.baseUrl}/api/guides/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete guide');
+      return true;
+    } catch (error) {
+      console.error('Delete guide error:', error);
+      return false;
+    }
+  }
+
+  async getGuideCategories(): Promise<string[]> {
+    try {
+      const response = await fetch(`${this.baseUrl}/api/guides/categories/list`);
+      if (!response.ok) throw new Error('Failed to fetch categories');
+      const data = await response.json();
+      return data.categories || [];
+    } catch (error) {
+      console.error('Get categories error:', error);
+      return [];
     }
   }
 }

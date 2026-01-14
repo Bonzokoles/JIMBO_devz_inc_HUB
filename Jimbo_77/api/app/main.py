@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 from .metrics import setup_metrics
 from .otel import setup_otel
 from .logging_setup import setup_logging
-from .routes import projects, commands, audit, publishing, analytics, logs, shop_sync, meble_pumo, analytics_ai, ai_analysis
+from .routes import projects, commands, audit, publishing, analytics, logs, shop_sync, meble_pumo, analytics_ai, ai_analysis, guides
 from .security.rbac import current_actor
 
 # Mock current_actor for testing
@@ -59,6 +59,7 @@ app.include_router(shop_sync.router)  # Already has /v1/shop-sync prefix
 app.include_router(meble_pumo.router, prefix="/v1")
 app.include_router(analytics_ai.router, prefix="/v1")  # Advanced AI Analytics
 app.include_router(ai_analysis.router, prefix="/v1")  # AI Analysis Engine
+app.include_router(guides.router, prefix="/api")  # Buying Guides (MOA integration)
 
 # Agent compatibility routes (no /v1 prefix)
 app.include_router(commands.router, prefix="/api")
