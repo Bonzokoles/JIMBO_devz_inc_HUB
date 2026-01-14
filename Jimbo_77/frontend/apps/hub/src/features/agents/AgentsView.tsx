@@ -10,6 +10,8 @@ const AGENT_TYPE_LABELS: Record<AgentType, string> = {
   security: "Security",
 };
 
+const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8001';
+
 export function AgentsView() {
   const [selectedType, setSelectedType] = useState<AgentType | "all">("all");
   const [agents] = useState<Agent[]>(AGENT_REGISTRY);
@@ -20,7 +22,7 @@ export function AgentsView() {
 
   const handleStart = async (id: string) => {
     try {
-      const response = await fetch(`http://localhost:8001/api/agents/start/${id}`, {
+      const response = await fetch(`${API_BASE}/api/agents/start/${id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       });
@@ -42,7 +44,7 @@ export function AgentsView() {
 
   const handleStop = async (id: string) => {
     try {
-      const response = await fetch(`http://localhost:8001/api/agents/stop/${id}`, {
+      const response = await fetch(`${API_BASE}/api/agents/stop/${id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       });
@@ -71,7 +73,7 @@ export function AgentsView() {
     try {
       const config = JSON.parse(configJson);
 
-      const response = await fetch(`http://localhost:8001/api/agents/configure/${id}`, {
+      const response = await fetch(`${API_BASE}/api/agents/configure/${id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ agent_id: id, config })

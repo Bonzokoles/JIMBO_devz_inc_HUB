@@ -1,17 +1,16 @@
 """
-IdoSell API v3 Integration for Meble Pumo
-Dokumentacja: https://www.idosell.com/readme/api/v3/
+IdoSell API Integration for Meble Pumo
 """
 from __future__ import annotations
 import os
+import base64
 import httpx
 from typing import Optional, Dict, List, Any
 from pydantic import BaseModel
 
-# Configuration - IdoSell API v3
+# Configuration
 IDOSELL_SHOP_URL = os.getenv("IDOSELL_SHOP_URL", "https://meblepumo.iai-shop.com")
-IDOSELL_API_KEY = os.getenv("IDOSELL_API_KEY", "")  # Bearer token z panelu IdoSell
-IDOSELL_API_VERSION = "v3"
+IDOSELL_API_KEY = os.getenv("IDOSELL_API_KEY", "YXBwbGljYXRpb24yMDpDcGRCOVp3cE1adG9HY2JTMWVUMXhYUTlmU1dLb0VhWWJOd2lDbG5wN3FpQzEwUkx4cStUYVE1cUFjc041dEpT")
 
 class IdoSellOrder(BaseModel):
     """IdoSell Order model"""
@@ -28,32 +27,21 @@ class IdoSellClient:
     def __init__(self, shop_url: str = None, api_key: str = None):
         self.shop_url = shop_url or IDOSELL_SHOP_URL
         self.api_key = api_key or IDOSELL_API_KEY
-        self.api_base = f"{self.shop_url}/api/{IDOSELL_API_VERSION}"
         self.client = httpx.AsyncClient(timeout=30.0)
     
     def get_headers(self) -> Dict[str, str]:
-        """
-        Get API request headers for IdoSell API v3
-        Authorization: Bearer TOKEN
-        """
-        headers = {
+        """Get API request headers"""
+        return {
+            'X-API-KEY': self.api_key,  # Already base64 encoded
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         }
-        
-        if self.api_key:
-            headers['Authorization'] = f'Bearer {self.api_key}'
-        
-        return headers
     
     async def test_connection(self) -> Dict[str, Any]:
-        """
-        Test API connection with IdoSell API v3
-        Endpoint: GET /orders
-        """
+        """Test API connection with basic endpoint"""
         try:
-            url = f"{self.api_base}/orders"
-            params = {"limit": 1}  # Minimal request
+            url = f"{self.shop_url}/api/admin/v3/orders/orders"
+            params = {"page": 1, "per_page": 1}  # Minimal request
             
             response = await self.client.get(
                 url,
@@ -64,37 +52,22 @@ class IdoSellClient:
             return {
                 "success": response.status_code == 200,
                 "status_code": response.status_code,
-                "response_text": response.text[:500] if response.status_code == 200 else response.text,
+                "response_text": response.text[:500],  # First 500 chars
                 "headers": dict(response.headers),
-                "url": str(response.url),
-                "message": "Connected to IdoSell API v3" if response.status_code == 200 else f"API Error: {response.status_code}"
+                "url": str(response.url)
             }
         except Exception as e:
             return {
                 "success": False,
-                "error": str(e)
+                "error": str(e),
+                "url": f"{self.shop_url}/api/admin/v3/orders/orders"
             }
     
-    async def get_orders(self, limit: int = 100, offset: int = 0, 
-                        order_add_date_from: Optional[str] = None) -> Dict[str, Any]:
-        """
-        Get orders from IdoSell API v3
-        Endpoint: GET /orders
-        
-        Args:
-            limit: Max orders to return (default 100)
-            offset: Offset for pagination
-            order_add_date_from: Filter by order date (format: YYYY-MM-DD)
-        """
+    async def get_orders(self, page: int = 1, per_page: int = 100) -> Dict[str, Any]:
+        """Get orders from IdoSell API"""
         try:
-            url = f"{self.api_base}/orders"
-            params = {
-                "limit": limit,
-                "offset": offset
-            }
-            
-            if order_add_date_from:
-                params["order_add_date_from"] = order_add_date_from
+            url = f"{self.shop_url}/api/admin/v3/orders/orders"
+            params = {"page": page, "per_page": per_page}
             
             response = await self.client.get(
                 url,
@@ -104,23 +77,30 @@ class IdoSellClient:
             
             if response.status_code == 200:
                 data = response.json()
-                orders = data if isinstance(data, list) else data.get("orders", [])
-                
                 return {
-                    "success": True,
-                    "orders": orders,
-                    "total_orders": len(orders),
-                    "limit": limit,
-                    "offset": offset
                     "success": True,
                     "data": data,
                     "total_orders": len(data.get("orders", [])),
-           
-        Get specific order details from IdoSell API v3
-        Endpoint: GET /orders/{order_id}
-        """
+                    "page": page,
+                    "per_page": per_page
+                }
+            else:
+                return {
+                    "success": False,
+                    "status_code": response.status_code,
+                    "error": response.text
+                }
+                
+        except Exception as e:
+            return {
+                "success": False,
+                "error": str(e)
+            }
+    
+    async def get_order_details(self, order_id: str) -> Dict[str, Any]:
+        """Get specific order details"""
         try:
-            url = f"{self.api_base}/orders/{order_id}"
+            url = f"{self.shop_url}/api/admin/v3/orders/orders/{order_id}"
             
             response = await self.client.get(
                 url,
@@ -145,393 +125,11 @@ class IdoSellClient:
                 "error": str(e)
             }
     
-    async def get_products(self, limit: int = 100, offset: int = 0) -> Dict[str, Any]:
-        """
-        Get products from IdoSell API v3
-        Endpoint: GET /products
-        
-        Returns product data with prices, categories, and availability
-        """
-        try:
-            url = f"{self.api_base}/products"
-            params = {
-                "limit": limit,
-                "offset": offset
-            }
-            
-            response = await self.client.get(
-                url,
-                headers=self.get_headers(),
-                params=params
-            )
-            
-            if response.status_code == 200:
-                data = response.json()
-                products = data if isinstance(data, list) else data.get("products", [])
-                
-                return {
-                    "success": True,
-                    "products": products,
-                    "total_products": len(products),
-                    "limit": limit,
-                    "offset": offset
-                }
-            else:
-                return {
-                    "success": False,
-                    "status_code": response.status_code,
-                    "error": response.text
-                }
-                
-        except Exception as e:
-            return {
-                "success": False,
-                "error": str(e)
-            }
-    
-    async def get_returns(self, limit: int = 100, offset: int = 0) -> Dict[str, Any]:
-        """
-        Get returns from IdoSell API v3
-        Endpoint: GET /returns
-        
-        Returns information about product returns
-        """
-        try:
-            url = f"{self.api_base}/returns"
-            params = {
-                "limit": limit,
-                "offset": offset
-            }
-            
-            response = await self.client.get(
-                url,
-                headers=self.get_headers(),
-                params=params
-            )
-            
-            if response.status_code == 200:
-                data = response.json()
-                returns = data if isinstance(data, list) else data.get("returns", [])
-                
-                return {
-                    "success": True,
-                    "returns": returns,
-                    "total_returns": len(returns),
-                    "limit": limit,
-                    "offset": offset
-                }
-            else:
-                return {
-                    "success": False,
-                    "status_code": response.status_code,
-                    "error": response.text
-                }
-                
-        except Exception as e:
-            return {
-                "success": False,
-                "error": str(e)
-            }
-        async def fetch_all_products(self, batch_size: int = 1000, created_after: Optional[str] = None) -> Dict[str, Any]:
-        """
-        Fetch ALL products from IdoSell API v3 with pagination
-        
-        Args:
-            batch_size: Number of products per request (max 1000)
-            created_after: Filter products by creation date (format: YYYY-MM-DD)
-        
-        Returns:
-            Dict with all_products list and metadata
-        """
-        all_products = []
-        offset = 0
-        total_fetched = 0
-        
-        try:
-            while True:
-                params = {"limit": batch_size, "offset": offset}
-                if created_after:
-                    params["created_after"] = created_after
-                
-                result = await self.get_products(limit=batch_size, offset=offset)
-                
-                if not result.get("success"):
-                    return {
-                        "success": False,
-                        "error": result.get("error", "Unknown error"),
-                        "products_fetched": total_fetched
-                    }
-                
-                products = result.get("products", [])
-                if not products:
-                    break  # No more data
-                
-                all_products.extend(products)
-                total_fetched += len(products)
-                offset += batch_size
-                
-                # Break if we got less than batch_size (last page)
-                if len(products) < batch_size:
-                    break
-            
-            return {
-                "success": True,
-                "all_products": all_products,
-                "total_fetched": total_fetched,
-                "batches": (offset // batch_size) + (1 if offset % batch_size else 0)
-            }
-            
-        except Exception as e:
-            return {
-                "success": False,
-                "error": str(e),
-                "products_fetched": total_fetched
-            }
-    
-    async def fetch_all_orders(self, batch_size: int = 1000, order_add_date_from: Optional[str] = None) -> Dict[str, Any]:
-        """
-        Fetch ALL orders from IdoSell API v3 with pagination
-        
-        Args:
-            batch_size: Number of orders per request (max 1000)
-            order_add_date_from: Filter orders by date (format: YYYY-MM-DD)
-        
-        Returns:
-            Dict with all_orders list and metadata
-        """
-        all_orders = []
-        offset = 0
-        total_fetched = 0
-        
-        try:
-            while True:
-                result = await self.get_orders(
-                    limit=batch_size,
-                    offset=offset,
-                    order_add_date_from=order_add_date_from
-                )
-                
-                if not result.get("success"):
-                    return {
-                        "success": False,
-                        "error": result.get("error", "Unknown error"),
-                        "orders_fetched": total_fetched
-                    }
-                
-                orders = result.get("orders", [])
-                if not orders:
-                    break
-                
-                all_orders.extend(orders)
-                total_fetched += len(orders)
-                offset += batch_size
-                
-                if len(orders) < batch_size:
-                    break
-            
-            return {
-                "success": True,
-                "all_orders": all_orders,
-                "total_fetched": total_fetched,
-                "batches": (offset // batch_size) + (1 if offset % batch_size else 0)
-            }
-            
-        except Exception as e:
-            return {
-                "success": False,
-                "error": str(e),
-                "orders_fetched": total_fetched
-            }
-    
-    async def fetch_all_returns(self, batch_size: int = 1000) -> Dict[str, Any]:
-        """
-        Fetch ALL returns from IdoSell API v3 with pagination
-        
-        Args:
-            batch_size: Number of returns per request (max 1000)
-        
-        Returns:
-            Dict with all_returns list and metadata
-        """
-        all_returns = []
-        offset = 0
-        total_fetched = 0
-        
-        try:
-            while True:
-                result = await self.get_returns(limit=batch_size, offset=offset)
-                
-                if not result.get("success"):
-                    return {
-                        "success": False,
-                        "error": result.get("error", "Unknown error"),
-                        "returns_fetched": total_fetched
-                    }
-                
-                returns = result.get("returns", [])
-                if not returns:
-                    break
-                
-                all_returns.extend(returns)
-                total_fetched += len(returns)
-                offset += batch_size
-                
-                if len(returns) < batch_size:
-                    break
-            
-            return {
-                "success": True,
-                "all_returns": all_returns,
-                "total_fetched": total_fetched,
-                "batches": (offset // batch_size) + (1 if offset % batch_size else 0)
-            }
-            
-        except Exception as e:
-            return {
-                "success": False,
-                "error": str(e),
-                "returns_fetched": total_fetched
-            }
-    
-    async def fetch_all_customers(self, batch_size: int = 1000) -> Dict[str, Any]:
-        """
-        Fetch ALL customers from IdoSell API v3 with pagination
-        Endpoint: GET /customers (if available)
-        
-        Args:
-            batch_size: Number of customers per request (max 1000)
-        
-        Returns:
-            Dict with all_customers list and metadata
-        """
-        all_customers = []
-        offset = 0
-        total_fetched = 0
-        
-        try:
-            url = f"{self.api_base}/customers"
-            
-            while True:
-                params = {"limit": batch_size, "offset": offset}
-                
-                response = await self.client.get(
-                    url,
-                    headers=self.get_headers(),
-                    params=params
-                )
-                
-                if response.status_code != 200:
-                    return {
-                        "success": False,
-                        "status_code": response.status_code,
-                        "error": response.text,
-                        "customers_fetched": total_fetched
-                    }
-                
-                data = response.json()
-                customers = data if isinstance(data, list) else data.get("customers", [])
-                
-                if not customers:
-                    break
-                
-                all_customers.extend(customers)
-                total_fetched += len(customers)
-                offset += batch_size
-                
-                if len(customers) < batch_size:
-                    break
-            
-            return {
-                "success": True,
-                "all_customers": all_customers,
-                "total_fetched": total_fetched,
-                "batches": (offset // batch_size) + (1 if offset % batch_size else 0)
-            }
-            
-        except Exception as e:
-            return {
-                "success": False,
-                "error": str(e),
-                "customers_fetched": total_fetched
-            }
-    
-    async def export_all_data(self, 
-                             order_date_from: Optional[str] = None,
-                             product_date_from: Optional[str] = None) -> Dict[str, Any]:
-        """
-        Export ALL data from IdoSell (products, orders, returns, customers)
-        
-        Args:
-            order_date_from: Filter orders by date (YYYY-MM-DD)
-            product_date_from: Filter products by date (YYYY-MM-DD)
-        
-        Returns:
-            Dict with all data and export summary
-        """
-        export_summary = {
-            "success": True,
-            "timestamp": None,
-            "data": {},
-            "errors": []
-        }
-        
-        # Fetch products
-        products_result = await self.fetch_all_products(created_after=product_date_from)
-        if products_result.get("success"):
-            export_summary["data"]["products"] = products_result
-        else:
-            export_summary["errors"].append(f"Products: {products_result.get('error')}")
-        
-        # Fetch orders
-        orders_result = await self.fetch_all_orders(order_add_date_from=order_date_from)
-        if orders_result.get("success"):
-            export_summary["data"]["orders"] = orders_result
-        else:
-            export_summary["errors"].append(f"Orders: {orders_result.get('error')}")
-        
-        # Fetch returns
-        returns_result = await self.fetch_all_returns()
-        if returns_result.get("success"):
-            export_summary["data"]["returns"] = returns_result
-        else:
-            export_summary["errors"].append(f"Returns: {returns_result.get('error')}")
-        
-        # Fetch customers
-        customers_result = await self.fetch_all_customers()
-        if customers_result.get("success"):
-            export_summary["data"]["customers"] = customers_result
-        else:
-            export_summary["errors"].append(f"Customers: {customers_result.get('error')}")
-        
-        export_summary["success"] = len(export_summary["errors"]) == 0
-        
-        from datetime import datetime
-        export_summary["timestamp"] = datetime.utcnow().isoformat()
-        
-        return export_summary
-        async def close(self):
+    async def close(self):
         """Close HTTP client"""
         await self.client.aclose()
-
 
 # Helper function for dependency injection
 def get_idosell_client() -> IdoSellClient:
     """Get IdoSell client instance"""
-    return IdoSellClient
-                }
-            else:
-                return {
-                    "success": False,
-                    "status_code": response.status_code,
-                    "error": response.text
-                }
-                
-        except Exception as e:
-            return {
-                "success": False,
-                "error": str(e)
-            }
-    
-    async def close(self):
-        """Close HTTP client"""
-        await self.client.aclose()
+    return IdoSellClient()
