@@ -4,7 +4,10 @@ on:
   push:
     branches: ["main"]
     paths:
-      - "Jimbo_77/frontend/**" # Trigger only on frontend changes
+      - "Jimbo_77/frontend/apps/hub/**"
+      - "Jimbo_77/frontend/pnpm-lock.yaml"
+      - "Jimbo_77/frontend/package.json"
+      - ".github/workflows/deploy-hub.yml"
   workflow_dispatch:
 
 jobs:
@@ -23,6 +26,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: "pnpm"
+          cache-dependency-path: "Jimbo_77/frontend/pnpm-lock.yaml"
 
       - name: Install pnpm
         uses: pnpm/action-setup@v3
