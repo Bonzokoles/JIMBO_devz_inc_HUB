@@ -251,7 +251,8 @@ export function UnifiedOpsView({
                   color: "var(--muted)",
                 }}
               >
-                Manual deploys, rollbacks, secrets management & GitHub Actions status
+                Manual deploys, rollbacks, secrets management & GitHub Actions
+                status
               </p>
               <button
                 type="button"
