@@ -1,7 +1,7 @@
 name = "jimbo-like-pumo-api"
 main = "src/index-new.ts"
 compatibility_date = "2026-01-08"
-# Auto-deploy test - GitHub Actions workflow verification
+# Auto-deploy verification - GitHub Actions with secrets
 
 # Keep workers.dev enabled as a fallback URL
 workers_dev = true
