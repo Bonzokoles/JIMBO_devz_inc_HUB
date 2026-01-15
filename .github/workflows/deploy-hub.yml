@@ -51,6 +51,6 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: "jimbo-devz-inc-hub"
+          projectName: "jimbo77-ops-hub"
           directory: "Jimbo_77/frontend/apps/hub/dist"
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
