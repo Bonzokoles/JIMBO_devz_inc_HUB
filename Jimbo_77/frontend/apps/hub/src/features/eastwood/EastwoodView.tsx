@@ -1,7 +1,7 @@
 import React from "react";
 
 export function EastwoodView() {
-  const [agents, setAgents] = React.useState([
+  const [agents] = React.useState([
     {
       id: "retention-agent",
       name: "Retention Agent",
@@ -32,7 +32,7 @@ export function EastwoodView() {
     },
   ]);
 
-  const [moneyMachine, setMoneyMachine] = React.useState([
+  const [moneyMachine] = React.useState([
     { name: "Affiliate Marketing", path: "affiliate-marketing", ideas: 5 },
     { name: "AI Content Creation", path: "ai-content-creation", ideas: 8 },
     { name: "AI Monetization", path: "ai-monetization", ideas: 12 },
