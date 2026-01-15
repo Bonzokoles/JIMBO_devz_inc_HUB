@@ -13,6 +13,7 @@ import { AgentsView } from "./features/agents/AgentsView";
 import { EastwoodView } from "./features/eastwood/EastwoodView";
 import { WorkersMonitoringView } from "./features/monitoring/WorkersMonitoringView";
 import { MultiDomainAnalyticsView } from "./features/analytics/MultiDomainAnalyticsView";
+import { DeploymentControlView } from "./features/deployment/DeploymentControlView";
 
 import { PumoView } from "./features/pumo/PumoView";
 
@@ -26,6 +27,7 @@ export default function App() {
     | "eastwood"
     | "monitoring"
     | "analytics"
+    | "deployment"
   >("dashboards");
 
   // Dashboard Sub-navigation state
@@ -100,6 +102,12 @@ export default function App() {
         >
           ANALYTICS
         </button>
+        <button
+          className={`tab ${activeTab === "deployment" ? "active" : ""}`}
+          onClick={() => setActiveTab("deployment")}
+        >
+          DEPLOYMENT
+        </button>
       </div>
 
       <div style={{ padding: "20px", maxWidth: 1800, margin: "0 auto" }}>
@@ -112,6 +120,7 @@ export default function App() {
               onOpenEastwood={() => setActiveTab("eastwood")}
               onOpenMonitoring={() => setActiveTab("monitoring")}
               onOpenAnalytics={() => setActiveTab("analytics")}
+              onOpenDeployment={() => setActiveTab("deployment")}
             />
           ))}
         {activeTab === "services" && (
@@ -124,6 +133,7 @@ export default function App() {
         {activeTab === "eastwood" && <EastwoodView />}
         {activeTab === "monitoring" && <WorkersMonitoringView />}
         {activeTab === "analytics" && <MultiDomainAnalyticsView />}
+        {activeTab === "deployment" && <DeploymentControlView />}
       </div>
     </AppShell>
   );

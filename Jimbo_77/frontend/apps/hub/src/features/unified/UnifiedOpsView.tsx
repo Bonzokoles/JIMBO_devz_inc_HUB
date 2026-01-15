@@ -6,6 +6,7 @@ interface UnifiedOpsViewProps {
   onOpenEastwood?: () => void;
   onOpenMonitoring?: () => void;
   onOpenAnalytics?: () => void;
+  onOpenDeployment?: () => void;
 }
 
 export function UnifiedOpsView({
@@ -14,6 +15,7 @@ export function UnifiedOpsView({
   onOpenEastwood,
   onOpenMonitoring,
   onOpenAnalytics,
+  onOpenDeployment,
 }: UnifiedOpsViewProps) {
   return (
     <div
@@ -189,6 +191,82 @@ export function UnifiedOpsView({
                 }}
               >
                 OPEN ANALYTICS →
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Deployment Control Panel */}
+        <div className="card">
+          <div
+            style={{
+              borderBottom: "1px solid var(--line)",
+              paddingBottom: 12,
+              marginBottom: 12,
+            }}
+          >
+            <div
+              style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}
+            >
+              GITHUB ACTIONS
+            </div>
+            <h3
+              style={{
+                margin: 0,
+                fontSize: 14,
+                fontWeight: 900,
+                letterSpacing: 1,
+              }}
+            >
+              DEPLOYMENT CONTROL PANEL
+            </h3>
+          </div>
+          <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+            <div
+              style={{
+                width: 42,
+                height: 42,
+                minWidth: 42,
+                border: "1px solid var(--line)",
+                background:
+                  "repeating-linear-gradient(45deg, rgba(106, 255, 184, .12) 0px, rgba(106, 255, 184, .12) 1px, transparent 1px, transparent 4px)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 16,
+                fontWeight: 900,
+                color: "#6affb8",
+              }}
+            >
+              🚀
+            </div>
+            <div style={{ flex: 1 }}>
+              <h4 style={{ margin: 0, fontSize: 13, fontWeight: 800 }}>
+                8 Repos Deployment Manager
+              </h4>
+              <p
+                style={{
+                  margin: "4px 0 0",
+                  fontSize: 12,
+                  color: "var(--muted)",
+                }}
+              >
+                Manual deploys, rollbacks, secrets management & GitHub Actions status
+              </p>
+              <button
+                type="button"
+                className="btn"
+                style={{
+                  marginTop: 12,
+                  width: "100%",
+                  justifyContent: "center",
+                }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (onOpenDeployment) onOpenDeployment();
+                }}
+              >
+                OPEN DEPLOYMENT →
               </button>
             </div>
           </div>
