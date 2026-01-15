@@ -11,6 +11,7 @@ import { LoginPage } from "./features/auth/LoginPage";
 import { UnifiedOpsView } from "./features/unified/UnifiedOpsView";
 import { AgentsView } from "./features/agents/AgentsView";
 import { EastwoodView } from "./features/eastwood/EastwoodView";
+import { WorkersMonitoringView } from "./features/monitoring/WorkersMonitoringView";
 
 import { PumoView } from "./features/pumo/PumoView";
 
@@ -18,7 +19,7 @@ export default function App() {
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
   const [projects, setProjects] = React.useState<Project[]>([]);
   const [activeTab, setActiveTab] = React.useState<
-    "dashboards" | "services" | "agents" | "eastwood"
+    "dashboards" | "services" | "agents" | "eastwood" | "monitoring"
   >("dashboards");
 
   // Dashboard Sub-navigation state
@@ -81,6 +82,12 @@ export default function App() {
         >
           EASTWOOD
         </button>
+        <button
+          className={`tab ${activeTab === "monitoring" ? "active" : ""}`}
+          onClick={() => setActiveTab("monitoring")}
+        >
+          MONITORING
+        </button>
       </div>
 
       <div style={{ padding: "20px", maxWidth: 1800, margin: "0 auto" }}>
@@ -88,9 +95,10 @@ export default function App() {
           (currentDashboard === "pumo" ? (
             <PumoView onBack={() => setCurrentDashboard("main")} />
           ) : (
-            <UnifiedOpsView 
+            <UnifiedOpsView
               onOpenPumo={() => setCurrentDashboard("pumo")}
               onOpenEastwood={() => setActiveTab("eastwood")}
+              onOpenMonitoring={() => setActiveTab("monitoring")}
             />
           ))}
         {activeTab === "services" && (
@@ -101,6 +109,7 @@ export default function App() {
         )}
         {activeTab === "agents" && <AgentsView />}
         {activeTab === "eastwood" && <EastwoodView />}
+        {activeTab === "monitoring" && <WorkersMonitoringView />}
       </div>
     </AppShell>
   );
