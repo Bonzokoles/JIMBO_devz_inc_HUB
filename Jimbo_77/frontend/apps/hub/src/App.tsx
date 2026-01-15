@@ -88,7 +88,10 @@ export default function App() {
           (currentDashboard === "pumo" ? (
             <PumoView onBack={() => setCurrentDashboard("main")} />
           ) : (
-            <UnifiedOpsView onOpenPumo={() => setCurrentDashboard("pumo")} />
+            <UnifiedOpsView 
+              onOpenPumo={() => setCurrentDashboard("pumo")}
+              onOpenEastwood={() => setActiveTab("eastwood")}
+            />
           ))}
         {activeTab === "services" && (
           <ServicesPage

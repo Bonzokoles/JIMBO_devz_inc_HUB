@@ -3,9 +3,10 @@ import { AICrawlerWidget } from "../pumo/components/AICrawlerWidget";
 interface UnifiedOpsViewProps {
   onOpenPumo?: () => void;
   onOpenControlCenter?: () => void;
+  onOpenEastwood?: () => void;
 }
 
-export function UnifiedOpsView({ onOpenPumo, onOpenControlCenter }: UnifiedOpsViewProps) {
+export function UnifiedOpsView({ onOpenPumo, onOpenControlCenter, onOpenEastwood }: UnifiedOpsViewProps) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20, paddingBottom: 50 }}>
       {/* Header */}
@@ -207,14 +208,18 @@ export function UnifiedOpsView({ onOpenPumo, onOpenControlCenter }: UnifiedOpsVi
             <div style={{ flex: 1 }}>
               <h4 style={{ margin: 0, fontSize: 13, fontWeight: 800 }}>Business Intelligence Libs</h4>
               <p style={{ margin: "4px 0 0", fontSize: 12, color: "var(--muted)" }}>
-                Specialized business intelligence libraries and tools
+                AI Agents: Retention, Idea, Shadow, Trend + Money Machine (52 ideas)
               </p>
               <button 
+                type="button"
                 className="btn" 
-                style={{ marginTop: 12, width: "100%", justifyContent: "center", opacity: 0.5, cursor: "not-allowed" }}
-                disabled
+                style={{ marginTop: 12, width: "100%", justifyContent: "center" }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (onOpenEastwood) onOpenEastwood();
+                }}
               >
-                COMING SOON
+                OPEN EASTWOOD →
               </button>
             </div>
           </div>
