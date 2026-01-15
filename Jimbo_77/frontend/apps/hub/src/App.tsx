@@ -10,23 +10,30 @@ import { ServicesPage } from "./features/services/ServicesPage";
 import { LoginPage } from "./features/auth/LoginPage";
 import { UnifiedOpsView } from "./features/unified/UnifiedOpsView";
 import { AgentsView } from "./features/agents/AgentsView";
+import { EastwoodView } from "./features/eastwood/EastwoodView";
 
 import { PumoView } from "./features/pumo/PumoView";
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
   const [projects, setProjects] = React.useState<Project[]>([]);
-  const [activeTab, setActiveTab] = React.useState<"dashboards" | "services" | "agents">("dashboards");
-  
+  const [activeTab, setActiveTab] = React.useState<
+    "dashboards" | "services" | "agents" | "eastwood"
+  >("dashboards");
+
   // Dashboard Sub-navigation state
-  const [currentDashboard, setCurrentDashboard] = React.useState<"main" | "pumo" | null>("main");
-  
+  const [currentDashboard, setCurrentDashboard] = React.useState<
+    "main" | "pumo" | null
+  >("main");
+
   // Command Drawer State
-  const [activeCommandId, setActiveCommandId] = React.useState<string | null>(null);
+  const [activeCommandId, setActiveCommandId] = React.useState<string | null>(
+    null
+  );
 
   React.useEffect(() => {
     if (!isAuthenticated) return;
-    
+
     (async () => {
       try {
         const [p] = await Promise.all([api.projects()]);
@@ -42,43 +49,55 @@ export default function App() {
   }
 
   return (
-    <AppShell
-      topbar={<Topbar title="UNIFIED OPS" />}
-    >
-      <CommandDrawer commandId={activeCommandId} onClose={() => setActiveCommandId(null)} />
+    <AppShell topbar={<Topbar title="UNIFIED OPS" />}>
+      <CommandDrawer
+        commandId={activeCommandId}
+        onClose={() => setActiveCommandId(null)}
+      />
 
       {/* TABS Navigation */}
       <div className="tabs">
-        <button 
+        <button
           className={`tab ${activeTab === "dashboards" ? "active" : ""}`}
           onClick={() => setActiveTab("dashboards")}
         >
           DASHBOARDS
         </button>
-        <button 
+        <button
           className={`tab ${activeTab === "services" ? "active" : ""}`}
           onClick={() => setActiveTab("services")}
         >
           SERVICES
         </button>
-         <button 
+        <button
           className={`tab ${activeTab === "agents" ? "active" : ""}`}
           onClick={() => setActiveTab("agents")}
         >
           AGENTS
         </button>
+        <button
+          className={`tab ${activeTab === "eastwood" ? "active" : ""}`}
+          onClick={() => setActiveTab("eastwood")}
+        >
+          EASTWOOD
+        </button>
       </div>
 
       <div style={{ padding: "20px", maxWidth: 1800, margin: "0 auto" }}>
-        {activeTab === "dashboards" && (
-          currentDashboard === "pumo" ? (
+        {activeTab === "dashboards" &&
+          (currentDashboard === "pumo" ? (
             <PumoView onBack={() => setCurrentDashboard("main")} />
           ) : (
             <UnifiedOpsView onOpenPumo={() => setCurrentDashboard("pumo")} />
-          )
+          ))}
+        {activeTab === "services" && (
+          <ServicesPage
+            projects={projects}
+            onCommand={(id) => setActiveCommandId(id)}
+          />
         )}
-        {activeTab === "services" && <ServicesPage projects={projects} onCommand={(id) => setActiveCommandId(id)} />}
         {activeTab === "agents" && <AgentsView />}
+        {activeTab === "eastwood" && <EastwoodView />}
       </div>
     </AppShell>
   );
