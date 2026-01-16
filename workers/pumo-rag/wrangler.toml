@@ -1,0 +1,42 @@
+name = "pumo-rag"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+
+# Vectorize binding for product embeddings
+[[vectorize]]
+binding = "VECTORIZE"
+index_name = "pumo-products"
+
+# KV namespaces
+[[kv_namespaces]]
+binding = "LOGS"
+id = "41d03720f6cc4385b8e37cb2dca77861"
+
+[[kv_namespaces]]
+binding = "CACHE"
+id = "959e9d4588d744f89dc833b7a94ca1d3"
+
+# Workers AI binding
+[ai]
+binding = "AI"
+
+# Environment variables
+[vars]
+ENVIRONMENT = "production"
+
+# Secrets (set via: npx wrangler secret put <KEY_NAME>)
+# OPENROUTER_API_KEY
+# INTERNAL_API_KEY
+
+# Remove build command - let wrangler handle TypeScript directly
+
+# Production routes
+[env.production]
+name = "pumo-rag"
+routes = [
+  { pattern = "pumo-api.jimbo77.com/*", zone_name = "jimbo77.com" }
+]
+
+# Development
+[env.development]
+name = "pumo-rag-dev"

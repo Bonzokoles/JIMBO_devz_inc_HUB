@@ -1,0 +1,31 @@
+{
+  "name": "pumo-rag",
+  "version": "1.0.0",
+  "description": "PUMO Guide RAG System - Cloudflare Worker with Vectorize",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "deploy:prod": "wrangler deploy --env production",
+    "build": "tsc",
+    "tail": "wrangler tail",
+    "setup:vectorize": "wrangler vectorize create pumo-products --dimensions=1536 --metric=cosine",
+    "setup:kv": "npm run setup:kv:logs && npm run setup:kv:cache",
+    "setup:kv:logs": "wrangler kv:namespace create PUMO_LOGS",
+    "setup:kv:cache": "wrangler kv:namespace create PUMO_CACHE"
+  },
+  "keywords": [
+    "cloudflare-workers",
+    "rag",
+    "vectorize",
+    "pumo",
+    "furniture"
+  ],
+  "author": "JIMBO DevZ Inc.",
+  "license": "MIT",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241127.0",
+    "typescript": "^5.3.3",
+    "wrangler": "^3.94.0"
+  }
+}

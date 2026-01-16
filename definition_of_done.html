@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Definition of Done – Architecture Readiness</title>
+    <style>
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        margin: 0;
+        padding: 1.5rem;
+        background: #f5f5f7;
+        color: #111827;
+      }
+      #architecture-dod {
+        max-width: 980px;
+        margin: 0 auto;
+        background: #ffffff;
+        border-radius: 10px;
+        padding: 1.5rem 1.75rem;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      }
+      #architecture-dod h1 {
+        margin-top: 0;
+        font-size: 1.8rem;
+        margin-bottom: 0.3rem;
+      }
+      #architecture-dod > p {
+        margin-top: 0.2rem;
+        color: #4b5563;
+        font-size: 0.95rem;
+      }
+      .dod-section {
+        border: 1px solid #e5e7eb;
+        padding: 0.9rem 1rem;
+        margin: 0.75rem 0;
+        border-radius: 8px;
+        background: #f9fafb;
+      }
+      /* Highlight dla sekcji PUMO Guide (8-11) */
+      .dod-section[data-section^="pumo"] {
+        background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+        border-color: #c084fc;
+      }
+      .dod-section[data-section="summary-final"] {
+        background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+        border-color: #34d399;
+        border-width: 2px;
+      }
+      .dod-section h3 {
+        margin: 0 0 0.4rem 0;
+        font-size: 1.1rem;
+        color: #111827;
+      }
+      .dod-section ul {
+        list-style: none;
+        padding-left: 0;
+        margin: 0;
+      }
+      .dod-section li {
+        margin: 0.25rem 0;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.45rem;
+        font-size: 0.95rem;
+        color: #1f2933;
+      }
+      .dod-item-label {
+        flex: 1;
+      }
+      input[type="checkbox"] {
+        width: 1rem;
+        height: 1rem;
+        margin-top: 0.1rem;
+        cursor: pointer;
+      }
+      code {
+        background: #11182710;
+        padding: 0.08rem 0.25rem;
+        border-radius: 4px;
+        font-size: 0.86rem;
+      }
+      @media (max-width: 640px) {
+        body {
+          padding: 1rem;
+        }
+        #architecture-dod {
+          padding: 1.1rem 1.2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <section id="architecture-dod">
+      <h1>Definition of Done – Architecture Readiness + Pumo Guide Upgrade</h1>
+      <p>
+        System jest <strong>Architecture‑Ready</strong> i
+        <strong>Pumo Guide Upgrade Complete</strong>, jeśli spełnia wszystkie
+        krytyczne warunki poniżej. Checkboxy możesz odznaczać ręcznie lub przez
+        model w VS Code (edycja samego atrybutu <code>checked</code> w
+        znacznikach <code>&lt;input&gt;</code>).
+      </p>
+      <p style="margin-top: 0.5rem; font-size: 0.9rem; color: #6366f1">
+        <strong>Nowe sekcje 8-9</strong> pochodzą z
+        <a
+          href="../PUMO_GUIDE_UPGRADE_PLAN.md"
+          style="color: #6366f1; text-decoration: underline"
+          >PUMO_GUIDE_UPGRADE_PLAN.md</a
+        >
+        (integracja AI_SEO_AUDIT, RAG_DEPLOYMENT_GUIDE, ARCHITECT_READINESS)
+      </p>
+
+      <div class="dod-section" data-section="summary">
+        <h3>0. Podsumowanie ogólne</h3>
+        <ul>
+          <li data-id="summary-coverage">
+            <input type="checkbox" id="summary-coverage" />
+            <label class="dod-item-label" for="summary-coverage">
+              Minimum 90% wszystkich krytycznych punktów z sekcji 1–7 jest
+              oznaczonych jako ukończone (checkboxy zaznaczone).
+            </label>
+          </li>
+          <li data-id="summary-explainability">
+            <input type="checkbox" id="summary-explainability" />
+            <label class="dod-item-label" for="summary-explainability">
+              Aktualny opis architektury (ARCHITECT_READINESS +
+              WORKFLOW_ARCHITECTURE/*) pozwala wyjaśnić cały system inżynierowi
+              w &lt; 15 minut.
+            </label>
+          </li>
+        </ul>
+      </div>
+
+      <div class="dod-section" data-section="orchestration">
+        <h3>1. Orkiestracja i graph</h3>
+        <ul>
+          <li data-id="graph-source-of-truth">
+            <input type="checkbox" id="graph-source-of-truth" />
+            <label class="dod-item-label" for="graph-source-of-truth">
+              Istnieje jeden główny graph (np. <code>pumo_guide_graph</code>),
+              który opisuje pełny przepływ od wejścia usera do odpowiedzi (fast
+              / expert / hybrid).
+            </label>
+          </li>
+          <li data-id="graph-doc">
+            <input type="checkbox" id="graph-doc" />
+            <label class="dod-item-label" for="graph-doc">
+              Diagram przepływu (Mermaid/obrazek) jest aktualny i znajduje się w
+              <code>WORKFLOW_ARCHITECTURE/README.md</code>.
+            </label>
+          </li>
+          <li data-id="router-documented">
+            <input type="checkbox" id="router-documented" />
+            <label class="dod-item-label" for="router-documented">
+              Router/MoE‑gate ma w dokumentacji tabelę: „typ zapytania → ścieżka
+              → LLM (fast / reasoning)”.
+            </label>
+          </li>
+        </ul>
+      </div>
+
+      <div class="dod-section" data-section="llm">
+        <h3>2. Warstwa LLM (fast + reasoning)</h3>
+        <ul>
+          <li data-id="fast-llm-configured">
+            <input type="checkbox" id="fast-llm-configured" />
+            <label class="dod-item-label" for="fast-llm-configured">
+              Fast LLM (np. Llama 3.1 8B) jest skonfigurowany z timeoutem, retry
+              i logowaniem tokenów oraz latency dla wszystkich wywołań.
+            </label>
+          </li>
+          <li data-id="fast-llm-latency">
+            <input type="checkbox" id="fast-llm-latency" />
+            <label class="dod-item-label" for="fast-llm-latency">
+              Zmierzono p95 latency dla ścieżki fast na ≥ 50 zapytaniach i p95
+              &lt; 1.5 s.
+            </label>
+          </li>
+          <li data-id="reasoning-llm-configured">
+            <input type="checkbox" id="reasoning-llm-configured" />
+            <label class="dod-item-label" for="reasoning-llm-configured">
+              Reasoning LLM (np. OpenAI o3/o3‑mini) ma osobny klient,
+              konfigurację przez ENV (API key, limity kosztu) i loguje każde
+              użycie.
+            </label>
+          </li>
+          <li data-id="reasoning-policy-active">
+            <input type="checkbox" id="reasoning-policy-active" />
+            <label class="dod-item-label" for="reasoning-policy-active">
+              Reasoning używany jest wyłącznie w węzłach oznaczonych jako „hard
+              mode” według polityki (task_type / complexity / user_tier).
+            </label>
+          </li>
+          <li data-id="llm-quality-eval">
+            <input type="checkbox" id="llm-quality-eval" />
+            <label class="dod-item-label" for="llm-quality-eval">
+              Dla 30–50 trudnych zapytań powstał raport porównujący jakość fast
+              LLM vs reasoning LLM oraz ich koszt i latency.
+            </label>
+          </li>
+        </ul>
+      </div>
+
+      <div class="dod-section" data-section="rag">
+        <h3>3. MoE‑RAG i retrieval</h3>
+        <ul>
+          <li data-id="rag-paths-defined">
+            <input type="checkbox" id="rag-paths-defined" />
+            <label class="dod-item-label" for="rag-paths-defined">
+              Zdefiniowano co najmniej dwie ścieżki RAG (Simple vs Deep) z jasno
+              przypisanymi indeksami/źródłami.
+            </label>
+          </li>
+          <li data-id="chunking-metadata">
+            <input type="checkbox" id="chunking-metadata" />
+            <label class="dod-item-label" for="chunking-metadata">
+              Chunking jest spójne (sekcje przewodnika + FAQ) i każdy chunk ma
+              pełne metadata (category_slug, section_type, price_range,
+              brands…).
+            </label>
+          </li>
+          <li data-id="rag-eval-suite">
+            <input type="checkbox" id="rag-eval-suite" />
+            <label class="dod-item-label" for="rag-eval-suite">
+              Istnieje mały zbiór testowy (20–30 zapytań) z ręczną oceną jakości
+              retrieval, opisany w pliku RAG_EVAL.
+            </label>
+          </li>
+        </ul>
+      </div>
+
+      <div class="dod-section" data-section="agents">
+        <h3>4. Agenci i integracja PUMO</h3>
+        <ul>
+          <li data-id="agent-dispatcher">
+            <input type="checkbox" id="agent-dispatcher" />
+            <label class="dod-item-label" for="agent-dispatcher">
+              Istnieje centralny dispatcher agentów z mappingiem: typ zadania →
+              agent(y) odpowiedzialny(e) za obsługę.
+            </label>
+          </li>
+          <li data-id="agents-documented">
+            <input type="checkbox" id="agents-documented" />
+            <label class="dod-item-label" for="agents-documented">
+              Każdy agent ma udokumentowaną rolę, wejście/wyjście oraz
+              ograniczenia (czas, koszty).
+            </label>
+          </li>
+          <li data-id="pumo-first-class">
+            <input type="checkbox" id="pumo-first-class" />
+            <label class="dod-item-label" for="pumo-first-class">
+              PUMO ma własne narzędzia/endpointy w grafie (search, category,
+              product) i dedykowany flow w dokumentacji integracyjnej.
+            </label>
+          </li>
+        </ul>
+      </div>
+
+      <div class="dod-section" data-section="nonfunctional">
+        <h3>5. Metryki, koszt, bezpieczeństwo</h3>
+        <ul>
+          <li data-id="metrics-dashboard">
+            <input type="checkbox" id="metrics-dashboard" />
+            <label class="dod-item-label" for="metrics-dashboard">
+              Istnieje dashboard lub endpoint, który pokazuje p50/p95/p99
+              latency, udział reasoning i koszt na 1000 zapytań dla każdej
+              ścieżki.
+            </label>
+          </li>
+          <li data-id="baseline-comparison">
+            <input type="checkbox" id="baseline-comparison" />
+            <label class="dod-item-label" for="baseline-comparison">
+              Są zapisane baseline’y sprzed wdrożenia agent graph + reasoning,
+              umożliwiające porównanie (przed/po).
+            </label>
+          </li>
+          <li data-id="fallback-mechanism">
+            <input type="checkbox" id="fallback-mechanism" />
+            <label class="dod-item-label" for="fallback-mechanism">
+              W przypadku awarii/drogiego reasoning LLM system automatycznie
+              przełącza ruch na fast path, bez przerwy dla użytkownika.
+            </label>
+          </li>
+          <li data-id="fallback-doc">
+            <input type="checkbox" id="fallback-doc" />
+            <label class="dod-item-label" for="fallback-doc">
+              Procedura ręcznego wyłączenia reasoning i rollbacku (blue/green)
+              jest opisana w dokumencie ryzyka/deployu.
+            </label>
+          </li>
+        </ul>
+      </div>
+
+      <div class="dod-section" data-section="deployment">
+        <h3>6. Deployment i operacje</h3>
+        <ul>
+          <li data-id="topology-described">
+            <input type="checkbox" id="topology-described" />
+            <label class="dod-item-label" for="topology-described">
+              Topologia wdrożenia (front, LangGraph/agent framework, vector DB,
+              cache, API) jest udokumentowana i aktualna.
+            </label>
+          </li>
+          <li data-id="containers-ready">
+            <input type="checkbox" id="containers-ready" />
+            <label class="dod-item-label" for="containers-ready">
+              Istnieją działające definicje kontenerów (Dockerfile +
+              compose/K8s) oraz opis lokalnego i stagingowego środowiska.
+            </label>
+          </li>
+          <li data-id="canary-rollout">
+            <input type="checkbox" id="canary-rollout" />
+            <label class="dod-item-label" for="canary-rollout">
+              Jest skonfigurowany canary rollout (feature flag / procent ruchu)
+              oraz checklista pre‑ i post‑deploy.
+            </label>
+          </li>
+        </ul>
+      </div>
+
+      <div class="dod-section" data-section="evaluation">
+        <h3>7. Ewaluacja jakości</h3>
+        <ul>
+          <li data-id="test-suite-exists">
+            <input type="checkbox" id="test-suite-exists" />
+            <label class="dod-item-label" for="test-suite-exists">
+              Istnieje test suite z co najmniej 30–50 reprezentatywnymi
+              zapytaniami, z oczekiwanym typem odpowiedzi.
+            </label>
+          </li>
+          <li data-id="comparative-eval">
+            <input type="checkbox" id="comparative-eval" />
+            <label class="dod-item-label" for="comparative-eval">
+              Przeprowadzono porównanie: stary RAG vs agent graph (fast) vs
+              agent graph (fast + reasoning) – zapisane wyniki i wnioski.
+            </label>
+          </li>
+          <li data-id="architect-kpi">
+            <input type="checkbox" id="architect-kpi" />
+            <label class="dod-item-label" for="architect-kpi">
+              Zdefiniowano i zapisano KPI architekta (docelowy latency, koszt,
+              jakość) oraz jest jasne, czy system je spełnia.
+            </label>
+          </li>
+        </ul>
+      </div>
+
+    <div class="dod-section" data-section="pumo-technical">
+      <h3>8. PUMO Guide - Warstwa Techniczna (AI SEO)</h3>
+      <ul>
+        <li data-id="pumo-url-standardization">
+          <input type="checkbox" id="pumo-url-standardization" />
+          <label class="dod-item-label" for="pumo-url-standardization">
+            URL Standardization: 65+ plików .md zmienionych z formatu <code>Kategoria_Podkategoria</code> na <code>kategoria-podkategoria</code> + redirects 301.
+          </label>
+        </li>
+        <li data-id="pumo-llms-txt">
+          <input type="checkbox" id="pumo-llms-txt" />
+          <label class="dod-item-label" for="pumo-llms-txt">
+            <code>public/llms.txt</code> utworzony z instrukcjami dla AI crawlerów (Perplexity/ChatGPT/Claude) + licencja + rate limiting.
+          </label>
+        </li>
+        <li data-id="pumo-content-versioning">
+          <input type="checkbox" id="pumo-content-versioning" />
+          <label class="dod-item-label" for="pumo-content-versioning">
+            Content Versioning System: <code>src/lib/pumo-version.ts</code> z wersją (2026-01), datą update, liczba produktów (2847), źródło danych.
+          </label>
+        </li>
+        <li data-id="pumo-sitemap">
+          <input type="checkbox" id="pumo-sitemap" />
+          <label class="dod-item-label" for="pumo-sitemap">
+            <code>public/sitemap-pumo-guide.xml</code> z osobną sekcją dla wszystkich 65 kategorii + lastmod + priority.
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <div class="dod-section" data-section="pumo-schema">
+      <h3>9. PUMO Guide - Schema.org & Templates</h3>
+      <ul>
+        <li data-id="pumo-collectionpage-schema">
+          <input type="checkbox" id="pumo-collectionpage-schema" />
+          <label class="dod-item-label" for="pumo-collectionpage-schema">
+            CollectionPage + ItemList schema na <code>/pumo-guide/index.astro</code> z listą wszystkich 65 kategorii + Dataset schema.
+          </label>
+        </li>
+        <li data-id="pumo-faqpage-article-schema">
+          <input type="checkbox" id="pumo-faqpage-article-schema" />
+          <label class="dod-item-label" for="pumo-faqpage-article-schema">
+            FAQPage + Article schema na wszystkich 65 stronach kategorii z <code>isBasedOn</code> → meblepumo.pl.
+          </label>
+        </li>
+        <li data-id="pumo-universal-template">
+          <input type="checkbox" id="pumo-universal-template" />
+          <label class="dod-item-label" for="pumo-universal-template">
+            Universal Template utworzony w <code>src/templates/pumo-category-template.md</code> z 5 sekcjami (Dla kogo, Co znajdziesz, Decyzje, FAQ, Jak używać przez AI).
+          </label>
+        </li>
+        <li data-id="pumo-template-rollout">
+          <input type="checkbox" id="pumo-template-rollout" />
+          <label class="dod-item-label" for="pumo-template-rollout">
+            Template rollout script (<code>src/scripts/rollout-template.ts</code>) wdrożony na wszystkie 65 kategorii + <code>category-metadata.json</code> gotowy.
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <div class="dod-section" data-section="pumo-rag-api">
+      <h3>10. PUMO Guide - RAG & API Integration</h3>
+      <ul>
+        <li data-id="pumo-search-api">
+          <input type="checkbox" id="pumo-search-api" />
+          <label class="dod-item-label" for="pumo-search-api">
+            <code>/api/pumo-search</code> endpoint z pełną strukturą RAG metadata (chunk_id, section_type, category_slug, price_range, brands).
+          </label>
+        </li>
+        <li data-id="pumo-rag-chatbot">
+          <input type="checkbox" id="pumo-rag-chatbot" />
+          <label class="dod-item-label" for="pumo-rag-chatbot">
+            RAG Chatbot wdrożony: Cloudflare Vectorize + <code>/api/ai/rag-chat</code> + UI w <code>/pumo-guide/chat</code> (z RAG_DEPLOYMENT_GUIDE).
+          </label>
+        </li>
+        <li data-id="pumo-dla-agentow">
+          <input type="checkbox" id="pumo-dla-agentow" />
+          <label class="dod-item-label" for="pumo-dla-agentow">
+            <code>/pumo-guide/dla-agentow</code> landing page z licencją, update frequency, example prompts, API spec.
+          </label>
+        </li>
+        <li data-id="pumo-internal-linking">
+          <input type="checkbox" id="pumo-internal-linking" />
+          <label class="dod-item-label" for="pumo-internal-linking">
+            Internal Linking System: <code>src/lib/internal-links.ts</code> + <code>category-relations.json</code> z min. 3 linkami na kategorię.
+          </label>
+        </li>
+        <li data-id="pumo-query-logging">
+          <input type="checkbox" id="pumo-query-logging" />
+          <label class="dod-item-label" for="pumo-query-logging">
+            API Query Logging aktywne + <code>/api/pumo-stats.json</code> z agregatami (total_queries, by_ai_bot, top_queries, last_24h).
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <div class="dod-section" data-section="pumo-promotion">
+      <h3>11. PUMO Guide - Post-Upgrade & Promotion</h3>
+      <ul>
+        <li data-id="pumo-blog-post">
+          <input type="checkbox" id="pumo-blog-post" />
+          <label class="dod-item-label" for="pumo-blog-post">
+            Public announcement post na mybonzoaiblog.com/blog + LinkedIn (z linkiem do /dla-agentow).
+          </label>
+        </li>
+        <li data-id="pumo-jimbo77-magnet">
+          <input type="checkbox" id="pumo-jimbo77-magnet" />
+          <label class="dod-item-label" for="pumo-jimbo77-magnet">
+            Integracja z jimbo77.org/ai-resources: Featured KB card z opisem Pumo Guide + API endpoints + example prompts.
+          </label>
+        </li>
+        <li data-id="pumo-ai-citations-tracking">
+          <input type="checkbox" id="pumo-ai-citations-tracking" />
+          <label class="dod-item-label" for="pumo-ai-citations-tracking">
+            AI Citations tracking skonfigurowany: manual sample testing (1x/tydzień) + UTM params + Cloudflare Analytics User-Agent filtering.
+          </label>
+        </li>
+        <li data-id="pumo-schema-validation">
+          <input type="checkbox" id="pumo-schema-validation" />
+          <label class="dod-item-label" for="pumo-schema-validation">
+            Wszystkie schema zwalidowane przez validator.schema.org + Google Rich Results Test (0 errors).
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <div class="dod-section" data-section="summary-final">
+      <h3>12. Podsumowanie końcowe (Definition of Done)</h3>
+      <ul>
+        <li data-id="architecture-90percent">
+          <input type="checkbox" id="architecture-90percent" />
+          <label class="dod-item-label" for="architecture-90percent">
+            Minimum 90% checkboxów z sekcji 1-7 (Architecture) jest zaznaczonych.
+          </label>
+        </li>
+        <li data-id="pumo-90percent">
+          <input type="checkbox" id="pumo-90percent" />
+          <label class="dod-item-label" for="pumo-90percent">
+            Minimum 90% checkboxów z sekcji 8-11 (PUMO Upgrade) jest zaznaczonych.
+          </label>
+        </li>
+        <li data-id="kpi-met">
+          <input type="checkbox" id="kpi-met" />
+          <label class="dod-item-label" for="kpi-met">
+            KPIs spełnione: Schema Coverage 100%, Template Consistency 100%, AI Readiness 100%, API Availability 100%.
+          </label>
+        </li>
+        <li data-id="deployment-tested">
+          <input type="checkbox" id="deployment-tested" />
+          <label class="dod-item-label" for="deployment-tested">
+            Deployment przetestowany: Build success, Preview URL działa, Schema.org 0 errors, Cloudflare Pages auto-deploy OK.
+          </label>
+        </li>
+      </ul>
+    </div>
+</html>
