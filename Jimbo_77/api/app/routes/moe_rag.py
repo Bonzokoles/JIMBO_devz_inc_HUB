@@ -17,7 +17,9 @@ try:
     from ..moe_rag.graph_state import GraphState, RoutingDecision
     from ..moe_rag.gating_network import GatingNetwork, QuerySignals
     from ..moe_rag.indices_registry import get_indices_registry
-    from ..moe_rag.expert_groups import get_expert_groups
+
+    # from ..moe_rag.expert_groups import get_expert_groups  # Not needed for minimal version
+    from ..moe_rag.graph_definition import run_moe_rag
     from ..security.input_validator import InputValidator
 
     GRAPH_AVAILABLE = True
@@ -156,193 +158,60 @@ async def moe_rag_endpoint(request: MoERAGRequest) -> MoERAGResponse:
         )
 
     try:
-        # Initialize state
-        state: GraphState = {
-            "user_input": cleaned_query,
-            "routing_decision": None,
-            "routing_confidence": 0.0,
-            "query_signals": None,
-            "retrieved_docs": [],
-            "selected_agents": [],
-            "agent_responses": [],
-            "final_response": None,
-            "response_confidence": 0.0,
-            "cache_hit": False,
-            "indices_queried": [],
-            "metrics": {
-                "total_tokens_in": 0,
-                "total_tokens_out": 0,
-                "total_cost_usd": 0.0,
-            },
-        }
-
-        # Step 2: Routing (using GatingNetwork)
-        gating = GatingNetwork()
-        signals = gating.extract_signals(cleaned_query)
-        decision = gating.route(signals)
-
-        state["routing_decision"] = decision
-        state["routing_confidence"] = max(
-            signals.query_length / 1000, 0.5
-        )  # Simple confidence
-        state["query_signals"] = signals
-
-        logger.info(
-            f"🧭 Routing: {decision.value} (signals: length={signals.query_length}, technical={signals.has_technical_terms})"
+        # Execute MoE-RAG graph
+        state = await run_moe_rag(
+            query=cleaned_query,
+            user_id=request.user_id,
+            session_id=request.session_id,
         )
 
-        # Step 3: Retrieval (using embeddings if available, fallback to placeholder)
-        if EMBEDDINGS_AVAILABLE:
-            registry = get_vectorized_registry()
+        # Extract response data from state
+        final_response = state.get("final_response", "No response generated")
+        metadata = state.get("metadata") or {}
+        retrieved_docs = state.get("retrieved_docs") or []
+        routing_decision = state.get("routing_decision")
 
-            if decision == RoutingDecision.FAST_PATH:
-                # FAQ only
-                results = await registry.faq_index.search(
-                    cleaned_query, top_k=3, threshold=0.3
-                )
-                state["retrieved_docs"] = results
-                state["indices_queried"] = ["faq"]
-            elif decision == RoutingDecision.EXPERT_PATH:
-                # All indices
-                all_results = await registry.search_all(
-                    cleaned_query, top_k_per_index=5, threshold=0.3
-                )
-                state["retrieved_docs"] = (
-                    all_results.get("faq", [])
-                    + all_results.get("technical", [])
-                    + all_results.get("domain", [])
-                )
-                state["indices_queried"] = ["faq", "technical", "domain"]
-            else:  # HYBRID_PATH
-                # FAQ + Domain
-                faq_results = await registry.faq_index.search(
-                    cleaned_query, top_k=4, threshold=0.3
-                )
-                domain_results = await registry.domain_index.search(
-                    cleaned_query, top_k=4, threshold=0.3
-                )
-                state["retrieved_docs"] = faq_results + domain_results
-                state["indices_queried"] = ["faq", "domain"]
+        # Calculate latency
+        latency_ms = metadata.get(
+            "total_latency_ms", int((time.time() - start_time) * 1000)
+        )
 
-            logger.info(
-                f"📚 Retrieved {len(state['retrieved_docs'])} documents from {state['indices_queried']}"
-            )
-        else:
-            # Fallback to placeholder indices
-            old_registry = get_indices_registry()
-            if decision == RoutingDecision.FAST_PATH:
-                state["retrieved_docs"] = old_registry.search(
-                    "faq", cleaned_query, top_k=3
-                )
-                state["indices_queried"] = ["faq"]
+        # Extract agents (mock for now if not in state)
+        agent_results = state.get("agent_results") or {}
+        agents_used = agent_results.get("agents_used", [])
+        if not agents_used:
+            # Fallback based on routing
+            if routing_decision and routing_decision.value == "fast_path":
+                agents_used = ["faq-retriever"]
+            elif routing_decision and routing_decision.value == "expert_path":
+                agents_used = ["research-agent-1", "writing-agent-1"]
             else:
-                state["retrieved_docs"] = old_registry.search_all(
-                    cleaned_query, top_k_per_index=5
-                )
-                state["indices_queried"] = ["faq", "technical", "domain"]
-
-            logger.info(
-                f"📚 Retrieved {len(state['retrieved_docs'])} documents (placeholder mode)"
-            )
-
-        # Step 4: Agent Selection (using expert groups)
-        expert_groups = get_expert_groups()
-
-        if decision == RoutingDecision.FAST_PATH:
-            # Use research agents only
-            state["selected_agents"] = [
-                a["id"] for a in expert_groups.research_experts[:2]
-            ]
-        elif decision == RoutingDecision.EXPERT_PATH:
-            # Use all agent groups
-            state["selected_agents"] = (
-                [a["id"] for a in expert_groups.research_experts[:2]]
-                + [a["id"] for a in expert_groups.writing_experts[:2]]
-                + [a["id"] for a in expert_groups.system_experts[:1]]
-            )
-        else:  # HYBRID
-            # Research + Writing
-            state["selected_agents"] = [
-                a["id"] for a in expert_groups.research_experts[:2]
-            ] + [a["id"] for a in expert_groups.writing_experts[:1]]
-
-        logger.info(
-            f"🤖 Selected {len(state['selected_agents'])} agents: {state['selected_agents']}"
-        )
-
-        # Step 5: Response Synthesis with LLM
-        if LLM_AVAILABLE and state["retrieved_docs"]:
-            try:
-                llm_client = get_llm_client()
-
-                # Generate AI response using retrieved documents
-                llm_result = await llm_client.generate_response(
-                    query=cleaned_query,
-                    retrieved_docs=state["retrieved_docs"],
-                    model="qwen",  # Default to Qwen 2.5 72B
-                    max_tokens=1500,
-                    temperature=0.7,
-                )
-
-                state["final_response"] = llm_result["response"]
-                state["response_confidence"] = 0.85  # Higher confidence with LLM
-                state["metrics"]["total_tokens_in"] = llm_result["tokens_input"]
-                state["metrics"]["total_tokens_out"] = llm_result["tokens_output"]
-                state["metrics"]["total_cost_usd"] = llm_result["cost_usd"]
-
-                logger.info(
-                    f"🤖 LLM response generated: {llm_result['model_name']} "
-                    f"({llm_result['tokens_input']} + {llm_result['tokens_output']} tokens, "
-                    f"${llm_result['cost_usd']:.6f})"
-                )
-
-            except Exception as e:
-                logger.warning(f"LLM generation failed, using fallback: {e}")
-                # Fallback to document-based response
-                state = _generate_fallback_response(state, decision)
-        else:
-            # No LLM or no docs - use fallback
-            state = _generate_fallback_response(state, decision)
-
-        # Calculate metrics
-        latency_ms = int((time.time() - start_time) * 1000)
-
-        # Mock tokens (in production, these come from actual LLM calls)
-        state["metrics"]["total_tokens_in"] = len(cleaned_query.split())
-        state["metrics"]["total_tokens_out"] = len(state["final_response"].split())
-        state["metrics"]["total_cost_usd"] = (
-            state["metrics"]["total_tokens_in"] + state["metrics"]["total_tokens_out"]
-        ) * 0.000001
+                agents_used = ["hybrid-agent"]
 
         # Build response
         response = MoERAGResponse(
-            response=state["final_response"],
-            confidence=state["response_confidence"],
-            agents_used=state["selected_agents"],
-            routing_path=decision.value,
+            response=final_response,
+            confidence=metadata.get("response_confidence", 0.7),
+            agents_used=agents_used,
+            routing_path=routing_decision.value if routing_decision else "unknown",
             latency_ms=latency_ms,
-            tokens_used={
-                "input": state["metrics"]["total_tokens_in"],
-                "output": state["metrics"]["total_tokens_out"],
-            },
-            cost_usd=state["metrics"]["total_cost_usd"],
-            sources=state["indices_queried"],
-            cache_hit=False,
+            tokens_used=metadata.get("tokens_used", {"input": 0, "output": 0}),
+            cost_usd=metadata.get("cost_usd", 0.0),
+            sources=metadata.get("indices_queried", []),
+            cache_hit=metadata.get("cache_hit", False),
             metadata={
-                "routing_confidence": state["routing_confidence"],
-                "documents_retrieved": len(state["retrieved_docs"]),
-                "query_signals": {
-                    "length": signals.query_length,
-                    "technical": signals.has_technical_terms,
-                    "writing": signals.has_writing_terms,
-                    "ecommerce": signals.has_ecommerce_terms,
-                },
+                "routing_confidence": metadata.get("routing_confidence", 0.0),
+                "documents_retrieved": metadata.get(
+                    "documents_retrieved", len(retrieved_docs)
+                ),
+                "retrieval_time_ms": metadata.get("retrieval_time_ms", 0),
+                "synthesis_time_ms": metadata.get("synthesis_time_ms", 0),
                 "embeddings_mode": EMBEDDINGS_AVAILABLE,
             },
         )
 
         logger.info(
-            f"✅ MoE-RAG response: {response.routing_path} ({latency_ms}ms, {len(state['retrieved_docs'])} docs)"
+            f"✅ MoE-RAG response: {response.routing_path} ({latency_ms}ms, {len(retrieved_docs)} docs)"
         )
         return response
 
