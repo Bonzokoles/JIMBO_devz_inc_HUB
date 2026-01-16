@@ -1,0 +1,7 @@
+tunnel: e04cbedb-2c71-45cb-b7ce-f62da831c139
+credentials-file: C:\Users\stola\.cloudflared\e04cbedb-2c71-45cb-b7ce-f62da831c139.json
+
+ingress:
+  - hostname: rag.jimbo77.com
+    service: http://localhost:3885
+  - service: http_status:404

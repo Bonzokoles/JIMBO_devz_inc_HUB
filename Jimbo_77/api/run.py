@@ -6,10 +6,12 @@ Direct startup script
 
 import sys
 import os
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import uvicorn
 from app.main import app
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8001, reload=False)
+    # Use port 3885 for RAG API (reserved in config/ports.env)
+    uvicorn.run(app, host="0.0.0.0", port=3885, reload=False)

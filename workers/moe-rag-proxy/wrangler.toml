@@ -1,0 +1,31 @@
+name = "moe-rag-api"
+main = "src/index.ts"
+compatibility_date = "2026-01-15"
+
+# Production route
+route = { pattern = "api.jimbo77.com/api/moe-rag/*", zone_name = "jimbo77.com" }
+
+[env.production]
+name = "moe-rag-api"
+workers_dev = false
+
+# Environment variables
+[vars]
+BACKEND_URL = "https://rag.jimbo77.com/api/moe-rag"
+CORS_ORIGIN = "https://hub.jimbo77.com,https://jimbo77.com"
+CACHE_TTL = "300"  # 5 minutes
+
+# KV for caching responses
+[[kv_namespaces]]
+binding = "CACHE"
+id = "457240e143234fb5bd66cd799110c2b8"
+preview_id = "d3b2245e706d4e878d0475d4dabbae14"
+
+# D1 Database for query logging and metrics
+[[d1_databases]]
+binding = "DB"
+database_name = "moe-rag-db"
+database_id = "8d9370b9-58e5-4848-b235-983681d28f98"
+
+[dev]
+port = 8788

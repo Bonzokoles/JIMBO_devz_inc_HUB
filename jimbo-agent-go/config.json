@@ -1,0 +1,22 @@
+{
+  "agent": {
+    "bind": "127.0.0.1:8787"
+  },
+  "security": {
+    "tokenFile": "secret.txt",
+    "allowTunnelExpose": true
+  },
+  "cloudflared": {
+    "enabled": true,
+    "binPath": "cloudflared",
+    "tunnelName": "moe-rag-backend",
+    "configPath": "U:\\The_yellow_hub\\JIMBO_devz_inc_HUB\\Jimbo_77\\api\\moe-rag-tunnel.yml",
+    "args": [
+      "tunnel",
+      "--config",
+      "U:\\The_yellow_hub\\JIMBO_devz_inc_HUB\\Jimbo_77\\api\\moe-rag-tunnel.yml",
+      "run",
+      "moe-rag-backend"
+    ]
+  }
+}

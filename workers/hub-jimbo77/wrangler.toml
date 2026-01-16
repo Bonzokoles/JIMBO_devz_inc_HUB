@@ -1,0 +1,18 @@
+name = "hub-jimbo77"
+main = "src/index.ts"
+compatibility_date = "2026-01-16"
+
+# Production route
+route = { pattern = "hub.jimbo77.com/*", zone_name = "jimbo77.com" }
+
+[env.production]
+name = "hub-jimbo77"
+workers_dev = false
+
+# Environment variables
+[vars]
+API_BASE_URL = "https://api.jimbo77.com"
+AGENT_BASE_URL = "http://127.0.0.1:8787"
+
+[dev]
+port = 8788
