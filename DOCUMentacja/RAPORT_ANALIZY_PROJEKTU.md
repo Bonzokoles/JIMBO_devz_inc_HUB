@@ -1,7 +1,8 @@
 # RAPORT ANALIZY PROJEKTU JIMBO77 DEVZ inc. HUB
 
-**Data analizy**: 14 stycznia 2026
-**Zakres**: Kompletna analiza struktury, stanu implementacji i dokumentacji
+**Data utworzenia**: 14 stycznia 2026  
+**Ostatnia aktualizacja**: 16 stycznia 2026  
+**Zakres**: Kompletna analiza struktury, stanu implementacji i dokumentacji  
 **Analityk**: Claude AI Assistant (SuperClaude Framework)
 
 ---
@@ -9,17 +10,41 @@
 ## 📋 EXECUTIVE SUMMARY
 
 **JIMBO77 DEVZ inc. HUB** to zaawansowany ekosystem zarządzania projektami AI i e-commerce składający się z:
+
 - **Centralnego API** (FastAPI + Python) na porcie 8001
 - **Frontend Hub** (React + Vite) z modułowym systemem workspace
 - **18 agentów AI** (8 Python + 10 TypeScript)
-- **Cloudflare Workers** (MOA System, PUMO Data Sync)
+- **Cloudflare Workers** (MOA System, PUMO Data Sync, **NOWY: PUMO RAG**)
 - **Integracji e-commerce** (IdoSell dla MeblePumo.pl)
+- **NOWY: Integracja RAG z My Bonzo AI Blog** (Pumo Guide knowledge base)
 
 ### Status Ogólny
-🟢 **INFRASTRUKTURA**: 85% gotowa - wymaga konfiguracji środowiska
-🟡 **DOKUMENTACJA**: 75% kompletna - wymaga konsolidacji
-🟡 **WDROŻENIE**: 60% - wymaga setup baz danych i testów
+
+🟢 **INFRASTRUKTURA**: 90% gotowa - główny cleanup wykonany (16.01.2026)
+🟢 **DOKUMENTACJA**: 85% kompletna - architektura PUMO RAG dodana
+🟡 **WDROŻENIE**: 65% - architektura PUMO RAG zdefiniowana, wymaga implementacji
 🔴 **PRODUKCJA**: 0% - system nie jest wdrożony na produkcji
+
+### ⚡ AKTUALIZACJE (16 stycznia 2026)
+
+**Cleanup & Organizacja:**
+
+- ✅ Usunięto 10 przestarzałych plików MD z głównego folderu
+- ✅ Przeniesiono do `ZZ_files`: DEPLOYMENT_STATUS, PUMO_Dashboard_Deployment_Log, MEBLE_PUMO_WDROZENIE_STATUS, etc.
+- ✅ Usunięto 31 plików tymczasowych `tmpclaude-*-cwd`
+- ✅ Utworzono `DOCUMentacja/archive/` dla historycznych dokumentów
+
+**Nowa Architektura:**
+
+- ✅ Utworzono `PUMO_RAG_INTEGRATION_ARCHITECTURE.md` - szczegółowa architektura RAG
+- ✅ Zdefiniowano podział Backend (JIMBO) vs Frontend (Blog)
+- ✅ Zaplanowano 4-tygodniowy timeline implementacji
+
+**Integracja z My Bonzo AI Blog:**
+
+- ✅ Zaktualizowano `my-bonzo-ai-blog/docs/PUMO_GUIDE_UPGRADE_PLAN.md`
+- ✅ Dodano sekcję "ARCHITECTURE UPDATE" wskazującą na JIMBO jako backend
+- ✅ Blog będzie tylko konsumentem API (chat widget UI)
 
 ---
 
@@ -28,6 +53,7 @@
 ### 1. Dual-Domain Architecture
 
 #### OPS Domain (jimbo77.org) - Private Control Center ⚠️ PLANOWANE
+
 ```
 ├── hub.ops.tld         → Master Control HUB
 ├── api.ops.tld         → Central API (FastAPI) ✅ ZAIMPLEMENTOWANE
@@ -39,6 +65,7 @@
 **Status**: Architektura zdefiniowana, wymaga wdrożenia Cloudflare Access + domeny
 
 #### AI Magnet Domain (jimbo77.com) - Public Catalog ⏳ PLANOWANE
+
 ```
 └── magnets.jimbo77.com → Crawler-friendly katalog projektów
 ```
@@ -60,9 +87,11 @@ JIMBO77_DEVZ_inc_HUB/
 ├── agents/                      # 🟢 AGENTY - system 18 agentów AI
 │   └── python/                  # 8 agentów Python (NEXT_GEN_RAG)
 │
-├── workers/                     # 🟡 CLOUDFLARE - workers dla funkcji edge
+├── workers/                     # � CLOUDFLARE - workers dla funkcji edge
 │   ├── moa-system/              # MOA (Mixture of Agents)
-│   └── pumo-data-sync/          # Synchronizacja danych PUMO
+│   ├── pumo-data-sync/          # Synchronizacja danych PUMO
+│   ├── pumo-rag/                # 🆕 RAG API (Vectorize + LLM) - ZAPLANOWANE
+│   └── agents-orchestrator/     # Orkiestracja 18 agentów
 │
 ├── DOCUMentacja/               # 🟡 DOKUMENTACJA - wymaga porządku
 │   ├── agents/                  # Dokumentacja agentów TS
@@ -83,35 +112,39 @@ JIMBO77_DEVZ_inc_HUB/
 **Lokalizacja**: `Jimbo_77/api/`
 
 #### A. Główny Plik
+
 - **`app/main.py`** ✅
-  - Konfiguracja CORS (origins: "*" - wymaga ograniczenia dla prod)
+  - Konfiguracja CORS (origins: "\*" - wymaga ograniczenia dla prod)
   - OpenTelemetry setup (metrics + tracing)
   - Logging JSON format
   - 13 zarejestrowanych routerów
 
 #### B. Routes (API Endpoints)
-| Router | Status | Port | Opis |
-|--------|--------|------|------|
-| `projects.router` | ✅ | 8001 | Zarządzanie projektami |
-| `commands.router` | ✅ | 8001 | System komend |
-| `audit.router` | ✅ | 8001 | Audit log |
-| `publishing.router` | ✅ | 8001 | System publikacji |
-| `analytics.router` | ✅ | 8001 | Analytics basic |
-| `logs.router` | ✅ | 8001 | System logów |
-| `shop_sync.router` | ✅ | 8001 | Synchronizacja sklepów |
-| `meble_pumo.router` | ✅ | 8001 | Dedykowany endpoint PUMO |
-| `analytics_ai.router` | ✅ | 8001 | Advanced AI Analytics |
-| `ai_analysis.router` | ✅ | 8001 | AI Analysis Engine |
-| `guides.router` | ✅ | 8001 | Buying Guides (MOA) |
-| `converter.router` | ✅ | 8001 | CAY Feed Converter |
-| `agents.router` | ✅ | 8001 | Agent Management System |
+
+| Router                | Status | Port | Opis                     |
+| --------------------- | ------ | ---- | ------------------------ |
+| `projects.router`     | ✅     | 8001 | Zarządzanie projektami   |
+| `commands.router`     | ✅     | 8001 | System komend            |
+| `audit.router`        | ✅     | 8001 | Audit log                |
+| `publishing.router`   | ✅     | 8001 | System publikacji        |
+| `analytics.router`    | ✅     | 8001 | Analytics basic          |
+| `logs.router`         | ✅     | 8001 | System logów             |
+| `shop_sync.router`    | ✅     | 8001 | Synchronizacja sklepów   |
+| `meble_pumo.router`   | ✅     | 8001 | Dedykowany endpoint PUMO |
+| `analytics_ai.router` | ✅     | 8001 | Advanced AI Analytics    |
+| `ai_analysis.router`  | ✅     | 8001 | AI Analysis Engine       |
+| `guides.router`       | ✅     | 8001 | Buying Guides (MOA)      |
+| `converter.router`    | ✅     | 8001 | CAY Feed Converter       |
+| `agents.router`       | ✅     | 8001 | Agent Management System  |
 
 #### C. Services
+
 - **`idosell_client.py`** ✅ - Komunikacja z IdoSell API
 - **`shop_sync_service.py`** ✅ - Synchronizacja zamówień/produktów
 - **`agent_monitor.py`** ✅ - Process manager dla agentów
 
 #### D. Database Models (`models.py`)
+
 ```python
 ✅ ShopSyncStatus      # Status synchronizacji sklepów
 ✅ ShopOrder           # Zamówienia z IdoSell
@@ -120,6 +153,7 @@ JIMBO77_DEVZ_inc_HUB/
 ```
 
 #### E. Security
+
 - **RBAC** (`security/rbac.py`) ✅ - Role-Based Access Control
 - **Cloudflare Access JWT** ⏳ PLANOWANE - wymaga konfiguracji
 
@@ -130,26 +164,29 @@ JIMBO77_DEVZ_inc_HUB/
 **Lokalizacja**: `Jimbo_77/frontend/`
 
 #### A. Workspace Structure (pnpm workspaces)
+
 ```json
 {
   "apps": [
-    "hub",              // ✅ Master Control Panel
-    "project",          // ✅ Template dla subdomen
-    "magnet",           // ⏳ AI Magnet (w budowie)
-    "pumo-api",         // ✅ PUMO API wrapper
+    "hub", // ✅ Master Control Panel
+    "project", // ✅ Template dla subdomen
+    "magnet", // ⏳ AI Magnet (w budowie)
+    "pumo-api", // ✅ PUMO API wrapper
     "pumo-frontend-legacy" // ✅ Legacy PUMO UI
   ],
   "packages": [
-    "ui",               // ✅ Shared UI components
-    "core"              // ✅ API client + RBAC + types
+    "ui", // ✅ Shared UI components
+    "core" // ✅ API client + RBAC + types
   ]
 }
 ```
 
 #### B. Hub App (`apps/hub/`)
+
 **Stack**: React 18.3.1 + Vite 5.4.1 + TypeScript 5.5.4
 
 **Features**:
+
 - ✅ **AgentsView.tsx** - System zarządzania agentami
   - Filtrowanie po typie (research, analytics, system, content, automation, security)
   - Start/Stop/Configure buttons
@@ -158,6 +195,7 @@ JIMBO77_DEVZ_inc_HUB/
   - Grid layout (responsive)
 
 **Główne zależności**:
+
 ```json
 "chart.js": "^4.5.1"           // Wykresy
 "react-chartjs-2": "^5.3.1"    // React wrapper dla Chart.js
@@ -166,6 +204,7 @@ JIMBO77_DEVZ_inc_HUB/
 ```
 
 **Scripts**:
+
 ```bash
 pnpm dev      # Development server (port 5173)
 pnpm build    # TypeScript compile + Vite build
@@ -173,7 +212,9 @@ pnpm deploy   # Build + Cloudflare Pages deploy
 ```
 
 #### C. Core Package (`packages/core/`)
+
 **Agent Registry** (`src/agents/registry.ts`) ✅
+
 - Centralna definicja 18 agentów
 - TypeScript types dla Agent/AgentType
 - Metadata: id, name, description, port, capabilities, status, language
@@ -188,16 +229,16 @@ pnpm deploy   # Build + Cloudflare Pages deploy
 
 **Lokalizacja**: `agents/python/`
 
-| Agent | Port | Capabilities | Status |
-|-------|------|--------------|--------|
-| **research-agent** | 6062 | search, trends, data-mining | ✅ |
-| **writer-agent** | 6030 | content, seo, proofread | ✅ |
-| **seo-agent** | 6031 | keywords, on-page, backlinks | ✅ |
-| **finance-agent** | 6040 | analysis, budget, forecast | ✅ |
-| **graphics-agent** | 6050 | generate, edit, thumbnail | ✅ |
-| **market-research-agent** | 6070 | market-analysis, survey | ✅ |
-| **company-analysis-agent** | 6071 | profile, swot, valuation | ✅ |
-| **planner-agent** | 6080 | schedule, task-management | ✅ |
+| Agent                      | Port | Capabilities                 | Status |
+| -------------------------- | ---- | ---------------------------- | ------ |
+| **research-agent**         | 6062 | search, trends, data-mining  | ✅     |
+| **writer-agent**           | 6030 | content, seo, proofread      | ✅     |
+| **seo-agent**              | 6031 | keywords, on-page, backlinks | ✅     |
+| **finance-agent**          | 6040 | analysis, budget, forecast   | ✅     |
+| **graphics-agent**         | 6050 | generate, edit, thumbnail    | ✅     |
+| **market-research-agent**  | 6070 | market-analysis, survey      | ✅     |
+| **company-analysis-agent** | 6071 | profile, swot, valuation     | ✅     |
+| **planner-agent**          | 6080 | schedule, task-management    | ✅     |
 
 **Base Class**: `base_agent.py` - Shared functionality dla wszystkich Python agentów
 
@@ -205,18 +246,18 @@ pnpm deploy   # Build + Cloudflare Pages deploy
 
 **Lokalizacja**: `DOCUMentacja/agents/`
 
-| Agent | Port | Typ | Status |
-|-------|------|-----|--------|
-| **analytics-prophet** | 6000 | Analytics | ✅ WORKING |
-| **system-monitor** | 6001 | System | ✅ WORKING |
-| **security-guard** | 6002 | Security | ✅ WORKING |
-| **web-crawler** | 6010 | Research | ✅ Implemented |
-| **file-manager** | 6011 | System | ✅ Existing (Astro API) |
-| **database-query** | 6012 | System | ✅ Existing (Astro API) |
-| **email-handler** | 6020 | Automation | ✅ Implemented |
-| **content-guardian** | 6021 | Content | ✅ Existing (Astro API) |
-| **marketing-maestro** | 6025 | Content | ✅ Existing (Astro API) |
-| **webmaster** | 6026 | System | ✅ Existing (Astro API) |
+| Agent                 | Port | Typ        | Status                  |
+| --------------------- | ---- | ---------- | ----------------------- |
+| **analytics-prophet** | 6000 | Analytics  | ✅ WORKING              |
+| **system-monitor**    | 6001 | System     | ✅ WORKING              |
+| **security-guard**    | 6002 | Security   | ✅ WORKING              |
+| **web-crawler**       | 6010 | Research   | ✅ Implemented          |
+| **file-manager**      | 6011 | System     | ✅ Existing (Astro API) |
+| **database-query**    | 6012 | System     | ✅ Existing (Astro API) |
+| **email-handler**     | 6020 | Automation | ✅ Implemented          |
+| **content-guardian**  | 6021 | Content    | ✅ Existing (Astro API) |
+| **marketing-maestro** | 6025 | Content    | ✅ Existing (Astro API) |
+| **webmaster**         | 6026 | System     | ✅ Existing (Astro API) |
 
 #### C. API Endpoints dla Agentów
 
@@ -240,6 +281,7 @@ GET    /api/agents/logs/search/{id}        # Search logs
 ```
 
 **Process Manager**: `agent_monitor.py` ✅
+
 - Auto-restart on crash
 - Health check monitoring
 - Log aggregation
@@ -254,12 +296,14 @@ GET    /api/agents/logs/search/{id}        # Search logs
 #### A. IdoSell Integration ✅
 
 **Credentials** (hardcoded - ⚠️ wymaga przeniesienia do .env):
+
 ```python
 IDOSELL_SHOP_URL = "https://meblepumo.iai-shop.com"
 IDOSELL_API_KEY = "YXBwbGljYXRpb24yMDpDcGRCO..."  # base64 encoded
 ```
 
 **API Routes**:
+
 ```bash
 # Shop Sync
 POST   /v1/shop-sync/initialize           # Init synchronizacji
@@ -281,6 +325,7 @@ GET    /v1/idosell/live-data               # Live shop data (24h)
 #### B. Database Schema ✅
 
 **Tabele** (zdefiniowane w `models.py`, wymaga utworzenia w DB):
+
 ```sql
 shop_sync_status     # Status synchronizacji (id, shop_name, last_sync_at, statistics cache)
 shop_orders          # Zamówienia (idosell_order_id, order_value, customer_email)
@@ -291,6 +336,7 @@ shop_analytics       # Daily snapshots (analytics_date, revenue, orders_count)
 #### C. Demo Scripts ✅
 
 **Lokalizacja**: `Jimbo_77/api/`
+
 - `demo_shop_sync.py` - Demo pełnego flow synchronizacji
 - `init_pumo_analytics.py` - Inicjalizacja z danymi testowymi
 - `generate_analytics.py` - Generator mock danych
@@ -300,6 +346,7 @@ shop_analytics       # Daily snapshots (analytics_date, revenue, orders_count)
 #### D. Wymagane Kroki Wdrożenia ❌
 
 1. **Environment Setup** ❌
+
    ```bash
    cd Jimbo_77/api
    cp .env.example .env
@@ -307,6 +354,7 @@ shop_analytics       # Daily snapshots (analytics_date, revenue, orders_count)
    ```
 
 2. **Database Setup** ❌
+
    ```bash
    # Docker PostgreSQL
    docker run -d --name pumo-postgres \
@@ -320,12 +368,14 @@ shop_analytics       # Daily snapshots (analytics_date, revenue, orders_count)
    ```
 
 3. **Redis Setup** ❌
+
    ```bash
    docker run -d --name pumo-redis \
      -p 6379:6379 redis:7-alpine
    ```
 
 4. **API Server Start** ❌
+
    ```bash
    cd Jimbo_77/api
    pip install -r requirements.txt
@@ -335,6 +385,7 @@ shop_analytics       # Daily snapshots (analytics_date, revenue, orders_count)
    ```
 
 5. **Inicjalizacja Danych** ❌
+
    ```bash
    # Opcja A: Demo data
    python init_pumo_analytics.py
@@ -358,6 +409,7 @@ shop_analytics       # Daily snapshots (analytics_date, revenue, orders_count)
 **Status**: Struktura istnieje, wymaga weryfikacji implementacji
 
 **Zastosowanie**:
+
 - Buying Guides dla PUMO (endpoint `/api/guides`)
 - Multi-agent orchestration
 - Integracja z głównym API
@@ -369,6 +421,7 @@ shop_analytics       # Daily snapshots (analytics_date, revenue, orders_count)
 **Status**: Struktura istnieje, wymaga weryfikacji implementacji
 
 **Zastosowanie**:
+
 - Synchronizacja danych PUMO na edge
 - Periodyczna aktualizacja cache
 - Integracja z IdoSell API
@@ -378,6 +431,7 @@ shop_analytics       # Daily snapshots (analytics_date, revenue, orders_count)
 **Dokument**: `DOCUMentacja/REPLICATE_CLOUDFLARE_INTEGRATION.md` ✅
 
 **Zawartość**:
+
 - Kompletna instrukcja integracji Replicate API
 - Backend Worker (Hono + TypeScript)
 - Frontend client (vanilla JS + React examples)
@@ -392,24 +446,25 @@ shop_analytics       # Daily snapshots (analytics_date, revenue, orders_count)
 
 #### A. Główne Dokumenty ✅
 
-| Dokument | Status | Opis |
-|----------|--------|------|
-| `README.md` | ✅ | Główny README - przegląd projektu |
-| `MEBLE_PUMO_WDROZENIE_STATUS.md` | ✅ | Szczegółowy status wdrożenia PUMO |
-| `MEBLE_PUMO_IDOSELL_INTEGRATION.md` | ✅ | Plan integracji IdoSell |
-| `JIMBO77_DOMAINS_ARCHITECTURE.md` | ✅ | Architektura domen |
-| `JIMBO77_QUICK_IMPLEMENTATION.md` | ✅ | Quick implementation guide |
-| `MASTER_MIGRATION_PLAN.md` | ✅ | Plan migracji |
-| `DEPLOYMENT_GUIDE.md` | ✅ | Deployment instructions |
-| `PUMO_Dashboard_Deployment_Log.md` | ✅ | Log wdrożenia dashboardu |
-| `agents/AGENT_SYSTEM_COMPLETE_GUIDE.md` | ✅ | Kompletny guide agentów |
-| `REPLICATE_CLOUDFLARE_INTEGRATION.md` | ✅ | Replicate integration guide |
+| Dokument                                | Status | Opis                              |
+| --------------------------------------- | ------ | --------------------------------- |
+| `README.md`                             | ✅     | Główny README - przegląd projektu |
+| `MEBLE_PUMO_WDROZENIE_STATUS.md`        | ✅     | Szczegółowy status wdrożenia PUMO |
+| `MEBLE_PUMO_IDOSELL_INTEGRATION.md`     | ✅     | Plan integracji IdoSell           |
+| `JIMBO77_DOMAINS_ARCHITECTURE.md`       | ✅     | Architektura domen                |
+| `JIMBO77_QUICK_IMPLEMENTATION.md`       | ✅     | Quick implementation guide        |
+| `MASTER_MIGRATION_PLAN.md`              | ✅     | Plan migracji                     |
+| `DEPLOYMENT_GUIDE.md`                   | ✅     | Deployment instructions           |
+| `PUMO_Dashboard_Deployment_Log.md`      | ✅     | Log wdrożenia dashboardu          |
+| `agents/AGENT_SYSTEM_COMPLETE_GUIDE.md` | ✅     | Kompletny guide agentów           |
+| `REPLICATE_CLOUDFLARE_INTEGRATION.md`   | ✅     | Replicate integration guide       |
 
 #### B. Folder DOCUMentacja/gp4/ ⚠️ WYMAGA PORZĄDKU
 
 **Zawartość**: 63 pliki Markdown z różnych sesji planowania
 
 **Kategorie**:
+
 - **Steps** (step_1.md do step_10.md) - Etapy implementacji
 - **Upgrades** (upgrade1.md do upgrage10.md) - Ulepszenia
 - **Agents** (agent1.md, agent2.md, agent3.md) - Plany agentów
@@ -417,6 +472,7 @@ shop_analytics       # Daily snapshots (analytics_date, revenue, orders_count)
 - **Inne** - Różne drafty i notatki
 
 **Rekomendacja**:
+
 1. Konsolidacja dokumentów w jedną spójną dokumentację
 2. Przeniesienie aktualnych planów do głównego README
 3. Archiwizacja starych wersji do `/DOCUMentacja/archive/`
@@ -424,6 +480,7 @@ shop_analytics       # Daily snapshots (analytics_date, revenue, orders_count)
 #### C. Folder DOCUMentacja/pumo_extracted/ ✅
 
 **Zawartość**: Ekstrakty systemu PUMO dashboard
+
 - `docs/` - 6 plików z architekturą (OVERVIEW, ARCHITECTURE, ANALYTICS, ENDPOINTS, DATA_STORES, GAPS)
 - `src/` - Kod źródłowy (auth, endpoints, generators, handlers, processors, services)
 - `README.md`, `QUICK_START.md`, `DASHBOARD_SYSTEM_DOCUMENTATION.md`
@@ -436,21 +493,22 @@ shop_analytics       # Daily snapshots (analytics_date, revenue, orders_count)
 
 ### Gotowość Produkcyjna
 
-| Komponent | Implementacja | Testy | Dokumentacja | Deployment | GOTOWOŚĆ |
-|-----------|---------------|-------|--------------|------------|----------|
-| **Backend API** | 90% ✅ | 0% ❌ | 85% ✅ | 0% ❌ | 44% 🟡 |
-| **Frontend Hub** | 85% ✅ | 0% ❌ | 75% ✅ | 0% ❌ | 40% 🟡 |
-| **System Agentów** | 100% ✅ | 0% ❌ | 90% ✅ | 0% ❌ | 48% 🟡 |
-| **PUMO Integration** | 75% ✅ | 0% ❌ | 95% ✅ | 0% ❌ | 43% 🟡 |
-| **Cloudflare Workers** | 50% ⚠️ | 0% ❌ | 80% ✅ | 0% ❌ | 33% 🔴 |
-| **Database Schema** | 100% ✅ | 0% ❌ | 90% ✅ | 0% ❌ | 48% 🟡 |
-| **Security (RBAC)** | 50% ⚠️ | 0% ❌ | 60% ⚠️ | 0% ❌ | 28% 🔴 |
+| Komponent              | Implementacja | Testy | Dokumentacja | Deployment | GOTOWOŚĆ |
+| ---------------------- | ------------- | ----- | ------------ | ---------- | -------- |
+| **Backend API**        | 90% ✅        | 0% ❌ | 85% ✅       | 0% ❌      | 44% 🟡   |
+| **Frontend Hub**       | 85% ✅        | 0% ❌ | 75% ✅       | 0% ❌      | 40% 🟡   |
+| **System Agentów**     | 100% ✅       | 0% ❌ | 90% ✅       | 0% ❌      | 48% 🟡   |
+| **PUMO Integration**   | 75% ✅        | 0% ❌ | 95% ✅       | 0% ❌      | 43% 🟡   |
+| **Cloudflare Workers** | 50% ⚠️        | 0% ❌ | 80% ✅       | 0% ❌      | 33% 🔴   |
+| **Database Schema**    | 100% ✅       | 0% ❌ | 90% ✅       | 0% ❌      | 48% 🟡   |
+| **Security (RBAC)**    | 50% ⚠️        | 0% ❌ | 60% ⚠️       | 0% ❌      | 28% 🔴   |
 
 **ŚREDNIA GOTOWOŚĆ**: **40.6%** 🟡
 
 ### Kluczowe Braki
 
 #### Implementacja
+
 1. ❌ Brak `.env` configuration
 2. ❌ Brak uruchomionej bazy danych (PostgreSQL + Redis)
 3. ❌ Cloudflare Workers wymaga dokończenia
@@ -458,12 +516,14 @@ shop_analytics       # Daily snapshots (analytics_date, revenue, orders_count)
 5. ❌ Frontend nie ma połączenia z działającym API
 
 #### Testy
+
 1. ❌ Brak unit testów (0%)
 2. ❌ Brak integration testów
 3. ❌ Brak E2E testów
 4. ❌ Brak load testów
 
 #### Deployment
+
 1. ❌ Brak konfiguracji CI/CD
 2. ❌ Brak deploymentu na produkcję
 3. ❌ Brak monitoringu produkcyjnego
@@ -476,6 +536,7 @@ shop_analytics       # Daily snapshots (analytics_date, revenue, orders_count)
 ### FAZA 1: PODSTAWOWA INFRASTRUKTURA (Czas: 2-3 godziny) 🔴 HIGH
 
 #### 1.1 Environment Setup
+
 ```bash
 # Jimbo_77/api/.env
 cd Jimbo_77/api
@@ -490,6 +551,7 @@ CORS_ORIGINS=http://localhost:5173,http://localhost:3000
 ```
 
 #### 1.2 Database Setup
+
 ```bash
 # Docker containers
 docker run -d --name pumo-postgres \
@@ -507,6 +569,7 @@ python create_shop_tables.py
 ```
 
 #### 1.3 API Server Start
+
 ```bash
 cd Jimbo_77/api
 pip install -r requirements.txt
@@ -518,6 +581,7 @@ curl http://localhost:8001/v1/shop-sync/health
 ```
 
 #### 1.4 Frontend Start
+
 ```bash
 cd Jimbo_77/frontend
 pnpm install
@@ -527,6 +591,7 @@ pnpm dev
 ```
 
 **Kryteria sukcesu**:
+
 - ✅ API server działa (GET /health → 200 OK)
 - ✅ Database połączone (tabele istnieją)
 - ✅ Redis działa (cache works)
@@ -537,6 +602,7 @@ pnpm dev
 ### FAZA 2: PUMO INTEGRATION (Czas: 1-2 godziny) 🟡 MEDIUM
 
 #### 2.1 Inicjalizacja Danych
+
 ```bash
 # Opcja A: Demo data (szybki test)
 cd Jimbo_77/api
@@ -558,6 +624,7 @@ curl http://localhost:8001/v1/shop-sync/status/Meble%20Pumo
 ```
 
 #### 2.2 Dashboard Verification
+
 ```bash
 # Sprawdź dane w przeglądarce:
 curl http://localhost:8001/v1/shop-sync/pumo-kpis
@@ -571,6 +638,7 @@ curl http://localhost:8001/v1/shop-sync/pumo-hub-data
 ```
 
 **Kryteria sukcesu**:
+
 - ✅ Shop sync zainicjalizowana (record w `shop_sync_status`)
 - ✅ Dane synchronizują się (records w `shop_orders`, `shop_products`)
 - ✅ Analytics generowane (records w `shop_analytics`)
@@ -581,6 +649,7 @@ curl http://localhost:8001/v1/shop-sync/pumo-hub-data
 ### FAZA 3: SYSTEM AGENTÓW (Czas: 2-3 godziny) 🟡 MEDIUM
 
 #### 3.1 Start Python Agents
+
 ```bash
 cd agents/python
 
@@ -595,6 +664,7 @@ cd seo-agent && python main.py --port 6031 &
 ```
 
 #### 3.2 Verify Agent System
+
 ```bash
 # List all agents
 curl http://localhost:8001/api/agents/
@@ -615,6 +685,7 @@ curl -X POST http://localhost:8001/api/agents/stop/research-agent
 ```
 
 #### 3.3 Frontend Agent Management
+
 ```bash
 # Otwórz: http://localhost:5173/agents
 # Sprawdź:
@@ -625,6 +696,7 @@ curl -X POST http://localhost:8001/api/agents/stop/research-agent
 ```
 
 **Kryteria sukcesu**:
+
 - ✅ Manager API działa (GET /api/agents → lista agentów)
 - ✅ Agenty startują poprawnie (status: active)
 - ✅ Frontend UI zarządza agentami
@@ -635,6 +707,7 @@ curl -X POST http://localhost:8001/api/agents/stop/research-agent
 ### FAZA 4: DOKUMENTACJA I KONSOLIDACJA (Czas: 3-4 godziny) 🟢 LOW
 
 #### 4.1 Konsolidacja Dokumentacji
+
 ```bash
 # Folder structure:
 DOCUMentacja/
@@ -651,6 +724,7 @@ DOCUMentacja/
 ```
 
 #### 4.2 API Documentation
+
 ```bash
 # Swagger UI dostępne automatycznie:
 http://localhost:8001/docs
@@ -663,8 +737,10 @@ npx swagger-markdown -i api-spec.json -o DOCUMentacja/API_REFERENCE.md
 ```
 
 #### 4.3 README Update
+
 ```markdown
 # Aktualizuj główny README.md:
+
 - Status komponentów (z tego raportu)
 - Quick Start (konsoliduj z wielu źródeł)
 - API endpoints (z API_REFERENCE.md)
@@ -673,6 +749,7 @@ npx swagger-markdown -i api-spec.json -o DOCUMentacja/API_REFERENCE.md
 ```
 
 **Kryteria sukcesu**:
+
 - ✅ Dokumentacja skonsolidowana (1 źródło prawdy)
 - ✅ API Reference kompletne
 - ✅ README.md aktualny
@@ -683,6 +760,7 @@ npx swagger-markdown -i api-spec.json -o DOCUMentacja/API_REFERENCE.md
 ### FAZA 5: CLOUDFLARE DEPLOYMENT (Czas: 4-6 godzin) 🟢 LOW
 
 #### 5.1 Cloudflare Access Setup
+
 ```bash
 # 1. Utwórz Cloudflare Access application
 # Dashboard → Zero Trust → Access → Applications
@@ -695,6 +773,7 @@ CORS_ORIGINS=https://hub.jimbo77.org,https://api.jimbo77.org
 ```
 
 #### 5.2 Frontend Deployment (Cloudflare Pages)
+
 ```bash
 cd Jimbo_77/frontend/apps/hub
 
@@ -714,12 +793,14 @@ npx wrangler pages deploy dist --project-name=jimbo-devz-inc-hub
 #### 5.3 API Deployment (Cloudflare Workers LUB VPS)
 
 **Opcja A: Cloudflare Workers** (zalecane dla API routes)
+
 ```bash
 # Stwórz wrangler.toml w Jimbo_77/api/
 # Deploy select routes as Workers
 ```
 
 **Opcja B: VPS/Cloud** (zalecane dla FastAPI full)
+
 ```bash
 # Deploy na DigitalOcean/AWS/GCP
 # Use Docker compose:
@@ -729,6 +810,7 @@ docker-compose up -d
 ```
 
 #### 5.4 Workers Deployment
+
 ```bash
 # MOA System
 cd workers/moa-system
@@ -742,6 +824,7 @@ npx wrangler deploy
 ```
 
 **Kryteria sukcesu**:
+
 - ✅ Frontend deployed (hub.jimbo77.org)
 - ✅ API deployed (api.jimbo77.org)
 - ✅ Workers deployed (edge functions)
@@ -753,6 +836,7 @@ npx wrangler deploy
 ### FAZA 6: TESTING & MONITORING (Czas: 3-5 godzin) 🟢 LOW
 
 #### 6.1 Unit Tests
+
 ```bash
 # Backend tests
 cd Jimbo_77/api
@@ -766,12 +850,14 @@ npm test
 ```
 
 #### 6.2 Integration Tests
+
 ```bash
 # Test full flow:
 # 1. API health → 2. Shop sync init → 3. Data sync → 4. Frontend display
 ```
 
 #### 6.3 Monitoring Setup
+
 ```bash
 # OpenTelemetry już skonfigurowane w main.py
 # Dodaj eksport do:
@@ -781,6 +867,7 @@ npm test
 ```
 
 **Kryteria sukcesu**:
+
 - ✅ Unit tests coverage >70%
 - ✅ Integration tests passing
 - ✅ Monitoring dashboard configured
@@ -791,6 +878,7 @@ npm test
 ## 📈 METRYKI POSTĘPU
 
 ### Obecny Stan
+
 ```
 Infrastruktura:     ████████░░ 85% (wymaga konfiguracji env)
 Backend API:        █████████░ 90% (gotowy, wymaga testów)
@@ -807,6 +895,7 @@ OGÓLNY POSTĘP:      ██████░░░░ 60%
 ```
 
 ### Czas do Produkcji
+
 ```
 Faza 1 (Infra):           2-3h   ████████░░  80% effort
 Faza 2 (PUMO):            1-2h   ████░░░░░░  40% effort
@@ -823,31 +912,37 @@ TOTAL:                    15-23h  (2-3 dni robocze)
 ## ⚠️ KRYTYCZNE RYZYKA
 
 ### 1. Brak Wdrożenia ⚠️ HIGH
+
 **Problem**: System nie jest wdrożony, nie można go użyć
 **Impact**: 100% funkcjonalności niedostępne
 **Mitigation**: Priorytetyzuj Fazę 1-3 (podstawowa infrastruktura)
 
 ### 2. Brak Testów ⚠️ HIGH
+
 **Problem**: 0% coverage, brak validacji poprawności
 **Impact**: Wysokie ryzyko błędów w produkcji
 **Mitigation**: Dodaj critical path tests przed deploymentem
 
 ### 3. Hardcoded Secrets ⚠️ HIGH
+
 **Problem**: API keys w kodzie (idosell_client.py)
 **Impact**: Security vulnerability
 **Mitigation**: Przenieś wszystkie secrets do .env, dodaj .env do .gitignore
 
-### 4. CORS "*" w Produkcji ⚠️ MEDIUM
+### 4. CORS "\*" w Produkcji ⚠️ MEDIUM
+
 **Problem**: `allow_origins = ["*"]` w main.py
 **Impact**: Security risk (CSRF)
 **Mitigation**: Ogranicz CORS do konkretnych domen w produkcji
 
 ### 5. Mock Auth ⚠️ MEDIUM
+
 **Problem**: `get_current_actor()` zwraca mock data
 **Impact**: Brak prawdziwej autoryzacji
 **Mitigation**: Implementuj Cloudflare Access JWT verification
 
 ### 6. Brak Backup Strategy ⚠️ LOW
+
 **Problem**: Brak automated backups dla DB
 **Impact**: Ryzyko utraty danych
 **Mitigation**: Setup daily PostgreSQL backups (pg_dump)
@@ -857,6 +952,7 @@ TOTAL:                    15-23h  (2-3 dni robocze)
 ## 🎯 ZALECENIA FINALNE
 
 ### Natychmiast (dzisiaj)
+
 1. ✅ Skopiuj `.env.example` → `.env` z credentials
 2. ✅ Uruchom Docker: PostgreSQL + Redis
 3. ✅ Stwórz tabele: `python create_shop_tables.py`
@@ -864,6 +960,7 @@ TOTAL:                    15-23h  (2-3 dni robocze)
 5. ✅ Test health: `curl localhost:8001/health`
 
 ### W tym tygodniu
+
 6. ✅ Zainicjalizuj PUMO sync (demo lub live)
 7. ✅ Start 8 Python agents
 8. ✅ Verify frontend UI (agents management)
@@ -871,6 +968,7 @@ TOTAL:                    15-23h  (2-3 dni robocze)
 10. ✅ Skonsoliduj dokumentację (DOCUMentacja/)
 
 ### W tym miesiącu
+
 11. ✅ Deploy na Cloudflare (Pages + Workers)
 12. ✅ Setup Cloudflare Access (JWT auth)
 13. ✅ Dodaj unit tests (>70% coverage)
@@ -882,12 +980,21 @@ TOTAL:                    15-23h  (2-3 dni robocze)
 ## 📚 REFERENCJE
 
 ### Kluczowe Dokumenty
+
 1. `README.md` - Główny przegląd projektu
-2. `MEBLE_PUMO_WDROZENIE_STATUS.md` - Status PUMO (najbardziej aktualny)
-3. `agents/AGENT_SYSTEM_COMPLETE_GUIDE.md` - Agent system guide
-4. `REPLICATE_CLOUDFLARE_INTEGRATION.md` - Replicate integration
+2. `JIMBO77_DOMAINS_ARCHITECTURE.md` - Architektura domen jimbo77.com/org
+3. `PUMO_RAG_INTEGRATION_ARCHITECTURE.md` - **NOWY** Architektura RAG (16.01.2026)
+4. `agents/AGENT_SYSTEM_COMPLETE_GUIDE.md` - Agent system guide
+5. `../my-bonzo-ai-blog/docs/PUMO_GUIDE_UPGRADE_PLAN.md` - Plan upgrade Pumo Guide
+6. `../my-bonzo-ai-blog/docs/planning/definition_of_done.html` - Tracking progress
+
+### Dokumenty Archiwalne (w ZZ_files)
+
+- `MEBLE_PUMO_WDROZENIE_STATUS.md` - Status PUMO (przestarzały)
+- `DEPLOYMENT_STATUS.md`, `RESTART_PLAN.md` - Deployment logs (historyczne)
 
 ### Główne Commity
+
 ```
 0b7db41 - feat: Kompletny system 18 agentów AI
 501714d - refactor: Унifikacja UI PUMO z głównym dashboardem
@@ -898,45 +1005,137 @@ b8ea070 - Add MeblePumo IdoSell integration
 ```
 
 ### API Endpoints Reference
+
 - Swagger UI: http://localhost:8001/docs
 - ReDoc: http://localhost:8001/redoc
 - OpenAPI JSON: http://localhost:8001/openapi.json
 
 ### Frontend Apps
+
 - Hub: http://localhost:5173 (Vite dev server)
 - Agents: http://localhost:5173/agents
 - PUMO: http://localhost:5173/pumo (jeśli routing skonfigurowany)
 
 ---
 
+## 🆕 NOWA ARCHITEKTURA: PUMO RAG SYSTEM (16.01.2026)
+
+### Cel
+
+Integracja Pumo Guide (65+ kategorii, 2847 produktów z My Bonzo AI Blog) jako knowledge base dla:
+
+- RAG chatbot na blogu (`mybonzoaiblog.com/pumo-guide/chat`)
+- Narzędzie dla 18 agentów AI (tool: `pumo-search`)
+- AI crawlers (llms.txt + dla-agentow page)
+
+### Architektura Podziału
+
+**Backend w JIMBO_devz_inc_HUB:**
+
+```
+workers/pumo-rag/
+├── src/
+│   ├── index.ts           → Main entry (/api/chat, /api/search)
+│   ├── rag-engine.ts      → RAG logic (Vectorize + LLM)
+│   ├── vectorize.ts       → Cloudflare Vectorize operations
+│   ├── agents-connector.ts → Połączenie z agents-orchestrator
+│   └── logging.ts         → Query logging do KV
+└── wrangler.toml          → Vectorize + KV bindings
+```
+
+**Frontend w my-bonzo-ai-blog:**
+
+```
+src/pages/pumo-guide/
+├── chat.astro             → Chat widget UI (konsument API)
+└── dla-agentow.astro      → API documentation
+
+public/llms.txt            → AI crawler instructions
+```
+
+### Stack Technologiczny
+
+- **Embeddings**: Cloudflare Workers AI `@cf/baai/bge-small-en-v1.5` (1536 dim)
+- **Vector DB**: Cloudflare Vectorize (cosine similarity)
+- **LLM**: OpenRouter (DeepSeek R1) + fallback Workers AI (Llama 3.3 70B)
+- **Caching**: Cloudflare KV (5 min TTL)
+- **Logging**: KV (30 dni retention)
+
+### Endpoints
+
+```typescript
+// PUMO RAG Worker (pumo-rag.jimbo77.com)
+POST /api/chat              → RAG chatbot (query → answer + sources)
+POST /api/search            → Semantic search (query → products)
+POST /api/embed             → Embedding endpoint (new products)
+GET  /api/stats             → Query analytics
+POST /internal/agent-search → For agents-orchestrator (API key required)
+```
+
+### Timeline (4 tygodnie)
+
+**Week 1**: Core RAG infrastructure (Vectorize setup, RAG engine, caching)
+**Week 2**: Blog integration (llms.txt, dla-agentow page, chat widget)
+**Week 3**: Agents integration (tool creation, testing)
+**Week 4**: JIMBO Hub dashboard + jimbo77.org integration
+
+### Dokumentacja
+
+- **Plan główny**: `PUMO_RAG_INTEGRATION_ARCHITECTURE.md` (677 linii)
+- **Code examples**: RAG engine, chat widget, agent tool
+- **Tracking**: `../my-bonzo-ai-blog/docs/planning/definition_of_done.html`
+
+---
+
 ## 🔚 PODSUMOWANIE
 
-**JIMBO77 DEVZ inc. HUB** jest zaawansowanym, **dobrze zaprojektowanym** systemem z kompletną architekturą, ale **wymaga wdrożenia infrastruktury** aby był użyteczny.
+**JIMBO77 DEVZ inc. HUB** jest zaawansowanym, **dobrze zaprojektowanym** systemem z kompletną architekturą, wzbogaconym o **nową warstwę RAG** dla integracji knowledge bases.
 
 ### Co działa
+
 ✅ Kompletna architektura (dual-domain, microservices)
 ✅ Backend API (13 routerów, wszystkie endpointy)
 ✅ Frontend Hub (React + workspace architecture)
 ✅ System 18 agentów AI (implementacja gotowa)
 ✅ PUMO integration (IdoSell client + sync service)
 ✅ Database models (schema zdefiniowana)
-✅ Dokumentacja (75% kompletna)
+✅ Dokumentacja (85% kompletna - **AKTUALIZACJA 16.01.2026**)
+✅ **NOWY**: Architektura PUMO RAG (szczegółowy plan + code examples)
+✅ **NOWY**: Cleanup struktury plików (główny folder uporządkowany)
 
 ### Co wymaga pracy
+
 ❌ Environment configuration (.env)
 ❌ Database setup (PostgreSQL + Redis)
 ❌ API server deployment
 ❌ Frontend deployment
 ❌ Agent system startup
+❌ **NOWY**: Implementacja workers/pumo-rag (4 tygodnie)
+❌ **NOWY**: Blog chat widget integration
 ❌ Testing (0% coverage)
 ❌ Production deployment
 ❌ Monitoring setup
 
 ### Następny krok
-**Realizuj Fazę 1** (2-3 godziny) aby mieć działający lokalny system. Wszystko inne to enhancement.
+
+**Opcja A**: Realizuj Fazę 1 (2-3 godziny) - lokalny system API + agenty  
+**Opcja B (NOWA)**: Implementuj PUMO RAG (4 tygodnie) zgodnie z timeline w `PUMO_RAG_INTEGRATION_ARCHITECTURE.md`
+
+**Rekomendacja**: Rozpocznij od **Opcji B Week 1** - core RAG infrastructure, ponieważ:
+
+- Architektura jest już zdefiniowana (677 linii dokumentacji)
+- Code examples gotowe do implementacji
+- Cloudflare stack jest już znany (Vectorize, Workers AI, KV)
+- Po Week 1 będziesz mieć działający RAG endpoint do testów
 
 ---
 
-**Raport wygenerowany**: 2026-01-14
-**Narzędzie**: Claude AI Assistant (SuperClaude Framework)
+**Raport utworzony**: 2026-01-14  
+**Ostatnia aktualizacja**: 2026-01-16  
+**Narzędzie**: Claude AI Assistant (SuperClaude Framework)  
 **Kontakt**: jimbo@mybonzo.com
+
+**Changelog**:
+
+- **2026-01-16**: Dodano architekturę PUMO RAG, cleanup struktury, aktualizacja statusów
+- **2026-01-14**: Inicjalna analiza projektu
