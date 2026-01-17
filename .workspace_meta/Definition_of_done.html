@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <title>WCS Dashboard – Definition of Done</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+/* =========================
+   WCS DoD – Dashboard UI
+   Theme-compatible with 1.HTML, but keeps DoD structure.
+   ========================= */
+
+:root{
+  --bg: #07090f;
+  --bg2:#05070c;
+  --panel:#0b0f1a;
+  --panel2:#090d17;
+  --text:#e7ecff;
+  --muted:#9aa6c7;
+  --faint:#6b7696;
+  --line:#1b2542;
+  --hot:#7cffb2;    /* neon green */
+  --cold:#6aa6ff;   /* neon blue */
+  --warn:#ffd166;   /* amber */
+  --bad:#ff4d6d;    /* red/pink */
+  --shadow: 0 0 0 1px rgba(231,236,255,.06), 0 18px 50px rgba(0,0,0,.55);
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  --focus: 0 0 0 2px var(--cold), 0 0 0 4px rgba(106,166,255,.25);
+}
+
+*{box-sizing:border-box;border-radius:0 !important}
+html,body{height:100%}
+body{
+  margin:0;
+  font: 14px/1.6 var(--sans);
+  background:
+    radial-gradient(900px 600px at 20% 0%, rgba(124,255,178,.10), transparent 55%),
+    radial-gradient(900px 600px at 90% 10%, rgba(106,166,255,.10), transparent 55%),
+    linear-gradient(180deg, var(--bg), var(--bg2) 65%);
+  color:var(--text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+::selection{background: rgba(124,255,178,.25)}
+
+/* ===== Header ===== */
+header{
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(8px);
+  background: linear-gradient(180deg, rgba(11,15,26,.88), rgba(7,9,15,.62));
+  border-bottom: 1px solid rgba(27,37,66,.85);
+  padding: 12px 16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+  flex-wrap:wrap;
+}
+header h1{
+  margin:0;
+  font: 800 12px/1.2 var(--mono);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+header small{
+  display:inline-block;
+  margin-top:2px;
+  font: 600 11px/1.3 var(--mono);
+  letter-spacing: .5px;
+  color: var(--muted);
+}
+.small{color: var(--faint)}
+
+.badge{
+  display:inline-block;
+  padding: 6px 8px;
+  border: 1px solid rgba(106,166,255,.35);
+  color: var(--muted);
+  font: 700 11px/1 var(--mono);
+  letter-spacing: .8px;
+  text-transform: uppercase;
+  background: rgba(11,15,26,.55);
+}
+.time-tracker{
+  display:inline-block;
+  margin-left:6px;
+  padding: 6px 8px;
+  border: 1px solid rgba(124,255,178,.28);
+  background: rgba(11,15,26,.55);
+  color: var(--muted);
+  font: 700 11px/1 var(--mono);
+  letter-spacing: .6px;
+}
+
+/* ===== Main layout (keep original: 3 columns) ===== */
+main{
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 16px;
+  display:grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 1100px){
+  main{grid-template-columns: 1fr 1fr}
+}
+@media (max-width: 760px){
+  main{grid-template-columns: 1fr}
+}
+
+section{
+  background: linear-gradient(180deg, rgba(11,15,26,.92), rgba(9,13,23,.86));
+  border: 1px solid rgba(27,37,66,.9);
+  box-shadow: var(--shadow);
+  padding: 12px;
+  min-height: 220px;
+}
+
+h2{
+  margin: 0 0 10px;
+  font: 800 12px/1.2 var(--mono);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text);
+  border-bottom: 1px solid rgba(27,37,66,.7);
+  padding-bottom: 8px;
+}
+
+h3{
+  margin: 12px 0 6px;
+  font: 800 11px/1.2 var(--mono);
+  letter-spacing: .8px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+p, ul, li{color: var(--muted)}
+
+.note{
+  font: 12px/1.55 var(--mono);
+  color: var(--muted);
+  background: rgba(7,9,15,.55);
+  border: 1px solid rgba(27,37,66,.85);
+  padding: 10px;
+  white-space: pre-wrap;
+}
+
+.mcp-badge{
+  display:inline-block;
+  margin: 4px 6px 0 0;
+  padding: 4px 6px;
+  border: 1px solid rgba(231,236,255,.14);
+  background: rgba(11,15,26,.55);
+  font: 700 10px/1 var(--mono);
+  letter-spacing: .7px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+/* Checklist rows */
+.checklist-item{
+  display:flex;
+  align-items:flex-start;
+  gap: 8px;
+  padding: 6px 8px;
+  border: 1px solid rgba(27,37,66,.65);
+  background: rgba(11,15,26,.35);
+  margin: 6px 0;
+}
+.checklist-item label{
+  cursor:pointer;
+  font: 12px/1.45 var(--sans);
+  color: var(--text);
+}
+input[type="checkbox"]{
+  accent-color: var(--hot);
+  transform: translateY(2px);
+}
+
+/* Inputs */
+input[type="text"], textarea{
+  width: 100%;
+  border: 1px solid rgba(27,37,66,.85);
+  background: rgba(7,9,15,.55);
+  color: var(--text);
+  padding: 10px;
+  font: 12px/1.55 var(--mono);
+  outline: none;
+}
+input[type="text"]:focus, textarea:focus{box-shadow: var(--focus)}
+textarea{min-height: 120px; resize: vertical}
+#snapshotOutput{min-height: 160px}
+#notesExport{min-height: 140px}
+
+/* Buttons */
+button{
+  border: 1px solid rgba(106,166,255,.45);
+  background: rgba(11,15,26,.65);
+  color: var(--text);
+  padding: 10px 12px;
+  font: 800 11px/1 var(--mono);
+  letter-spacing: .8px;
+  text-transform: uppercase;
+  cursor:pointer;
+}
+button:hover{border-color: rgba(124,255,178,.55); color: var(--hot)}
+button:focus{outline:none; box-shadow: var(--focus)}
+button.secondary{
+  border-color: rgba(231,236,255,.18);
+  color: var(--muted);
+}
+button.secondary:hover{border-color: rgba(255,209,102,.55); color: var(--warn)}
+
+</style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>🎯 WCS Dashboard – Definition of Done</h1>
+      <small>Workspace Context System v2.0</small><br />
+      <small class="small">
+        MCP-ready. CLAUDE.md + localStorage. Agents read this automatically.
+      </small>
+    </div>
+    <div>
+      <span class="badge">LIVE</span>
+      <span class="badge">MCP-ENABLED</span>
+      <span id="totalTime" class="time-tracker">Sesja: 0 min</span>
+    </div>
+  </header>
+
+  <main>
+    <!-- LEWA: AGENT CONTEXT -->
+    <section>
+      <h2>🤖 Agent Context</h2>
+
+      <h3>CLAUDE.md Status</h3>
+      <div class="note">
+✅ Agent reads CLAUDE.md first (MCP lazy-loaded)
+✅ Architecture principles enforced
+✅ MCP Tool Search enabled (50+ tools OK)
+✅ Decision tree in notes/decisions.md
+
+[TODO] Zaktualizuj CLAUDE.md jeśli zmieni się arch
+      </div>
+
+      <h3>MCP Tools Active</h3>
+      <div style="font-size: 11px; line-height: 1.6;">
+        <div class="mcp-badge">github</div>
+        <div class="mcp-badge">filesystem</div>
+        <div class="mcp-badge">shell</div>
+      </div>
+
+      <h3>Definition of Done</h3>
+      <div id="dodChecklistContainer" style="max-height: 150px; overflow-y: auto;">
+        <!-- Wygenerowane z JS -->
+      </div>
+
+      <h3>Agent Red Lines</h3>
+      <ul style="font-size: 11px; margin: 4px 0;">
+        <li>❌ Nie ignoruj błędów</li>
+        <li>❌ Nie commituj secrets</li>
+        <li>❌ Nie pomiń type-check</li>
+        <li>❌ Nie zostawiaj dead code bez TODO</li>
+      </ul>
+    </section>
+
+    <!-- ŚRODEK: CHECKLIST + TODO + SNAPSHOT -->
+    <section>
+      <h2>📋 Task Management</h2>
+
+      <h3>TODO List (Bieżące)</h3>
+      <ul id="todoList" style="font-size: 11px; margin: 0; padding: 0; list-style: none;">
+        <li class="checklist-item">
+          <input type="checkbox" id="t1" class="todo-checkbox" />
+          <label for="t1">Aktualizuj CLAUDE.md jeśli zmienia się architektura</label>
+        </li>
+        <li class="checklist-item">
+          <input type="checkbox" id="t2" class="todo-checkbox" />
+          <label for="t2">Dodaj nowy wpis do notes/decisions.md po ważnej decyzji</label>
+        </li>
+        <li class="checklist-item">
+          <input type="checkbox" id="t3" class="todo-checkbox" />
+          <label for="t3">Generuj snapshot co ~2h aktywnej pracy</label>
+        </li>
+      </ul>
+
+      <div style="margin: 6px 0; display: flex; gap: 6px; flex-wrap: wrap;">
+        <button id="clearDoneTodoBtn" class="secondary">Usuń wykonane</button>
+        <button id="generateSnapshotBtn">Generuj snapshot</button>
+      </div>
+
+      <h3>Snapshot Preview (kopiuj do snapshots/)</h3>
+      <textarea id="snapshotOutput" placeholder="# YYYY-MM-DD-snapshot.md"></textarea>
+    </section>
+
+    <!-- PRAWA: NOTATKI + AGENT HINTS -->
+    <section>
+      <h2>📝 Project Notes</h2>
+
+      <p style="font-size: 10px; color: #9fa6b2; margin: 0 0 6px;">
+        Te notatki są widoczne dla agenta jako dodatkowy kontekst. 
+        Agent czyta je razem z CLAUDE.md. Używaj technicznego języka.
+      </p>
+
+      <h3>Tema notatki</h3>
+      <input type="text" id="notesTitle" placeholder="np. API v2 assumptions" />
+
+      <h3>Treść</h3>
+      <textarea id="notesEditor" placeholder="- Assumption 1
+- Assumption 2
+- Risks
+- Decisions"></textarea>
+
+      <div style="margin: 6px 0; display: flex; gap: 6px; flex-wrap: wrap;">
+        <button id="saveNotesBtn">Zapisz lokalnie</button>
+        <button id="clearNotesBtn" class="secondary">Wyczyść</button>
+      </div>
+
+      <h3>Export do .md (kopiuj)</h3>
+      <textarea id="notesExport" readonly placeholder="# Temat
+Data: YYYY-MM-DD
+..."></textarea>
+
+      <div class="note">
+[AGENT-HINT]
+Agent widzi tę sekcję jako "Project Notes" w kontekście.
+Używa tego razem z CLAUDE.md do podejmowania decyzji architektonicznych.
+Aktualizuj notatki podczas ważnych zmian, aby agent miał aktualny kontekst.
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const STORAGE_PREFIX = "wcs_";
+    const TODO_STATE_KEY = STORAGE_PREFIX + "todo_state";
+    const NOTES_TITLE_KEY = STORAGE_PREFIX + "notes_title";
+    const NOTES_BODY_KEY = STORAGE_PREFIX + "notes_body";
+    const TIME_TOTAL_KEY = STORAGE_PREFIX + "time_total_minutes";
+
+    let totalMinutes = 0;
+    const totalTimeEl = document.getElementById("totalTime");
+
+    // DoD checklist dla agenta
+    const dodItems = [
+      "npm run build && npm test bez błędów",
+      "Testy – coverage ≥ 80%",
+      "Wpis w notes/ opisujący zmianę",
+      "CLAUDE.md zaktualizowany (jeśli arch)",
+      "Git diff – bez secrets, clean commits",
+      "Brak dead code bez TODO + GitHub issue"
+    ];
+
+    function renderDoDChecklist() {
+      const container = document.getElementById("dodChecklistContainer");
+      container.innerHTML = dodItems
+        .map((item, i) => {
+          const id = `dod_${i}`;
+          return `
+        <div class="checklist-item">
+          <input type="checkbox" id="${id}" class="dod-checkbox" />
+          <label for="${id}">${item}</label>
+        </div>
+          `;
+        })
+        .join("");
+
+      // Load state
+      const saved = localStorage.getItem("dod_state");
+      const state = saved ? JSON.parse(saved) : {};
+      document.querySelectorAll(".dod-checkbox").forEach(ch => {
+        const id = ch.id;
+        if (state[id] !== undefined) ch.checked = !!state[id];
+      });
+
+      // Save on change
+      document.querySelectorAll(".dod-checkbox").forEach(ch => {
+        ch.addEventListener("change", () => {
+          const state = {};
+          document.querySelectorAll(".dod-checkbox").forEach(c => {
+            state[c.id] = c.checked;
+          });
+          localStorage.setItem("dod_state", JSON.stringify(state));
+        });
+      });
+    }
+
+    // Time tracker
+    function loadTotalTime() {
+      const stored = localStorage.getItem(TIME_TOTAL_KEY);
+      totalMinutes = stored ? parseInt(stored, 10) || 0 : 0;
+      renderTime();
+    }
+
+    function saveTotalTime() {
+      localStorage.setItem(TIME_TOTAL_KEY, String(totalMinutes));
+    }
+
+    function renderTime() {
+      totalTimeEl.textContent = "Sesja: " + totalMinutes + " min";
+    }
+
+    window.addEventListener("load", () => {
+      loadTotalTime();
+      renderDoDChecklist();
+      loadNotes();
+      loadTodoState();
+
+      setInterval(() => {
+        totalMinutes += 1;
+        saveTotalTime();
+        renderTime();
+      }, 60 * 1000);
+    });
+
+    // TODO List
+    const todoListEl = document.getElementById("todoList");
+
+    function loadTodoState() {
+      const saved = localStorage.getItem(TODO_STATE_KEY);
+      const state = saved ? JSON.parse(saved) : {};
+      todoListEl.querySelectorAll(".todo-checkbox").forEach(ch => {
+        const id = ch.id;
+        if (state[id] !== undefined) ch.checked = !!state[id];
+      });
+    }
+
+    function saveTodoState() {
+      const state = {};
+      todoListEl.querySelectorAll(".todo-checkbox").forEach(ch => {
+        state[ch.id] = ch.checked;
+      });
+      localStorage.setItem(TODO_STATE_KEY, JSON.stringify(state));
+    }
+
+    todoListEl.addEventListener("change", saveTodoState);
+
+    document.getElementById("clearDoneTodoBtn").addEventListener("click", () => {
+      const remaining = [];
+      todoListEl.querySelectorAll("li").forEach(li => {
+        const ch = li.querySelector("input");
+        if (!ch || !ch.checked) remaining.push(li);
+      });
+      todoListEl.innerHTML = "";
+      remaining.forEach(li => todoListEl.appendChild(li));
+      saveTodoState();
+    });
+
+    // Snapshot generator
+    document.getElementById("generateSnapshotBtn").addEventListener("click", () => {
+      const now = new Date();
+      const dateStr = now.toISOString().slice(0, 10);
+
+      const dodDone = [];
+      document.querySelectorAll(".dod-checkbox").forEach((ch, i) => {
+        const status = ch.checked ? "✅ DONE" : "⏳ PENDING";
+        dodDone.push(`- [${status}] ${dodItems[i]}`);
+      });
+
+      const content = [
+        `# ${dateStr}-snapshot.md`,
+        "",
+        `Data: ${dateStr}`,
+        `Sesja: ${totalMinutes} minut`,
+        "",
+        "## Definition of Done – Stan",
+        ...dodDone,
+        "",
+        "## Zmiany w strukturze / architekturze",
+        "- (opisz tutaj co się zmieniło)",
+        "",
+        "## Zaktualizowane notatki",
+        "- (które pliki w notes/ / CLAUDE.md zmieniono)",
+        "",
+        "## Następne kroki",
+        "- (co robić dalej)",
+      ].join("\n");
+
+      document.getElementById("snapshotOutput").value = content;
+    });
+
+    // Notes editor
+    const notesTitleInput = document.getElementById("notesTitle");
+    const notesEditor = document.getElementById("notesEditor");
+    const notesExport = document.getElementById("notesExport");
+
+    function loadNotes() {
+      const title = localStorage.getItem(NOTES_TITLE_KEY) || "";
+      const body = localStorage.getItem(NOTES_BODY_KEY) || "";
+      notesTitleInput.value = title;
+      notesEditor.value = body;
+      updateNotesExport();
+    }
+
+    function saveNotes() {
+      localStorage.setItem(NOTES_TITLE_KEY, notesTitleInput.value || "");
+      localStorage.setItem(NOTES_BODY_KEY, notesEditor.value || "");
+      updateNotesExport();
+    }
+
+    function updateNotesExport() {
+      const title = notesTitleInput.value.trim() || "Project Notes";
+      const body = notesEditor.value.trim();
+      const now = new Date();
+      const dateStr = now.toISOString().slice(0, 10);
+      const md = [
+        `# ${title}`,
+        "",
+        `Data: ${dateStr}`,
+        "",
+        body || "- (uzupełnij treść)",
+      ].join("\n");
+      notesExport.value = md;
+    }
+
+    notesTitleInput.addEventListener("input", saveNotes);
+    notesEditor.addEventListener("input", saveNotes);
+    document.getElementById("saveNotesBtn").addEventListener("click", saveNotes);
+    document.getElementById("clearNotesBtn").addEventListener("click", () => {
+      notesTitleInput.value = "";
+      notesEditor.value = "";
+      saveNotes();
+    });
+  </script>
+</body>
+</html>
