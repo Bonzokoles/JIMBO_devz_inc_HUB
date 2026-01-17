@@ -38,6 +38,7 @@ export const api = {
   projectStatus: (id: string) => jget<ProjectStatus>(`/v1/status/project/${id}`),
   analyticsSystem: () => jget<SystemStats>("/v1/analytics/system"),
   publishEverywhere: (payload: any) => jpost<PublishResponse[]>("/v1/publish/everywhere", payload),
+  publisherBrainstorm: (category: string) => jpost<any>("/v1/publish/brainstorm", { category }),
   commandGet: (id: string) => jget<any>(`/api/commands/${id}`),
   commandEvents: (id: string) => jget<any[]>(`/api/commands/${id}/events`),
   command: (payload: CommandIn, idempotencyKey: string) =>

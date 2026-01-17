@@ -269,3 +269,75 @@ def _create_tweet_text(article_data: dict, blog_url: str) -> str:
         tweet = f"{title} 🚀\n\n{preview}\n\n📖 {blog_url}\n\n#AI"
     
     return tweet
+
+from pydantic import BaseModel
+class BrainstormRequest(BaseModel):
+    category: str
+
+@router.post("/brainstorm")
+async def brainstorm_article(request: BrainstormRequest):
+    """
+    Trigger the AI Publisher Brainstorm workflow.
+    Executes 'publisher_workflow.py --brainstorm <category>'
+    """
+    import subprocess
+    import os
+    import re
+    
+    # 1. Resolve path to publisher_workflow.py
+    # Assuming API runs from U:\The_yellow_hub\JIMBO_devz_inc_HUB
+    current_dir = os.getcwd()
+    workflow_script = os.path.join(current_dir, "agents", "python", "publisher_workflow.py")
+    
+    if not os.path.exists(workflow_script):
+        # Fallback for different working directory
+        workflow_script = r"U:\The_yellow_hub\JIMBO_devz_inc_HUB\agents\python\publisher_workflow.py"
+        
+    try:
+        # 2. Run the script
+        # Using python from env or just 'python'
+        cmd = ["python", workflow_script, "--brainstorm", request.category]
+        
+        process = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            check=False, # check=False to handle errors manually
+            cwd=os.path.dirname(workflow_script) # Run inside agents/python dir
+        )
+        
+        output = process.stdout
+        error = process.stderr
+        
+        if process.returncode != 0:
+            return {
+                "status": "failed",
+                "message": "Workflow script failed",
+                "details": error,
+                "logs": output
+            }
+            
+        # 3. Parse output to find the generated file
+        # Look for "Saved to: ..."
+        match = re.search(r"Saved to:\s+(.*\.md)", output)
+        if match:
+            filepath = match.group(1).strip()
+            # Read file content
+            if os.path.exists(filepath):
+                with open(filepath, "r", encoding="utf-8") as f:
+                    content = f.read()
+                return {
+                    "status": "success",
+                    "file_path": filepath,
+                    "content": content,
+                    "logs": output
+                }
+        
+        return {
+            "status": "partial_success",
+            "message": "Workflow finished but file path not found in logs",
+            "logs": output
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

@@ -3,102 +3,90 @@ Research Agent
 Capabilities: search, trends, data-mining, market-intelligence
 """
 import sys
+import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Load env from parent directory
+env_path = Path(__file__).parent.parent / '.env'
+load_dotenv(dotenv_path=env_path)
+
 sys.path.append(str(Path(__file__).parent.parent))
 
-from base_agent import BaseAgent, AgentConfig, create_agent_cli
+try:
+    from base_agent import BaseAgent, AgentConfig, create_agent_cli
+    from moa_engine import MOAEngine
+except ImportError as e:
+    print(f"Import Error: {e}")
+    sys.exit(1)
+
 from typing import Dict, Any, Optional
-import aiohttp
 import json
 
-
 class ResearchAgent(BaseAgent):
-    """Agent for research, search, and trends analysis"""
+    """Agent for research using MOA"""
     
     async def startup(self):
-        """Initialize research tools"""
         await super().startup()
-        self.search_engines = ["google", "bing", "duckduckgo"]
-        self.logger.info("Research tools initialized")
+        
+        config = {
+            "OPENROUTER_API_KEY": os.getenv("OPENROUTER_API_KEY"),
+            "CLOUDFLARE_ACCOUNT_ID": os.getenv("CLOUDFLARE_ACCOUNT_ID"),
+            "CLOUDFLARE_API_TOKEN": os.getenv("CLOUDFLARE_API_TOKEN"),
+            "OPENAI_API_KEY": os.getenv("OPENAI_API_KEY"),
+        }
+        self.moa = MOAEngine(config)
+        self.logger.info("Research Agent MOA initialized")
     
     async def execute(self, data: Optional[Dict] = None) -> Dict[str, Any]:
         """Execute research task"""
         if not data:
-            raise ValueError("No data provided for research")
+            raise ValueError("No data provided")
         
+        # Log incoming data for debugging
+        self.logger.info(f"Received Execution Data: {json.dumps(data)}")
+
         task_type = data.get("type", "search")
         query = data.get("query", "")
         
-        if task_type == "search":
-            return await self.search(query, data.get("engine", "duckduckgo"))
-        elif task_type == "trends":
-            return await self.analyze_trends(query)
-        elif task_type == "data-mining":
-            return await self.mine_data(data.get("source", ""))
-        else:
-            raise ValueError(f"Unknown research task: {task_type}")
-    
-    async def search(self, query: str, engine: str = "duckduckgo") -> Dict[str, Any]:
-        """Perform web search"""
-        self.logger.info(f"Searching: {query} via {engine}")
-        
-        # Example implementation - integrate with real search APIs
-        if engine == "duckduckgo":
-            # DuckDuckGo Instant Answer API
-            async with aiohttp.ClientSession() as session:
-                url = f"https://api.duckduckgo.com/?q={query}&format=json"
-                async with session.get(url) as response:
-                    if response.status == 200:
-                        data = await response.json()
-                        return {
-                            "query": query,
-                            "engine": engine,
-                            "results": data,
-                            "status": "success"
-                        }
-        
-        return {
-            "query": query,
-            "engine": engine,
-            "results": [],
-            "status": "not_implemented",
-            "message": f"Search engine {engine} integration pending"
-        }
-    
-    async def analyze_trends(self, topic: str) -> Dict[str, Any]:
-        """Analyze trends for a topic"""
-        self.logger.info(f"Analyzing trends for: {topic}")
-        
-        # Placeholder - integrate with Google Trends, Twitter API, etc.
-        return {
-            "topic": topic,
-            "trend_score": 0.75,
-            "direction": "rising",
-            "related_topics": ["AI", "automation", "data science"],
-            "status": "not_implemented",
-            "message": "Trends analysis requires API integration"
-        }
-    
-    async def mine_data(self, source: str) -> Dict[str, Any]:
-        """Mine data from a source"""
-        self.logger.info(f"Mining data from: {source}")
-        
-        # Placeholder - implement web scraping, API calls
-        return {
-            "source": source,
-            "data_points": 0,
-            "status": "not_implemented",
-            "message": "Data mining requires source-specific implementation"
-        }
+        # Fallback if query is missing but present in 'prompt' (compatibility)
+        if not query and "prompt" in data:
+            query = data["prompt"]
+            
+        if not query:
+             # Just in case, return a clear error matching our system
+            return {"status": "error", "message": "Missing 'query' or 'prompt' field in data"}
 
+        self.logger.info(f"Research Task: {task_type} - {query}")
+        
+        prompt = ""
+        if task_type == "search":
+            prompt = f"Provide a comprehensive summary and key facts about: {query}. Include data points and recent context if known."
+        elif task_type == "trends":
+            prompt = f"Identify current trends and emerging topics related to: {query}. Focus on 2024-2025 perspective."
+        elif task_type == "market-intelligence":
+            prompt = f"Perform a market analysis for: {query}. Identify competitors, opportunities, and risks."
+        else:
+            prompt = f"Research: {query}"
+            
+        try:
+            result = await self.moa.generate_response(prompt, f"research/{task_type}")
+            return {
+                "query": query,
+                "type": task_type,
+                "content": result,
+                "status": "success"
+            }
+        except Exception as e:
+            self.logger.error(f"MOA Error: {e}")
+            return {"status": "error", "message": str(e)}
 
 if __name__ == "__main__":
     config = {
         "id": "research-agent",
-        "name": "Research Agent",
-        "description": "Web search, trends analysis, and data mining agent",
+        "name": "Research Agent (MOA)",
+        "description": "Deep research and trend analysis via MOA",
         "port": 6062,
-        "capabilities": ["search", "trends", "data-mining", "market-intelligence"]
+        "capabilities": ["search", "trends", "market-intelligence"]
     }
-    
     create_agent_cli(ResearchAgent, config)

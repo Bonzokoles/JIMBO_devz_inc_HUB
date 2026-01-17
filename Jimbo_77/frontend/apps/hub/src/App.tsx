@@ -14,7 +14,7 @@ import { EastwoodView } from "./features/eastwood/EastwoodView";
 import { WorkersMonitoringView } from "./features/monitoring/WorkersMonitoringView";
 import { MultiDomainAnalyticsView } from "./features/analytics/MultiDomainAnalyticsView";
 import { DeploymentControlView } from "./features/deployment/DeploymentControlView";
-
+import { PublishingView } from "./features/publishing/PublishingView";
 import { PumoView } from "./features/pumo/PumoView";
 
 export default function App() {
@@ -28,13 +28,14 @@ export default function App() {
     | "monitoring"
     | "analytics"
     | "deployment"
+    | "publishing"
   >("dashboards");
 
   // Dashboard Sub-navigation state
   const [currentDashboard, setCurrentDashboard] = React.useState<
     "main" | "pumo" | null
   >("main");
-
+  
   // Command Drawer State
   const [activeCommandId, setActiveCommandId] = React.useState<string | null>(
     null
@@ -108,6 +109,12 @@ export default function App() {
         >
           DEPLOYMENT
         </button>
+        <button
+          className={`tab ${activeTab === "publishing" ? "active" : ""}`}
+          onClick={() => setActiveTab("publishing")}
+        >
+          PUBLISHER 2.0
+        </button>
       </div>
 
       <div style={{ padding: "20px", maxWidth: 1800, margin: "0 auto" }}>
@@ -134,6 +141,7 @@ export default function App() {
         {activeTab === "monitoring" && <WorkersMonitoringView />}
         {activeTab === "analytics" && <MultiDomainAnalyticsView />}
         {activeTab === "deployment" && <DeploymentControlView />}
+        {activeTab === "publishing" && <PublishingView />}
       </div>
     </AppShell>
   );

@@ -1,85 +1,66 @@
 """
 SEO Agent
-Capabilities: keyword-research, on-page-seo, backlink-analysis, competitor-analysis
+Capabilities: keyword-research, on-page-seo, strategy
 """
 import sys
+import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+env_path = Path(__file__).parent.parent / '.env'
+load_dotenv(dotenv_path=env_path)
+
 sys.path.append(str(Path(__file__).parent.parent))
 
 from base_agent import BaseAgent, AgentConfig, create_agent_cli
+from moa_engine import MOAEngine
 from typing import Dict, Any, Optional
 
-
 class SEOAgent(BaseAgent):
-    """Agent for SEO optimization and analysis"""
+    """Agent for SEO using MOA"""
+    
+    async def startup(self):
+        await super().startup()
+        config = {
+            "OPENROUTER_API_KEY": os.getenv("OPENROUTER_API_KEY"),
+            "CLOUDFLARE_ACCOUNT_ID": os.getenv("CLOUDFLARE_ACCOUNT_ID"),
+            "CLOUDFLARE_API_TOKEN": os.getenv("CLOUDFLARE_API_TOKEN"),
+            "OPENAI_API_KEY": os.getenv("OPENAI_API_KEY"),
+        }
+        self.moa = MOAEngine(config)
+        self.logger.info("SEO Agent MOA initialized")
     
     async def execute(self, data: Optional[Dict] = None) -> Dict[str, Any]:
-        """Execute SEO task"""
-        if not data:
-            raise ValueError("No data provided for SEO analysis")
-        
         task_type = data.get("type", "keywords")
-        url = data.get("url", "")
+        query = data.get("query", "") # seed keyword or url
         
+        self.logger.info(f"SEO Task: {task_type} - {query}")
+        
+        prompt = ""
         if task_type == "keywords":
-            return await self.keyword_research(data.get("seed_keywords", []))
+            prompt = f"Generate a list of high-potential SEO keywords related to: '{query}'. Include search intent (Informational, Transactional) and suggested long-tail variations."
         elif task_type == "on-page":
-            return await self.on_page_analysis(url)
-        elif task_type == "backlinks":
-            return await self.backlink_analysis(url)
-        elif task_type == "competitor":
-            return await self.competitor_analysis(url, data.get("competitors", []))
+             prompt = f"Provide an on-page SEO checklist and optimization strategy for specific content about: '{query}'."
         else:
-            raise ValueError(f"Unknown SEO task: {task_type}")
-    
-    async def keyword_research(self, seeds: list) -> Dict[str, Any]:
-        """Research keywords"""
-        self.logger.info(f"Keyword research for: {seeds}")
-        return {
-            "seed_keywords": seeds,
-            "suggestions": [],
-            "status": "not_implemented",
-            "message": "Requires SEMrush/Ahrefs API"
-        }
-    
-    async def on_page_analysis(self, url: str) -> Dict[str, Any]:
-        """Analyze on-page SEO"""
-        self.logger.info(f"On-page SEO for: {url}")
-        return {
-            "url": url,
-            "score": 0,
-            "issues": [],
-            "status": "not_implemented"
-        }
-    
-    async def backlink_analysis(self, url: str) -> Dict[str, Any]:
-        """Analyze backlinks"""
-        self.logger.info(f"Backlink analysis for: {url}")
-        return {
-            "url": url,
-            "total_backlinks": 0,
-            "referring_domains": 0,
-            "status": "not_implemented"
-        }
-    
-    async def competitor_analysis(self, url: str, competitors: list) -> Dict[str, Any]:
-        """Analyze competitors"""
-        self.logger.info(f"Competitor analysis: {url} vs {competitors}")
-        return {
-            "url": url,
-            "competitors": competitors,
-            "comparison": {},
-            "status": "not_implemented"
-        }
-
+            prompt = f"SEO advice for: {query}"
+            
+        try:
+            result = await self.moa.generate_response(prompt, f"seo/{task_type}")
+            return {
+                "query": query,
+                "type": task_type,
+                "content": result,
+                "status": "success"
+            }
+        except Exception as e:
+            return {"status": "error", "message": str(e)}
 
 if __name__ == "__main__":
     config = {
         "id": "seo-agent",
-        "name": "SEO Agent",
-        "description": "SEO optimization and competitor analysis",
+        "name": "SEO Agent (MOA)",
+        "description": "SEO strategy and keyword intelligence via MOA",
         "port": 6031,
-        "capabilities": ["keyword-research", "on-page-seo", "backlink-analysis", "competitor-analysis"]
+        "capabilities": ["keywords", "on-page"]
     }
-    
     create_agent_cli(SEOAgent, config)
