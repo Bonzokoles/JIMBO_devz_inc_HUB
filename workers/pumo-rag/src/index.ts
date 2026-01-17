@@ -157,7 +157,8 @@ export default {
         };
 
         // Basic search without LLM (just Vectorize results)
-        const embedding = (await env.AI.run("@cf/baai/bge-small-en-v1.5", {
+        // Using bge-base-en-v1.5 equivalent (768 dimensions)
+        const embedding = (await env.AI.run("@cf/baai/bge-base-en-v1.5", {
           text: [body.query],
         })) as { data: number[][] };
 

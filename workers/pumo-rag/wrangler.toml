@@ -11,10 +11,12 @@ index_name = "pumo-products"
 [[kv_namespaces]]
 binding = "LOGS"
 id = "41d03720f6cc4385b8e37cb2dca77861"
+preview_id = "c06313887e914789bd49757ca265260b"
 
 [[kv_namespaces]]
 binding = "CACHE"
 id = "959e9d4588d744f89dc833b7a94ca1d3"
+preview_id = "139be3a08d7940eea1de297b0ac22e59"
 
 # Workers AI binding
 [ai]

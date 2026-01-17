@@ -36,8 +36,8 @@ export async function ragChat(
   const startTime = Date.now();
 
   try {
-    // Step 1: Embed query using Workers AI
-    const embeddingResponse = (await env.AI.run("@cf/baai/bge-small-en-v1.5", {
+    // Step 1: Embed query using Workers AI (768 dimensions)
+    const embeddingResponse = (await env.AI.run("@cf/baai/bge-base-en-v1.5", {
       text: [query],
     })) as { data: number[][] };
 
