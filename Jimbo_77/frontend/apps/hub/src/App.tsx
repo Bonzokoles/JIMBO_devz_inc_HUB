@@ -1,12 +1,12 @@
 
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 // Remove AppShell, Topbar, CommandDrawer if not used in new design, or re-integrate them.
 // For "Bunker War Room", we want a full screen distinct look, but maybe consistent for other tabs.
 // The user approved "Bunker War Room" which implies a distinct look.
 // I will keep the clean Sidebar approach I proposed.
 
-import { api } from "@jimbo77/core/api";
-import type { Project } from "@jimbo77/core/types";
+// import { api } from "@jimbo77/core/api";
+// import type { Project } from "@jimbo77/core/types";
 
 // Views
 import { UnifiedOpsView } from "./features/unified/UnifiedOpsView";

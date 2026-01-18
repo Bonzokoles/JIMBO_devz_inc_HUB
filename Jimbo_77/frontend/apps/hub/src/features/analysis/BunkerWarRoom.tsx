@@ -1,6 +1,6 @@
 
-import React, { useState, useEffect } from 'react';
-import { api } from '@jimbo77/core';
+import { useState, useEffect } from 'react';
+import { api } from '@jimbo77/core/api';
 
 // Styles for the "Bunker" theme
 const bunkerStyles = {
