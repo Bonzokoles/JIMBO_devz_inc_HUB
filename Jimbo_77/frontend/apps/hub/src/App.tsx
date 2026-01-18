@@ -1,148 +1,126 @@
-import React from "react";
-import { AppShell } from "@jimbo77/ui/layout/AppShell";
-import { Topbar } from "@jimbo77/ui/layout/Topbar";
-import { CommandDrawer } from "@jimbo77/ui/components/CommandDrawer";
+
+import React, { useState, useEffect } from "react";
+// Remove AppShell, Topbar, CommandDrawer if not used in new design, or re-integrate them.
+// For "Bunker War Room", we want a full screen distinct look, but maybe consistent for other tabs.
+// The user approved "Bunker War Room" which implies a distinct look.
+// I will keep the clean Sidebar approach I proposed.
+
 import { api } from "@jimbo77/core/api";
 import type { Project } from "@jimbo77/core/types";
 
 // Views
-import { ServicesPage } from "./features/services/ServicesPage";
-import { LoginPage } from "./features/auth/LoginPage";
 import { UnifiedOpsView } from "./features/unified/UnifiedOpsView";
-import { AgentsView } from "./features/agents/AgentsView";
-import { EastwoodView } from "./features/eastwood/EastwoodView";
-import { WorkersMonitoringView } from "./features/monitoring/WorkersMonitoringView";
-import { MultiDomainAnalyticsView } from "./features/analytics/MultiDomainAnalyticsView";
-import { DeploymentControlView } from "./features/deployment/DeploymentControlView";
 import { PublishingView } from "./features/publishing/PublishingView";
-import { PumoView } from "./features/pumo/PumoView";
+import BunkerWarRoom from "./features/analysis/BunkerWarRoom"; // New View
+// import { ServicesPage } from "./features/services/ServicesPage"; // Optional: Re-enable later
+// import { AgentsView } from "./features/agents/AgentsView"; // Optional
+
+// Components
+const SidebarItem = ({ icon, label, id, active, onClick }: any) => (
+  <button
+    onClick={() => onClick(id)}
+    className={`w-full flex items-center space-x-3 px-4 py-3 rounded m-1 transition-all duration-200 font-mono text-sm ${
+      active
+        ? "bg-yellow-500 text-black font-bold shadow-lg shadow-yellow-500/20"
+        : "text-gray-400 hover:bg-gray-800 hover:text-white"
+    }`}
+  >
+    <span className="text-xl">{icon}</span>
+    <span>{label}</span>
+  </button>
+);
 
 export default function App() {
-  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
-  const [projects, setProjects] = React.useState<Project[]>([]);
-  const [activeTab, setActiveTab] = React.useState<
-    | "dashboards"
-    | "services"
-    | "agents"
-    | "eastwood"
-    | "monitoring"
-    | "analytics"
-    | "deployment"
-    | "publishing"
-  >("dashboards");
+  const [activeTab, setActiveTab] = useState("dashboard");
 
-  // Dashboard Sub-navigation state
-  const [currentDashboard, setCurrentDashboard] = React.useState<
-    "main" | "pumo" | null
-  >("main");
-  
-  // Command Drawer State
-  const [activeCommandId, setActiveCommandId] = React.useState<string | null>(
-    null
-  );
-
-  React.useEffect(() => {
-    if (!isAuthenticated) return;
-
-    (async () => {
-      try {
-        const [p] = await Promise.all([api.projects()]);
-        setProjects(p);
-      } catch (e) {
-        console.error("Failed to load initial data", e);
-      }
-    })().catch(console.error);
-  }, [isAuthenticated]);
-
-  if (!isAuthenticated) {
-    return <LoginPage onLogin={() => setIsAuthenticated(true)} />;
-  }
+  const renderContent = () => {
+    switch (activeTab) {
+      case "dashboard":
+        return <UnifiedOpsView />;
+      case "publisher":
+        return <PublishingView />;
+      case "wild_bunch":
+        return <BunkerWarRoom />;
+      case "agents":
+        return <div className="text-gray-500 p-10 flex items-center justify-center font-mono">AGENT MANAGEMENT [COMING SOON]</div>;
+      case "services":
+         return <div className="text-gray-500 p-10 flex items-center justify-center font-mono">MICROSERVICES [COMING SOON]</div>;
+      default:
+        return <UnifiedOpsView />;
+    }
+  };
 
   return (
-    <AppShell topbar={<Topbar title="UNIFIED OPS" />}>
-      <CommandDrawer
-        commandId={activeCommandId}
-        onClose={() => setActiveCommandId(null)}
-      />
+    <div className="flex h-screen bg-gray-900 text-white font-sans overflow-hidden selection:bg-yellow-500 selection:text-black">
+      {/* Sidebar - Fixed Width */}
+      <div className="w-64 bg-gray-950 border-r border-gray-800 flex flex-col shadow-2xl z-10">
+        <div className="p-6 border-b border-gray-800 flex flex-col">
+          <span className="font-black text-2xl tracking-tighter text-yellow-500">
+            JIMBO<span className="text-white">HUB</span>
+          </span>
+          <span className="text-xs text-gray-500 tracking-widest mt-1">OPERATIONS v2.1</span>
+        </div>
 
-      {/* TABS Navigation */}
-      <div className="tabs">
-        <button
-          className={`tab ${activeTab === "dashboards" ? "active" : ""}`}
-          onClick={() => setActiveTab("dashboards")}
-        >
-          DASHBOARDS
-        </button>
-        <button
-          className={`tab ${activeTab === "services" ? "active" : ""}`}
-          onClick={() => setActiveTab("services")}
-        >
-          SERVICES
-        </button>
-        <button
-          className={`tab ${activeTab === "agents" ? "active" : ""}`}
-          onClick={() => setActiveTab("agents")}
-        >
-          AGENTS
-        </button>
-        <button
-          className={`tab ${activeTab === "eastwood" ? "active" : ""}`}
-          onClick={() => setActiveTab("eastwood")}
-        >
-          EASTWOOD
-        </button>
-        <button
-          className={`tab ${activeTab === "monitoring" ? "active" : ""}`}
-          onClick={() => setActiveTab("monitoring")}
-        >
-          MONITORING
-        </button>
-        <button
-          className={`tab ${activeTab === "analytics" ? "active" : ""}`}
-          onClick={() => setActiveTab("analytics")}
-        >
-          ANALYTICS
-        </button>
-        <button
-          className={`tab ${activeTab === "deployment" ? "active" : ""}`}
-          onClick={() => setActiveTab("deployment")}
-        >
-          DEPLOYMENT
-        </button>
-        <button
-          className={`tab ${activeTab === "publishing" ? "active" : ""}`}
-          onClick={() => setActiveTab("publishing")}
-        >
-          PUBLISHER 2.0
-        </button>
-      </div>
-
-      <div style={{ padding: "20px", maxWidth: 1800, margin: "0 auto" }}>
-        {activeTab === "dashboards" &&
-          (currentDashboard === "pumo" ? (
-            <PumoView onBack={() => setCurrentDashboard("main")} />
-          ) : (
-            <UnifiedOpsView
-              onOpenPumo={() => setCurrentDashboard("pumo")}
-              onOpenEastwood={() => setActiveTab("eastwood")}
-              onOpenMonitoring={() => setActiveTab("monitoring")}
-              onOpenAnalytics={() => setActiveTab("analytics")}
-              onOpenDeployment={() => setActiveTab("deployment")}
-            />
-          ))}
-        {activeTab === "services" && (
-          <ServicesPage
-            projects={projects}
-            onCommand={(id) => setActiveCommandId(id)}
+        <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
+          <div className="text-xs font-bold text-gray-600 px-4 py-2 mt-2 mb-1 tracking-wider">MAIN</div>
+          <SidebarItem
+            icon="📊"
+            label="DASHBOARD"
+            id="dashboard"
+            active={activeTab === "dashboard"}
+            onClick={setActiveTab}
           />
-        )}
-        {activeTab === "agents" && <AgentsView />}
-        {activeTab === "eastwood" && <EastwoodView />}
-        {activeTab === "monitoring" && <WorkersMonitoringView />}
-        {activeTab === "analytics" && <MultiDomainAnalyticsView />}
-        {activeTab === "deployment" && <DeploymentControlView />}
-        {activeTab === "publishing" && <PublishingView />}
+          <SidebarItem
+            icon="📢"
+            label="PUBLISHER"
+            id="publisher"
+            active={activeTab === "publisher"}
+            onClick={setActiveTab}
+          />
+
+          <div className="text-xs font-bold text-gray-600 px-4 py-2 mt-6 mb-1 tracking-wider">INTELLIGENCE</div>
+          <SidebarItem
+            icon="☢️"
+            label="WILD BUNCH"
+            id="wild_bunch"
+            active={activeTab === "wild_bunch"}
+            onClick={setActiveTab}
+          />
+          
+          <div className="text-xs font-bold text-gray-600 px-4 py-2 mt-6 mb-1 tracking-wider">SYSTEM</div>
+          <SidebarItem
+            icon="🤖"
+            label="AGENTS"
+            id="agents"
+            active={activeTab === "agents"}
+            onClick={setActiveTab}
+          />
+          <SidebarItem
+            icon="🛠️"
+            label="SERVICES"
+            id="services"
+            active={activeTab === "services"}
+            onClick={setActiveTab}
+          />
+        </nav>
+
+        <div className="p-4 bg-gray-900 border-t border-gray-800">
+           <div className="flex items-center space-x-3">
+             <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-yellow-400 to-yellow-600 border border-yellow-300"></div>
+             <div className="text-sm">
+               <div className="font-bold text-gray-200">Admin User</div>
+               <div className="text-xs text-green-500">● Online</div>
+             </div>
+           </div>
+        </div>
       </div>
-    </AppShell>
+
+      {/* Main Content - Flex Grow */}
+      <div className="flex-1 overflow-hidden bg-gray-900 relative">
+        <div className="absolute inset-0 overflow-auto">
+            {renderContent()}
+        </div>
+      </div>
+    </div>
   );
 }

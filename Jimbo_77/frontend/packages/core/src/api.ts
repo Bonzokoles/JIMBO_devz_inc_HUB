@@ -38,7 +38,28 @@ export const api = {
   projectStatus: (id: string) => jget<ProjectStatus>(`/v1/status/project/${id}`),
   analyticsSystem: () => jget<SystemStats>("/v1/analytics/system"),
   publishEverywhere: (payload: any) => jpost<PublishResponse[]>("/v1/publish/everywhere", payload),
-  publisherBrainstorm: (category: string) => jpost<any>("/v1/publish/brainstorm", { category }),
+  publisherBrainstorm: (category: string) =>
+    jpost<any>("/v1/publish/brainstorm", { category }),
+    
+  // --- WILD BUNCH AGENTS ---
+  getRealmanReport: async () => {
+    // Direct call to Agent API (Fast & Private)
+    const response = await fetch('http://localhost:6070/report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: 'report' })
+    });
+    return response.json();
+  },
+  
+  getBadAudit: async () => {
+    const response = await fetch('http://localhost:6071/audit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: 'audit' })
+    });
+    return response.json();
+  },
   commandGet: (id: string) => jget<any>(`/api/commands/${id}`),
   commandEvents: (id: string) => jget<any[]>(`/api/commands/${id}/events`),
   command: (payload: CommandIn, idempotencyKey: string) =>

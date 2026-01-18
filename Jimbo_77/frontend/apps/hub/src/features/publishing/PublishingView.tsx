@@ -57,7 +57,7 @@ ${content}`;
          
          if (res.status === "success" && res.content) {
              // Extract title from content if possible, or use filename
-             const lines = res.content.split('\n');
+
              let extractedTitle = "Generated Article";
              // Try to find title in frontmatter
              const titleMatch = res.content.match(/title:\s*"(.*)"/);
