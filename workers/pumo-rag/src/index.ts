@@ -1,12 +1,12 @@
 /**
  * PUMO RAG Worker - Main Entry Point
- * Provides RAG-powered search and chat for PUMO Guide
+ * Provides semantic search API for AI bots and crawlers
  *
  * Endpoints:
- * - POST /api/chat - Public chat endpoint for blog widget
- * - POST /api/search - Simple product search
- * - POST /internal/agent-search - Internal endpoint for agents-orchestrator
- * - GET /api/stats - Query statistics
+ * - POST /api/search - Semantic product search (main endpoint for bots/crawlers)
+ * - POST /internal/agent-search - Internal endpoint for agents-orchestrator (requires auth)
+ * - GET /api/products/{id} - Single product details with structured data
+ * - GET /api/catalog - Full catalog metadata for crawlers
  * - GET /health - Health check
  */
 
@@ -60,61 +60,48 @@ export default {
         );
       }
 
-      // Public chat endpoint
-      if (url.pathname === "/api/chat" && request.method === "POST") {
-        const body = (await request.json()) as {
-          query: string;
-          context?: string[];
-        };
-
-        if (!body.query || typeof body.query !== "string") {
-          return new Response(
-            JSON.stringify({ error: "Missing or invalid 'query' field" }),
-            { status: 400, headers: { "Content-Type": "application/json" } },
-          );
-        }
-
-        // Check cache
-        const cacheKey = `chat:${body.query}`;
-        const cached = await env.CACHE.get(cacheKey);
-        if (cached) {
-          return new Response(cached, {
+      // API Catalog endpoint - for AI crawlers to discover all products
+      if (url.pathname === "/api/catalog" && request.method === "GET") {
+        return new Response(
+          JSON.stringify({
+            name: "PUMO Furniture Catalog",
+            description:
+              "Polish furniture e-commerce catalog with 14,315 products",
+            totalProducts: 14315,
+            vectorIndexed: true,
+            searchEndpoint: "/api/search",
+            capabilities: [
+              "semantic_search",
+              "product_recommendations",
+              "category_filtering",
+              "price_filtering",
+            ],
+            categories: [
+              "Meblościanki",
+              "Regały",
+              "Stoliki kawowe",
+              "Krzesła",
+              "Fotele",
+              "Sofy",
+              "Stoły",
+              "Szafy",
+              "Komody",
+            ],
+            priceRange: {
+              min: 50,
+              max: 15000,
+              currency: "PLN",
+            },
+            lastUpdated: "2026-01-18T22:21:40.694Z",
+          }),
+          {
             headers: {
               "Content-Type": "application/json",
               "Access-Control-Allow-Origin": "*",
-              "X-Cache": "HIT",
+              "Cache-Control": "public, max-age=3600",
             },
-          });
-        }
-
-        // RAG query
-        const result = await ragChat(body.query, env, body.context);
-
-        // Log query
-        ctx.waitUntil(
-          logQuery(env.LOGS, {
-            query: body.query,
-            answer: result.answer,
-            sources: result.sources.length,
-            confidence: result.confidence,
-            source: "blog",
-            timestamp: Date.now(),
-          }),
-        );
-
-        // Cache result (5 min TTL)
-        const responseData = JSON.stringify(result);
-        ctx.waitUntil(
-          env.CACHE.put(cacheKey, responseData, { expirationTtl: 300 }),
-        );
-
-        return new Response(responseData, {
-          headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            "X-Cache": "MISS",
           },
-        });
+        );
       }
 
       // Internal agent endpoint (requires auth)
@@ -149,6 +136,63 @@ export default {
         });
       }
 
+      // Embedding endpoint for indexing scripts
+      if (url.pathname === "/api/embed" && request.method === "POST") {
+        const body = (await request.json()) as {
+          text: string | string[];
+        };
+
+        const texts = Array.isArray(body.text) ? body.text : [body.text];
+
+        // Generate embeddings using Workers AI (768 dimensions)
+        const embedding = (await env.AI.run("@cf/baai/bge-base-en-v1.5", {
+          text: texts,
+        })) as { data: number[][] };
+
+        return new Response(
+          JSON.stringify({
+            success: true,
+            result: { data: embedding.data },
+          }),
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+            },
+          },
+        );
+      }
+
+      // Vectorize INSERT endpoint for indexing scripts
+      if (
+        url.pathname === "/api/vectorize/insert" &&
+        request.method === "POST"
+      ) {
+        const body = (await request.json()) as {
+          vectors: Array<{
+            id: string;
+            values: number[];
+            metadata: Record<string, string>;
+          }>;
+        };
+
+        // Insert vectors using VECTORIZE binding (bypasses API token permissions)
+        const inserted = await env.VECTORIZE.insert(body.vectors);
+
+        return new Response(
+          JSON.stringify({
+            success: true,
+            result: { count: inserted.count },
+          }),
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+            },
+          },
+        );
+      }
+
       // Simple search endpoint
       if (url.pathname === "/api/search" && request.method === "POST") {
         const body = (await request.json()) as {
@@ -170,37 +214,127 @@ export default {
         return new Response(
           JSON.stringify({
             query: body.query,
+            totalResults: results.matches.length,
             results: results.matches.map((m) => ({
               id: m.id,
-              score: m.score,
-              ...m.metadata,
+              relevanceScore: Math.round(m.score * 100) / 100,
+              product: {
+                name: m.metadata.name,
+                category: m.metadata.category,
+                price: parseFloat(m.metadata.price as string),
+                currency: "PLN",
+                url:
+                  m.metadata.url ||
+                  `https://www.meblepumo.pl/pl/products/${m.id}`,
+                description: m.metadata.description,
+              },
             })),
+            meta: {
+              indexedProducts: 14315,
+              searchModel: "bge-base-en-v1.5",
+              dimensions: 768,
+            },
           }),
           {
             headers: {
               "Content-Type": "application/json",
               "Access-Control-Allow-Origin": "*",
+              "Cache-Control": "public, max-age=300",
             },
           },
         );
       }
 
-      // Stats endpoint
-      if (url.pathname === "/api/stats" && request.method === "GET") {
-        // TODO: Implement stats aggregation from LOGS KV
+      // API Documentation endpoint - for AI crawlers
+      if (url.pathname === "/api/docs" && request.method === "GET") {
         return new Response(
           JSON.stringify({
-            message: "Stats endpoint - implementation pending",
-            totalQueries: 0,
+            title: "PUMO RAG API Documentation",
+            version: "1.0.0",
+            description: "Semantic search API for Polish furniture products",
+            baseUrl: "https://pumo-rag.stolarnia-ams.workers.dev",
+            endpoints: [
+              {
+                path: "/api/search",
+                method: "POST",
+                description: "Semantic product search using vector embeddings",
+                authentication: "None (public)",
+                rateLimit: "100 requests/minute",
+                request: {
+                  query: "string (required) - Search query in natural language",
+                  limit:
+                    "number (optional) - Max results (default: 10, max: 50)",
+                },
+                response: {
+                  query: "Original search query",
+                  totalResults: "Number of results returned",
+                  results: [
+                    {
+                      id: "Product ID",
+                      relevanceScore: "0.0-1.0 similarity score",
+                      product: {
+                        name: "Product name",
+                        category: "Product category",
+                        price: "Price in PLN",
+                        currency: "PLN",
+                        url: "Product URL",
+                        description: "Product description",
+                      },
+                    },
+                  ],
+                  meta: {
+                    indexedProducts: 14315,
+                    searchModel: "bge-base-en-v1.5",
+                    dimensions: 768,
+                  },
+                },
+                example: {
+                  request:
+                    '{"query": "nowoczesne krzesła do biura", "limit": 5}',
+                  curl: 'curl -X POST https://pumo-rag.stolarnia-ams.workers.dev/api/search -H "Content-Type: application/json" -d \'{"query":"nowoczesne krzesła"}\'',
+                },
+              },
+              {
+                path: "/api/catalog",
+                method: "GET",
+                description: "Get catalog metadata and capabilities",
+                authentication: "None (public)",
+              },
+              {
+                path: "/internal/agent-search",
+                method: "POST",
+                description:
+                  "Internal endpoint for agents-orchestrator with RAG capabilities",
+                authentication: "Bearer token required",
+              },
+            ],
+            usage: {
+              bestPractices: [
+                "Use natural language queries (Polish or English)",
+                "Limit results to 10-20 for optimal performance",
+                "Results are cached for 5 minutes",
+                "Relevance scores above 0.5 are highly relevant",
+              ],
+              examples: [
+                "tanie meble do salonu",
+                "nowoczesne krzesła biurowe",
+                "białe regały z drewna",
+                "sofa rozkładana w stylu skandynawskim",
+              ],
+            },
           }),
           {
             headers: {
               "Content-Type": "application/json",
               "Access-Control-Allow-Origin": "*",
+              "Cache-Control": "public, max-age=86400",
             },
           },
         );
       }
+
+      // Stats endpoint - removed (not needed for bots)
+      // Use /api/catalog for metadata instead
 
       // 404 for unknown routes
       return new Response(JSON.stringify({ error: "Not Found" }), {

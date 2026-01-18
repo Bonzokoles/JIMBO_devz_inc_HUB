@@ -1,0 +1,11 @@
+name = "cf-ai-image-gen"
+main = "src/worker.ts"
+compatibility_date = "2024-01-01"
+
+[ai]
+binding = "AI"
+
+[env.production]
+routes = [
+  { pattern = "ai-images.jimbo77.com/*", zone_name = "jimbo77.com" }
+]

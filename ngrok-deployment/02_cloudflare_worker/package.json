@@ -1,0 +1,24 @@
+{
+  "name": "ngrok-proxy-worker",
+  "version": "1.0.0",
+  "description": "Cloudflare Worker proxy for Ngrok AI Gateway",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "deploy:prod": "wrangler deploy --env production",
+    "deploy:staging": "wrangler deploy --env staging",
+    "tail": "wrangler tail",
+    "d1:create": "wrangler d1 create ngrok-analytics",
+    "d1:execute": "wrangler d1 execute ngrok-analytics --file=./schema.sql",
+    "d1:query": "wrangler d1 execute ngrok-analytics --command",
+    "test": "bun test"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240129.0",
+    "wrangler": "^3.22.4",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {}
+}

@@ -21,22 +21,22 @@ export async function parseCSV(filePath: string): Promise<PumoProduct[]> {
     let inQuotes = false;
 
     for (let i = 0; i < text.length; i++) {
-        const char = text[i];
-        const nextChar = text[i + 1];
+      const char = text[i];
+      const nextChar = text[i + 1];
 
-        if (char === '"') {
-            if (inQuotes && nextChar === '"') {
-                currentField += '"';
-                i++;
-            } else {
-                inQuotes = !inQuotes;
-            }
-        } else if (char === ',' && !inQuotes) {
-            row.push(currentField.trim());
-            currentField = "";
+      if (char === '"') {
+        if (inQuotes && nextChar === '"') {
+          currentField += '"';
+          i++;
         } else {
-            currentField += char;
+          inQuotes = !inQuotes;
         }
+      } else if (char === "," && !inQuotes) {
+        row.push(currentField.trim());
+        currentField = "";
+      } else {
+        currentField += char;
+      }
     }
     row.push(currentField.trim());
     return row;
@@ -46,22 +46,22 @@ export async function parseCSV(filePath: string): Promise<PumoProduct[]> {
   const headerRegex = /^@id,/;
 
   for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
-      if (!line.trim()) continue;
+    const line = lines[i];
+    if (!line.trim()) continue;
 
-      const isNewRecord = idRegex.test(line) || headerRegex.test(line);
+    const isNewRecord = idRegex.test(line) || headerRegex.test(line);
 
-      if (isNewRecord) {
-          if (currentRowLines.length > 0) {
-              rows.push(parseBlock(currentRowLines));
-          }
-          currentRowLines = [line];
-      } else {
-          currentRowLines.push(line);
+    if (isNewRecord) {
+      if (currentRowLines.length > 0) {
+        rows.push(parseBlock(currentRowLines));
       }
+      currentRowLines = [line];
+    } else {
+      currentRowLines.push(line);
+    }
   }
   if (currentRowLines.length > 0) {
-      rows.push(parseBlock(currentRowLines));
+    rows.push(parseBlock(currentRowLines));
   }
 
   const products: PumoProduct[] = [];
@@ -73,7 +73,7 @@ export async function parseCSV(filePath: string): Promise<PumoProduct[]> {
     if (cols.length < 186 || !cols[185]) continue;
 
     products.push({
-      id: cols[0].replace(/"/g, ''), // Clean ID
+      id: cols[0].replace(/"/g, ""), // Clean ID
       name: cols[185],
       category: cols[7],
       short_desc: cols[186],
@@ -131,48 +131,41 @@ export async function retry<T>(
 
 // --- GENERATE EMBEDDING (Workers AI) ---
 export async function generateEmbedding(text: string): Promise<number[]> {
-  // Real Cloudflare AI Embedding (768 dimensions)
-  const ACCOUNT_ID = Bun.env.CLOUDFLARE_ACCOUNT_ID;
-  const API_TOKEN = Bun.env.CLOUDFLARE_API_TOKEN;
+  // Używa Worker endpoint /api/embed zamiast bezpośredniego REST API
+  // Worker ma AI binding więc nie wymaga dodatkowych uprawnień tokena
+  const WORKER_URL = "https://pumo-rag.stolarnia-ams.workers.dev/api/embed";
 
-  if (!ACCOUNT_ID || !API_TOKEN) {
-    throw new Error("Missing CLOUDFLARE_ACCOUNT_ID or CLOUDFLARE_API_TOKEN env vars");
+  // Single try - retry is handled at batch level in processBatch()
+  const response = await fetch(WORKER_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ text }),
+  });
+
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(`Worker embed API error: ${response.status} ${errText}`);
   }
 
-  // Retry logic for API calls
-  return await retry(async () => {
-      const response = await fetch(
-        `https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/ai/run/@cf/baai/bge-base-en-v1.5`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${API_TOKEN}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ text: [text] }),
-        }
-      );
+  const data = (await response.json()) as any;
+  if (!data.success || !data.result?.data?.[0]) {
+    throw new Error(`Invalid embed response format: ${JSON.stringify(data)}`);
+  }
 
-      if (!response.ok) {
-        const errText = await response.text();
-        throw new Error(`Workers AI API error: ${response.status} ${errText}`);
-      }
-
-      const data = await response.json() as any;
-      if (!data.success || !data.result?.data?.[0]) {
-        throw new Error(`Invalid AI response format: ${JSON.stringify(data)}`);
-      }
-
-      return data.result.data[0]; // 768-dimensional array
-  }, 3);
+  return data.result.data[0]; // 768-dimensional array
 }
 
 // --- INSERT TO VECTORIZE ---
-// Zapisuje batch do lokalnego pliku JSON zamiast wysyłać do API
+// Wysyła embeddingi przez Worker endpoint który używa VECTORIZE binding
 export async function insertToVectorize(
   products: PumoProduct[],
   embeddings: number[][],
 ): Promise<void> {
+  const WORKER_URL =
+    "https://pumo-rag.stolarnia-ams.workers.dev/api/vectorize/insert";
+
   // Tworzymy strukturę zgodną z Vectorize API format
   const vectors = products.map((product, index) => ({
     id: product.id,
@@ -187,9 +180,28 @@ export async function insertToVectorize(
     },
   }));
 
-  // Zapisz do pliku JSON (nazwa: batch_<timestamp>.json)
-  const timestamp = Date.now();
-  const batchFile = resolve(import.meta.dir, "../../../../docs/PUMO/embeddings", `batch_${timestamp}.json`);
-  await Bun.write(batchFile, JSON.stringify({ vectors }, null, 2));
-  console.log(`    💾 Saved batch to ${batchFile}`);
+  // Wyślij do Worker który używa VECTORIZE binding
+  const response = await fetch(WORKER_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ vectors }),
+  });
+
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(
+      `Worker vectorize API error: ${response.status} ${errText}`,
+    );
+  }
+
+  const result = (await response.json()) as any;
+  if (!result.success) {
+    throw new Error(
+      `Vectorize insert failed: ${JSON.stringify(result.errors || result)}`,
+    );
+  }
+
+  console.log(`    ✅ Uploaded ${vectors.length} vectors to Vectorize`);
 }

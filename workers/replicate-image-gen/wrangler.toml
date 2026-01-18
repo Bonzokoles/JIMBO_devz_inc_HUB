@@ -1,0 +1,9 @@
+name = "replicate-image-gen"
+main = "src/worker.ts"
+compatibility_date = "2024-01-01"
+node_compat = true
+
+[env.production]
+routes = [
+  { pattern = "images.jimbo77.com/*", zone_name = "jimbo77.com" }
+]

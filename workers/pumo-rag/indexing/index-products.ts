@@ -1,4 +1,23 @@
 // indexing/index-products.ts
+
+// Load .env file for credentials using Bun native method
+import { resolve } from "path";
+import { readFileSync } from "fs";
+const dotenvPath = resolve(import.meta.dir, ".env");
+const envContent = readFileSync(dotenvPath, "utf-8");
+for (const line of envContent.split("\n")) {
+  const trimmed = line.trim();
+  if (!trimmed || trimmed.startsWith("#")) continue;
+  const [key, ...valueParts] = trimmed.split("=");
+  if (key && valueParts.length > 0) {
+    process.env[key.trim()] = valueParts.join("=").trim();
+  }
+}
+console.log(
+  "✅ Loaded env vars:",
+  Object.keys(process.env).filter((k) => k.startsWith("CLOUDFLARE")),
+);
+
 import { PumoProduct, IndexingProgress, BatchResult } from "./types";
 import {
   parseCSV,
@@ -8,15 +27,17 @@ import {
   insertToVectorize,
 } from "./utils";
 import { readdirSync } from "fs";
-import { resolve } from "path";
 
 // --- CONFIG ---
 const CONFIG = {
   // Resolved relative to this script directory (workers/pumo-rag/indexing)
   CHUNKS_DIR: resolve(import.meta.dir, "../../../../docs/PUMO/chunks"),
-  PROGRESS_FILE: resolve(import.meta.dir, "../../../../docs/PUMO/indexing_progress.json"),
-  BATCH_SIZE: 50,
-  MAX_RETRIES: 3,
+  PROGRESS_FILE: resolve(
+    import.meta.dir,
+    "../../../../docs/PUMO/indexing_progress.json",
+  ),
+  BATCH_SIZE: 10, // Reduced from 50 for better rate limiting
+  MAX_RETRIES: 2, // Reduced from 3 (generateEmbedding has its own retry)
   ACCOUNT_ID: Bun.env.CLOUDFLARE_ACCOUNT_ID || "",
   API_TOKEN: Bun.env.CLOUDFLARE_API_TOKEN || "",
 };
@@ -53,13 +74,19 @@ async function processBatch(
   try {
     // 1. Generuj embeddingi dla batcha
     const embeddings: number[][] = [];
-    for (const product of products) {
+    for (let i = 0; i < products.length; i++) {
+      const product = products[i];
       const text = `${product.name} | ${product.category} | ${product.short_desc} ${product.long_desc}`;
       const embedding = await retry(
         () => generateEmbedding(text),
         CONFIG.MAX_RETRIES,
       );
       embeddings.push(embedding);
+
+      // Delay between embeddings to avoid rate limiting (Workers AI: 100 req/min)
+      if (i < products.length - 1) {
+        await Bun.sleep(1000); // 1000ms = safe 60 req/min, avoids rate limit spikes
+      }
     }
     // 2. Insert batch do Vectorize
     await retry(

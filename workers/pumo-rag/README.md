@@ -4,7 +4,7 @@ Cloudflare Worker providing RAG-powered search and chat for PUMO Guide (meble.pu
 
 ## Architecture
 
-- **Embeddings**: Workers AI `@cf/baai/bge-small-en-v1.5` (1536 dimensions)
+- **Embeddings**: Workers AI `@cf/baai/bge-base-en-v1.5` (768 dimensions)
 - **Vector DB**: Cloudflare Vectorize (cosine similarity)
 - **LLM**: OpenRouter (DeepSeek R1) with fallback to Workers AI (Llama 3.3 70B)
 - **Caching**: KV namespace (5 min TTL)
@@ -79,8 +79,8 @@ npm install
 ### 2. Create Cloudflare Resources
 
 ```bash
-# Vectorize namespace (1536 dimensions, cosine similarity)
-npx wrangler vectorize create pumo-products --dimensions=1536 --metric=cosine
+# Vectorize namespace (768 dimensions, cosine similarity)
+npx wrangler vectorize create pumo-products --dimensions=768 --metric=cosine
 
 # KV namespaces
 npx wrangler kv:namespace create PUMO_LOGS

@@ -8,10 +8,10 @@ workers_dev = true
 name = "jimbo77-agents-orchestrator"
 route = { pattern = "orchestrator.jimbo77.com/*", zone_name = "jimbo77.com" }
 
-# KV for task state
-[[kv_namespaces]]
-binding = "AGENT_STATE"
-id = "YOUR_KV_NAMESPACE_ID"  # wrangler kv:namespace create AGENT_STATE
+# KV for task state (optional - comment out if not using)
+# [[kv_namespaces]]
+# binding = "AGENT_STATE"
+# id = "YOUR_KV_NAMESPACE_ID"  # wrangler kv:namespace create AGENT_STATE
 
 # Environment variables (set via wrangler secret)
 # OPENROUTER_API_KEY - OpenRouter API key
@@ -21,6 +21,9 @@ id = "YOUR_KV_NAMESPACE_ID"  # wrangler kv:namespace create AGENT_STATE
 [vars]
 # Default model (can be overridden per request)
 DEFAULT_MODEL = "deepseek/deepseek-r1"
+
+# Ngrok AI Gateway proxy (optional - provides multi-provider failover)
+NGROK_PROXY_URL = "https://ngrok-proxy.stolarnia-ams.workers.dev"
 
 # Available models through OpenRouter:
 # - deepseek/deepseek-r1 (best reasoning, cheap)

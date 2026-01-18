@@ -188,12 +188,14 @@ export function WorkersMonitoringView() {
             <XAxis dataKey="time" />
             <YAxis />
             <Tooltip />
+            {/* @ts-ignore */}
             <Line
               type="monotone"
               dataKey="requests"
               stroke="#8884d8"
               strokeWidth={2}
             />
+            {/* @ts-ignore */}
             <Line
               type="monotone"
               dataKey="errors"

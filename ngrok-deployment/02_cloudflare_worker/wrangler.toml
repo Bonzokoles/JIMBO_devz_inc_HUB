@@ -1,0 +1,36 @@
+name = "ngrok-proxy"
+main = "src/index.ts"
+compatibility_date = "2024-01-10"
+
+# Account configuration
+account_id = "7f490d58a478c6baccb0ae01ea1d87c3"
+
+# Workers settings
+workers_dev = true
+
+# D1 Database binding
+[[d1_databases]]
+binding = "ANALYTICS"
+database_name = "ngrok-analytics"
+database_id = "4b5b784b-cf6c-4a27-884f-76fa00bf32bf"  # Will be created during deployment
+
+# Environment variables (secrets set via wrangler secret put)
+[vars]
+NGROK_AI_GATEWAY_URL = "https://smallish-apocalyptically-candis.ngrok-free.dev/v1"
+
+# Production environment
+[env.production]
+name = "ngrok-proxy-prod"
+route = { pattern = "ngrok.jimbo77.com/*", zone_name = "jimbo77.com" }
+
+# Staging environment
+[env.staging]
+name = "ngrok-proxy-staging"
+route = "ngrok-staging.stolarnia-ams.workers.dev/*"
+
+# Build configuration
+[build]
+command = "npm install && npm run build"
+
+[build.upload]
+format = "service-worker"
