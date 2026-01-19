@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MyBonzo AI Blog - Technical Content Platform | JIMBO77</title>
+    <meta
+      name="description"
+      content="Technical blog about AI development, RAG systems, Cloudflare Workers, and modern web architecture. Built with Astro and optimized for performance."
+    />
+
+    <!-- OpenGraph -->
+    <meta
+      property="og:title"
+      content="MyBonzo AI Blog - AI Development & Tools"
+    />
+    <meta
+      property="og:description"
+      content="In-depth articles about AI agents, RAG architecture, Cloudflare Workers deployment, and MCP server development."
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://jimbo77.org/projects/bonzo-ai-blog"
+    />
+    <meta property="og:site_name" content="JIMBO77 DEVZ INC" />
+
+    <!-- Schema.org -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        "name": "MyBonzo AI Blog",
+        "description": "Technical blog covering AI development, RAG systems, multi-agent orchestration, and Cloudflare Workers deployment strategies.",
+        "url": "https://www.mybonzoaiblog.com",
+        "publisher": {
+          "@type": "Organization",
+          "name": "JIMBO77 DEVZ INC",
+          "url": "https://jimbo77.org"
+        },
+        "blogPost": [
+          {
+            "@type": "BlogPosting",
+            "headline": "Building PUMO RAG with Cloudflare Vectorize",
+            "url": "https://www.mybonzoaiblog.com/blog/pumo-rag-architecture"
+          },
+          {
+            "@type": "BlogPosting",
+            "headline": "Multi-Agent Orchestration with DeepSeek R1",
+            "url": "https://www.mybonzoaiblog.com/blog/multi-agent-orchestration"
+          },
+          {
+            "@type": "BlogPosting",
+            "headline": "MCP Server Development Guide",
+            "url": "https://www.mybonzoaiblog.com/blog/mcp-server-guide"
+          }
+        ],
+        "keywords": [
+          "AI development",
+          "RAG systems",
+          "Cloudflare Workers",
+          "Multi-agent",
+          "MCP servers",
+          "Astro",
+          "DeepSeek"
+        ],
+        "inLanguage": "en"
+      }
+    </script>
+
+    <style>
+      :root {
+        --bg: #0a0f19;
+        --fg: #e4e8f0;
+        --primary: #6366f1;
+        --muted: #94a3b8;
+        --line: #1e293b;
+        --mono: "Courier New", monospace;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: var(--bg);
+        color: var(--fg);
+        line-height: 1.6;
+      }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 60px 20px;
+      }
+      header {
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 40px;
+        margin-bottom: 60px;
+      }
+      h1 {
+        font-size: 48px;
+        margin-bottom: 20px;
+        font-family: var(--mono);
+        letter-spacing: -1px;
+        background: linear-gradient(to right, #fff, var(--primary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .subtitle {
+        color: var(--muted);
+        font-size: 18px;
+      }
+      .badge {
+        display: inline-block;
+        background: var(--primary);
+        color: #000;
+        padding: 4px 12px;
+        font-size: 11px;
+        font-weight: bold;
+        font-family: var(--mono);
+        margin: 20px 0;
+      }
+      h2 {
+        font-size: 32px;
+        margin: 60px 0 20px 0;
+        border-left: 4px solid var(--primary);
+        padding-left: 16px;
+      }
+      h3 {
+        font-size: 24px;
+        margin: 40px 0 16px 0;
+        color: var(--primary);
+      }
+      p {
+        margin-bottom: 16px;
+        color: var(--muted);
+      }
+      ul {
+        margin-left: 24px;
+        margin-bottom: 16px;
+      }
+      li {
+        margin-bottom: 8px;
+        color: var(--muted);
+      }
+      .link {
+        color: var(--primary);
+        text-decoration: none;
+        border-bottom: 1px dashed var(--primary);
+      }
+      .link:hover {
+        border-bottom-style: solid;
+      }
+      .post-grid {
+        display: grid;
+        gap: 24px;
+        margin: 40px 0;
+      }
+      .post-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--line);
+        padding: 24px;
+      }
+      .post-card h4 {
+        color: var(--fg);
+        margin-bottom: 8px;
+      }
+      .post-meta {
+        font-size: 12px;
+        color: var(--muted);
+        font-family: var(--mono);
+      }
+      footer {
+        margin-top: 100px;
+        border-top: 1px solid var(--line);
+        padding-top: 40px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 12px;
+        font-family: var(--mono);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="badge">TECHNICAL BLOG</div>
+        <h1>MyBonzo AI Blog</h1>
+        <p class="subtitle">
+          In-depth technical content about AI development, RAG systems, and
+          modern web architecture
+        </p>
+      </header>
+
+      <article>
+        <section id="overview">
+          <h2>Overview</h2>
+          <p>
+            MyBonzo AI Blog is a technical content platform focused on
+            real-world AI implementation, RAG system architecture, multi-agent
+            orchestration, and Cloudflare Workers deployment strategies. Built
+            with Astro for maximum performance and SEO optimization.
+          </p>
+          <p>
+            All articles are based on production implementations from the
+            JIMBO77 ecosystem, providing practical insights and code examples
+            from actual deployments.
+          </p>
+        </section>
+
+        <section id="topics">
+          <h2>Content Topics</h2>
+          <ul>
+            <li>
+              <strong>RAG Systems</strong>: Hybrid search, vector databases,
+              embedding strategies
+            </li>
+            <li>
+              <strong>AI Agents</strong>: Multi-agent orchestration, task
+              coordination, state management
+            </li>
+            <li>
+              <strong>Cloudflare Workers</strong>: Edge deployment, D1
+              databases, Vectorize integration
+            </li>
+            <li>
+              <strong>MCP Servers</strong>: VS Code integration, tool
+              development, protocol implementation
+            </li>
+            <li>
+              <strong>Web Performance</strong>: Astro optimization, image
+              delivery, CDN strategies
+            </li>
+            <li>
+              <strong>DevOps</strong>: Docker orchestration, Git submodules,
+              CI/CD pipelines
+            </li>
+          </ul>
+        </section>
+
+        <section id="featured-posts">
+          <h2>Featured Posts</h2>
+          <div class="post-grid">
+            <div class="post-card">
+              <h4>Building PUMO RAG with Cloudflare Vectorize</h4>
+              <p class="post-meta">2026-01-15 | RAG Systems, Cloudflare</p>
+              <p>
+                Complete architecture breakdown of hybrid RAG system combining
+                vector search with keyword matching for furniture e-commerce.
+              </p>
+              <a
+                href="https://www.mybonzoaiblog.com/blog/pumo-rag-architecture"
+                class="link"
+                >Read more →</a
+              >
+            </div>
+
+            <div class="post-card">
+              <h4>Multi-Agent Orchestration with DeepSeek R1</h4>
+              <p class="post-meta">2026-01-12 | AI Agents, Orchestration</p>
+              <p>
+                How we coordinate 18 specialized AI agents for deployment,
+                monitoring, and cost optimization using priority-based
+                scheduling.
+              </p>
+              <a
+                href="https://www.mybonzoaiblog.com/blog/multi-agent-orchestration"
+                class="link"
+                >Read more →</a
+              >
+            </div>
+
+            <div class="post-card">
+              <h4>MCP Server Development: Workspace Navigator</h4>
+              <p class="post-meta">2026-01-10 | MCP, VS Code</p>
+              <p>
+                Building a Model Context Protocol server for navigating
+                multi-repo workspaces with 7 Git submodules.
+              </p>
+              <a
+                href="https://www.mybonzoaiblog.com/blog/mcp-server-guide"
+                class="link"
+                >Read more →</a
+              >
+            </div>
+
+            <div class="post-card">
+              <h4>Managing 7 Git Submodules in One Workspace</h4>
+              <p class="post-meta">2026-01-08 | DevOps, Git</p>
+              <p>
+                PowerShell automation for coordinated pull/push across main
+                repository and 7 interconnected submodules.
+              </p>
+              <a
+                href="https://www.mybonzoaiblog.com/blog/git-submodules-workflow"
+                class="link"
+                >Read more →</a
+              >
+            </div>
+          </div>
+        </section>
+
+        <section id="tech-stack">
+          <h2>Technology Stack</h2>
+          <ul>
+            <li>
+              <strong>Framework</strong>: Astro 4.0+ (static site generation)
+            </li>
+            <li>
+              <strong>Hosting</strong>: Cloudflare Pages (edge distribution)
+            </li>
+            <li>
+              <strong>Images</strong>: Cloudflare Images (automatic
+              optimization)
+            </li>
+            <li>
+              <strong>Storage</strong>: Cloudflare R2 (blog assets, media)
+            </li>
+            <li><strong>Styling</strong>: Custom CSS with dark mode</li>
+            <li>
+              <strong>SEO</strong>: Schema.org markup, XML sitemap, RSS feed
+            </li>
+          </ul>
+        </section>
+
+        <section id="performance">
+          <h2>Performance Metrics</h2>
+          <ul>
+            <li>
+              <strong>Lighthouse Score</strong>: 100/100 (Performance,
+              Accessibility, SEO)
+            </li>
+            <li><strong>First Contentful Paint</strong>: ~0.8s</li>
+            <li><strong>Time to Interactive</strong>: ~1.2s</li>
+            <li><strong>Bundle Size</strong>: < 50KB (JS), < 20KB (CSS)</li>
+            <li>
+              <strong>Image Optimization</strong>: WebP/AVIF with lazy loading
+            </li>
+          </ul>
+        </section>
+
+        <section id="links">
+          <h2>Related Links</h2>
+          <ul>
+            <li>
+              <a href="https://www.mybonzoaiblog.com" class="link"
+                >Visit Blog</a
+              >
+            </li>
+            <li>
+              <a href="https://www.mybonzoaiblog.com/rss.xml" class="link"
+                >RSS Feed</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://github.com/stolarnia-ams/my-bonzo-ai-blog"
+                class="link"
+                >GitHub Repository</a
+              >
+            </li>
+            <li>
+              <a href="https://jimbo77.org" class="link"
+                >Back to JIMBO77 Catalog</a
+              >
+            </li>
+          </ul>
+        </section>
+      </article>
+
+      <footer>
+        Generated by JIMBO77 Unified Ops (Magnet Node)<br />
+        2026 © JIMBO77 DEVZ INC |
+        <a href="https://jimbo77.org/llms.txt" class="link">llms.txt</a>
+      </footer>
+    </div>
+  </body>
+</html>

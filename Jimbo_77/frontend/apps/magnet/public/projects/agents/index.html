@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Agent Orchestration - 18 Specialized Agents | JIMBO77</title>
+    <meta
+      name="description"
+      content="Multi-agent coordination system with 18 specialized AI agents for deployment, monitoring, cost optimization, and DevOps automation using DeepSeek R1."
+    />
+
+    <!-- OpenGraph -->
+    <meta
+      property="og:title"
+      content="AI Agent Orchestration - Multi-Agent System"
+    />
+    <meta
+      property="og:description"
+      content="Coordinate 18 specialized AI agents for complex task execution with priority-based scheduling and parallel execution."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://jimbo77.org/projects/agents" />
+    <meta property="og:site_name" content="JIMBO77 DEVZ INC" />
+
+    <!-- Schema.org -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "AI Agent Orchestration System",
+        "applicationCategory": "DeveloperApplication",
+        "description": "Multi-agent coordination platform managing 18 specialized AI agents for deployment, security monitoring, cost optimization, and DevOps automation.",
+        "url": "https://orchestrator.jimbo77.com",
+        "author": {
+          "@type": "Organization",
+          "name": "JIMBO77 DEVZ INC",
+          "url": "https://jimbo77.org"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "featureList": [
+          "18 specialized AI agents",
+          "Priority-based task scheduling",
+          "Parallel execution engine",
+          "DeepSeek R1 integration",
+          "Cloudflare Workers deployment",
+          "State management with KV storage",
+          "Real-time monitoring and alerts"
+        ],
+        "operatingSystem": "Cloudflare Workers",
+        "programmingLanguage": ["TypeScript", "Python"]
+      }
+    </script>
+
+    <style>
+      :root {
+        --bg: #0a0f19;
+        --fg: #e4e8f0;
+        --primary: #6366f1;
+        --muted: #94a3b8;
+        --line: #1e293b;
+        --mono: "Courier New", monospace;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: var(--bg);
+        color: var(--fg);
+        line-height: 1.6;
+      }
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 60px 20px;
+      }
+      header {
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 40px;
+        margin-bottom: 60px;
+      }
+      h1 {
+        font-size: 48px;
+        margin-bottom: 20px;
+        font-family: var(--mono);
+        letter-spacing: -1px;
+        background: linear-gradient(to right, #fff, var(--primary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .subtitle {
+        color: var(--muted);
+        font-size: 18px;
+      }
+      .badge {
+        display: inline-block;
+        background: var(--primary);
+        color: #000;
+        padding: 4px 12px;
+        font-size: 11px;
+        font-weight: bold;
+        font-family: var(--mono);
+        margin: 20px 0;
+      }
+      h2 {
+        font-size: 32px;
+        margin: 60px 0 20px 0;
+        border-left: 4px solid var(--primary);
+        padding-left: 16px;
+      }
+      p {
+        margin-bottom: 16px;
+        color: var(--muted);
+      }
+      ul {
+        margin-left: 24px;
+        margin-bottom: 16px;
+      }
+      li {
+        margin-bottom: 8px;
+        color: var(--muted);
+      }
+      .agent-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 16px;
+        margin: 40px 0;
+      }
+      .agent-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--line);
+        padding: 16px;
+      }
+      .agent-card h4 {
+        color: var(--primary);
+        margin-bottom: 8px;
+        font-size: 16px;
+      }
+      .agent-card p {
+        font-size: 13px;
+        margin: 0;
+      }
+      .priority {
+        font-size: 10px;
+        color: var(--muted);
+        font-family: var(--mono);
+      }
+      pre {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--line);
+        padding: 20px;
+        overflow-x: auto;
+        margin: 20px 0;
+        font-family: var(--mono);
+        font-size: 14px;
+      }
+      .link {
+        color: var(--primary);
+        text-decoration: none;
+        border-bottom: 1px dashed var(--primary);
+      }
+      .link:hover {
+        border-bottom-style: solid;
+      }
+      footer {
+        margin-top: 100px;
+        border-top: 1px solid var(--line);
+        padding-top: 40px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 12px;
+        font-family: var(--mono);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="badge">MULTI-AGENT SYSTEM</div>
+        <h1>AI Agent Orchestration</h1>
+        <p class="subtitle">
+          18 specialized AI agents coordinated for complex task execution with
+          priority-based scheduling
+        </p>
+      </header>
+
+      <article>
+        <section id="overview">
+          <h2>Overview</h2>
+          <p>
+            The AI Agent Orchestration System manages 18 specialized agents,
+            each designed for specific DevOps, deployment, and optimization
+            tasks. Using DeepSeek R1 as the reasoning engine, the orchestrator
+            coordinates parallel execution, manages dependencies, and ensures
+            efficient task completion.
+          </p>
+          <p>
+            Deployed on Cloudflare Workers with KV storage for state management,
+            the system provides real-time monitoring, automated alerts, and
+            intelligent task routing based on agent capabilities.
+          </p>
+        </section>
+
+        <section id="agents">
+          <h2>Agent Directory (18 Agents)</h2>
+          <div class="agent-grid">
+            <div class="agent-card">
+              <h4>Deployment Coordinator</h4>
+              <p class="priority">Priority 1 | Port 6001</p>
+              <p>
+                Manages Cloudflare Workers deployments, version control, and
+                rollback strategies.
+              </p>
+            </div>
+
+            <div class="agent-card">
+              <h4>Guardian Agent</h4>
+              <p class="priority">Priority 1 | Port 6004</p>
+              <p>
+                Security monitoring, threat detection, and automated incident
+                response.
+              </p>
+            </div>
+
+            <div class="agent-card">
+              <h4>Cost Optimizer</h4>
+              <p class="priority">Priority 2 | Port 6002</p>
+              <p>
+                Analyzes cloud spend, identifies optimization opportunities,
+                auto-adjusts resources.
+              </p>
+            </div>
+
+            <div class="agent-card">
+              <h4>Worker Health Monitor</h4>
+              <p class="priority">Priority 1 | Port 6003</p>
+              <p>
+                Tracks service uptime, performance metrics, and automated health
+                checks.
+              </p>
+            </div>
+
+            <div class="agent-card">
+              <h4>Research Agent</h4>
+              <p class="priority">Priority 3 | Port 6062</p>
+              <p>
+                Web scraping, data collection, and research task automation.
+              </p>
+            </div>
+
+            <div class="agent-card">
+              <h4>Code Reviewer</h4>
+              <p class="priority">Priority 2 | Port 6005</p>
+              <p>
+                Automated code quality checks, style enforcement, security
+                scanning.
+              </p>
+            </div>
+
+            <div class="agent-card">
+              <h4>Documentation Generator</h4>
+              <p class="priority">Priority 3 | Port 6006</p>
+              <p>
+                Auto-generates API docs, READMEs, and code comments from source
+                code.
+              </p>
+            </div>
+
+            <div class="agent-card">
+              <h4>Image Optimizer</h4>
+              <p class="priority">Priority 3 | Port 6007</p>
+              <p>
+                Cloudflare Images integration, format conversion, compression
+                optimization.
+              </p>
+            </div>
+
+            <div class="agent-card">
+              <h4>Database Manager</h4>
+              <p class="priority">Priority 1 | Port 6008</p>
+              <p>
+                D1/PostgreSQL operations, schema migrations, query optimization.
+              </p>
+            </div>
+
+            <div class="agent-card">
+              <h4>API Gateway Controller</h4>
+              <p class="priority">Priority 1 | Port 6009</p>
+              <p>Route management, rate limiting, API versioning control.</p>
+            </div>
+
+            <div class="agent-card">
+              <h4>Cache Optimizer</h4>
+              <p class="priority">Priority 2 | Port 6010</p>
+              <p>
+                CDN caching strategies, cache invalidation, edge optimization.
+              </p>
+            </div>
+
+            <div class="agent-card">
+              <h4>Log Analyzer</h4>
+              <p class="priority">Priority 2 | Port 6011</p>
+              <p>Error pattern detection, log aggregation, alert generation.</p>
+            </div>
+
+            <div class="agent-card">
+              <h4>Performance Tuner</h4>
+              <p class="priority">Priority 2 | Port 6012</p>
+              <p>
+                Worker performance optimization, bundle size reduction, load
+                testing.
+              </p>
+            </div>
+
+            <div class="agent-card">
+              <h4>Backup Coordinator</h4>
+              <p class="priority">Priority 1 | Port 6013</p>
+              <p>Automated backup management, R2 storage, disaster recovery.</p>
+            </div>
+
+            <div class="agent-card">
+              <h4>Secret Manager</h4>
+              <p class="priority">Priority 1 | Port 6014</p>
+              <p>
+                Secure credential rotation, environment variable management.
+              </p>
+            </div>
+
+            <div class="agent-card">
+              <h4>DNS Manager</h4>
+              <p class="priority">Priority 2 | Port 6015</p>
+              <p>Cloudflare DNS automation, record updates, zone management.</p>
+            </div>
+
+            <div class="agent-card">
+              <h4>SSL Certificate Monitor</h4>
+              <p class="priority">Priority 1 | Port 6016</p>
+              <p>Certificate expiry tracking, auto-renewal, security alerts.</p>
+            </div>
+
+            <div class="agent-card">
+              <h4>Analytics Aggregator</h4>
+              <p class="priority">Priority 3 | Port 6017</p>
+              <p>
+                Multi-source analytics collection, reporting, visualization.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="orchestration">
+          <h2>Orchestration Pattern</h2>
+          <pre>
+Task → Priority Assignment → Agent Selection → Parallel Execution → Result Aggregation</pre
+          >
+
+          <h3>Priority Levels</h3>
+          <ul>
+            <li>
+              <strong>Priority 1</strong>: Critical operations (deployment,
+              security, backups)
+            </li>
+            <li>
+              <strong>Priority 2</strong>: Important but non-blocking
+              (optimization, monitoring)
+            </li>
+            <li>
+              <strong>Priority 3</strong>: Background tasks (research,
+              documentation, analytics)
+            </li>
+          </ul>
+        </section>
+
+        <section id="api">
+          <h2>API Example</h2>
+          <pre><code>POST https://orchestrator.jimbo77.com/api/execute
+
+{
+  "task": "Deploy PUMO RAG to production",
+  "priority": 1,
+  "agents": [
+    "deployment-coordinator",
+    "cache-optimizer",
+    "dns-manager"
+  ]
+}
+
+Response:
+{
+  "taskId": "task_abc123",
+  "status": "executing",
+  "assignedAgents": [
+    "deployment-coordinator",
+    "cache-optimizer",
+    "dns-manager"
+  ],
+  "estimatedCompletion": "2026-01-19T15:30:00Z",
+  "progress": {
+    "deployment-coordinator": "in-progress",
+    "cache-optimizer": "queued",
+    "dns-manager": "queued"
+  }
+}</code></pre>
+        </section>
+
+        <section id="tech-stack">
+          <h2>Technology Stack</h2>
+          <ul>
+            <li>
+              <strong>Orchestrator Runtime</strong>: Cloudflare Workers
+              (TypeScript)
+            </li>
+            <li>
+              <strong>Agent Runtime</strong>: Python 3.11 (Docker containers)
+            </li>
+            <li><strong>State Storage</strong>: Cloudflare KV + PostgreSQL</li>
+            <li><strong>LLM</strong>: DeepSeek R1 via OpenRouter</li>
+            <li><strong>Communication</strong>: HTTP APIs + WebSocket</li>
+            <li>
+              <strong>Monitoring</strong>: Custom dashboard + log aggregation
+            </li>
+          </ul>
+        </section>
+
+        <section id="links">
+          <h2>Related Links</h2>
+          <ul>
+            <li>
+              <a href="https://orchestrator.jimbo77.com" class="link"
+                >Live Orchestrator Dashboard</a
+              >
+            </li>
+            <li>
+              <a href="https://jimbo77.org/docs/agents" class="link"
+                >Agent Documentation</a
+              >
+            </li>
+            <li>
+              <a href="https://jimbo77.org" class="link"
+                >Back to JIMBO77 Catalog</a
+              >
+            </li>
+          </ul>
+        </section>
+      </article>
+
+      <footer>
+        Generated by JIMBO77 Unified Ops (Magnet Node)<br />
+        2026 © JIMBO77 DEVZ INC |
+        <a href="https://jimbo77.org/llms.txt" class="link">llms.txt</a>
+      </footer>
+    </div>
+  </body>
+</html>

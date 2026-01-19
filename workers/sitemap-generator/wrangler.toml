@@ -1,0 +1,58 @@
+name = "jimbo77-sitemap-generator"
+main = "src/index.ts"
+compatibility_date = "2026-01-19"
+workers_dev = true
+
+# Production routes
+[env.production]
+name = "jimbo77-sitemap-generator"
+routes = [
+  { pattern = "jimbo77.org/sitemap.xml", zone_name = "jimbo77.org" },
+  { pattern = "jimbo77.org/robots.txt", zone_name = "jimbo77.org" }
+]
+
+[env.production.vars]
+# External sitemaps to aggregate (add more as projects grow)
+EXTERNAL_SITEMAPS = [
+  "https://www.mybonzoaiblog.com/sitemap.xml",
+  "https://zen-bro-wser.org/sitemap.xml"
+]
+
+# Local pages (static + project pages)
+LOCAL_PAGES = [
+  "/",
+  "/projects/",
+  "/projects/pumo-furniture/",
+  "/projects/bonzo-ai-blog/",
+  "/projects/zen-browser/",
+  "/projects/agents/",
+  "/projects/mcp-tools/",
+  "/docs/",
+  "/blog/",
+  "/llms.txt",
+  "/.well-known/ai-plugin.json",
+  "/.well-known/llm-context.json"
+]
+
+[vars]
+# External sitemaps to aggregate (add more as projects grow)
+EXTERNAL_SITEMAPS = [
+  "https://www.mybonzoaiblog.com/sitemap.xml",
+  "https://zen-bro-wser.org/sitemap.xml"
+]
+
+# Local pages (static + project pages)
+LOCAL_PAGES = [
+  "/",
+  "/projects/",
+  "/projects/pumo-furniture/",
+  "/projects/bonzo-ai-blog/",
+  "/projects/zen-browser/",
+  "/projects/agents/",
+  "/projects/mcp-tools/",
+  "/docs/",
+  "/blog/",
+  "/llms.txt",
+  "/.well-known/ai-plugin.json",
+  "/.well-known/llm-context.json"
+]

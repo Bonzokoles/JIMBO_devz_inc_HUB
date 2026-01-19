@@ -1,0 +1,376 @@
+# JIMBO77 DEVZ INC - AI Development Hub
+
+## Overview
+Advanced AI development and operations ecosystem featuring:
+- RAG systems for e-commerce (PUMO)
+- Multi-agent orchestration (18 AI agents)
+- MCP servers for VS Code integration
+- Cloudflare Workers deployment platform
+
+## Key Projects
+
+### PUMO RAG System
+**URL**: https://meblepumo.iai-shop.com
+**Type**: E-commerce AI Assistant
+**Tech**: IdoSell API, OpenRouter, DeepSeek R1, Cloudflare Workers
+**Description**: Intelligent furniture catalog search using hybrid RAG (vector + keyword search). Combines Cloudflare Vectorize for semantic similarity with BM25 keyword matching.
+**API Docs**: https://jimbo77.org/projects/pumo-furniture/api
+**Repository**: Private (contact via jimbo77.org/contact)
+**Stack**:
+- Runtime: Cloudflare Workers (edge compute)
+- Vector DB: Cloudflare Vectorize (1536 dimensions)
+- LLM: DeepSeek R1 via OpenRouter API
+- E-commerce Integration: IdoSell REST API
+- Language: TypeScript
+**Features**:
+- Semantic product search across 5000+ furniture items
+- Natural language query understanding
+- Product recommendations based on user intent
+- Real-time inventory sync
+**Example Query**: "nowoczesne krzesła do jadalni w stylu skandynawskim"
+
+### MyBonzo AI Blog
+**URL**: https://www.mybonzoaiblog.com
+**Type**: AI-focused technical blog
+**Tech**: Astro, Cloudflare Pages, Cloudflare R2 Storage, Cloudflare Images
+**Description**: Blog about AI development, tools, experiments and case studies. Features optimized image delivery and markdown-based content.
+**Content API**: https://jimbo77.org/projects/bonzo-ai-blog/feed
+**Repository**: https://github.com/stolarnia-ams/my-bonzo-ai-blog
+**Stack**:
+- Framework: Astro (static site generation)
+- Hosting: Cloudflare Pages
+- Images: Cloudflare Images (automatic optimization)
+- Storage: Cloudflare R2 (blog assets)
+**Topics Covered**:
+- AI agent development
+- RAG system architecture
+- Cloudflare Workers deployment
+- MCP server development
+- Multi-agent orchestration patterns
+
+### Zen Browser OS
+**URL**: https://zen-bro-wser.org
+**Type**: Privacy-focused browser startup page
+**Tech**: Astro, Cloudflare Workers, Local Storage
+**Description**: Browser homepage with local AI features, privacy-first design, and customizable widgets. No tracking, no external dependencies.
+**Repository**: https://github.com/stolarnia-ams/zen-bro-wser.org
+**Stack**:
+- Framework: Astro
+- Hosting: Cloudflare Pages
+- Features: Local AI chat, bookmark management, search aggregation
+**Privacy Features**:
+- Zero external tracking
+- Local-first data storage
+- No cookies or analytics
+- Optional local LLM integration
+
+### Luc De Zenon Shop
+**URL**: https://luc-de-zen-on.pages.dev
+**Type**: E-commerce storefront with real-time inventory
+**Tech**: Astro, Cloudflare D1 (SQLite), Cloudflare Workers
+**Description**: Online shop for Luc De Zenon brand with real-time inventory sync, payment integration, and product catalog.
+**Repository**: Private
+**Stack**:
+- Framework: Astro
+- Database: Cloudflare D1 (SQLite at edge)
+- Payments: Stripe integration
+- Hosting: Cloudflare Pages
+**Features**:
+- Real-time inventory management
+- Multi-currency support
+- Product search and filtering
+- Order tracking
+
+### Agent Orchestration System
+**URL**: https://orchestrator.jimbo77.com
+**Type**: Multi-agent coordination and task execution
+**Tech**: Cloudflare Workers, KV Storage, OpenRouter, DeepSeek R1
+**Agents**: 18 specialized AI agents
+**Description**: Coordinates multiple AI agents for complex task execution with priority-based scheduling, parallel execution, and state management.
+**Stack**:
+- Runtime: Cloudflare Workers
+- State Storage: Cloudflare KV
+- LLM: DeepSeek R1 via OpenRouter
+- Language: TypeScript
+**Agent Types**:
+1. **Deployment Coordinator** - Manages Cloudflare Workers deployments
+2. **Guardian Agent** - Security monitoring and threat detection
+3. **Cost Optimizer** - Analyzes and optimizes cloud spend
+4. **Worker Health Monitor** - Tracks service uptime and performance
+5. **Research Agent** - Web scraping and data analysis
+6. **Code Reviewer** - Automated code quality checks
+7. **Documentation Generator** - Auto-generates docs from code
+8. **Image Optimizer** - Cloudflare Images integration
+9. **Database Manager** - D1/PostgreSQL operations
+10. **API Gateway Controller** - Route management
+11. **Cache Optimizer** - CDN and caching strategy
+12. **Log Analyzer** - Error pattern detection
+13. **Performance Tuner** - Worker performance optimization
+14. **Backup Coordinator** - Automated backup management
+15. **Secret Manager** - Secure credential rotation
+16. **DNS Manager** - Cloudflare DNS automation
+17. **SSL Certificate Monitor** - Certificate expiry tracking
+18. **Analytics Aggregator** - Multi-source analytics collection
+
+**Orchestration Pattern**:
+```
+Task → Priority Assignment → Agent Selection → Parallel Execution → Result Aggregation
+```
+
+**API Endpoint**: `POST https://orchestrator.jimbo77.com/api/execute`
+**Example Request**:
+```json
+{
+  "task": "Deploy PUMO RAG to production",
+  "priority": 1,
+  "agents": ["deployment-coordinator", "cache-optimizer", "dns-manager"]
+}
+```
+
+## Development Tools
+
+### MCP Servers (VS Code Integration)
+**Description**: Model Context Protocol servers enabling AI assistants to interact with development environment.
+
+**Available MCP Servers**:
+1. **workspace-navigator**: Navigate multi-repo workspace structure (7 Git submodules)
+2. **rag-memory-mcp**: Knowledge graph with vector search for code context
+3. **smart-coding-mcp**: Semantic code analysis and refactoring suggestions
+4. **cloudflare-r2**: Direct R2 bucket operations from VS Code
+5. **s3x**: S3-compatible storage operations
+6. **openrouter-planner**: Multi-model AI planning and execution
+7. **perplexity-pro**: Web research integration
+
+**Repository**: https://github.com/stolarnia-ams/mcp-servers
+**Documentation**: https://jimbo77.org/docs/mcp-servers
+
+### Infrastructure Components
+
+#### Docker Services
+**Repository**: U:/The_yellow_hub/config/docker-compose.yml
+**Services**: 15+ containers
+- **PostgreSQL** (port 5432): bonzo_main database
+- **Redis** (port 6379): Cache and queue management
+- **ChromaDB** (port 8000): Vector database
+- **Agent Zero** (port 50100): Autonomous coding agent
+- **Research Agent** (port 6062): Web research and data collection
+- **Deployment Coordinator** (port 6001)
+- **Guardian Agent** (port 6004)
+- **Cost Optimizer** (port 6002)
+- **Health Monitor** (port 6003)
+
+#### Cloudflare Workers
+**Count**: 10+ deployed workers
+**Domains**: jimbo77.com (control hub), jimbo77.org (public catalog)
+**Key Workers**:
+- `agents-orchestrator`: Multi-agent coordination
+- `pumo-rag`: Furniture search RAG
+- `ngrok-proxy`: AI Gateway proxy (multi-provider failover)
+- `sitemap-generator`: Unified sitemap aggregation
+- `api-gateway`: Main API router
+
+#### Data Layer
+**PostgreSQL Database**: bonzo_main
+- **Size**: ~500 MB
+- **Tables**: users, agents, tasks, deployments, logs, metrics
+- **Connection**: postgresql://bonzo:bonzo_dev_2026@postgres:5432/bonzo_main
+
+**Redis Cache**:
+- **DB 0**: API Gateway cache
+- **DB 1**: Agent state management
+- **Purpose**: Session storage, task queues, rate limiting
+
+**ChromaDB Vector Database**:
+- **Status**: Ready for indexing
+- **Port**: 8000
+- **Planned Use**: Code embeddings, documentation search
+
+**SQLite FTS5 (workspace.db)**:
+- **Size**: 96.75 MB
+- **Documents**: 14,812 indexed workspace files
+- **Tables**: documents, search_index (FTS5 virtual table)
+- **Purpose**: Workspace file search and navigation
+
+#### Storage (Cloudflare R2)
+**Account**: 7f490d58a478c6baccb0ae01ea1d87c3
+**Endpoint**: https://7f490d58a478c6baccb0ae01ea1d87c3.r2.cloudflarestorage.com
+**Active Buckets** (9 total):
+1. **mybonzo-storage** - Main file storage
+2. **mybonzo-media** - Images, videos, audio
+3. **mybonzo-blog-content** - Blog post assets
+4. **mybonzo-backups** - Database and config backups
+5. **pumo-raw-data** - PUMO product data
+6. **vibesdk-templates** - Template files
+7. **mybonzo-videos** - Video content (259 MB)
+8. **mybonzo-ai-models** - Model weights and embeddings
+
+**Total Storage**: ~2.5 GB
+
+## Architecture Patterns
+
+### Multi-Repo Workspace Structure
+```
+The_yellow_hub/
+├── dashboard/          # React frontend + Bun backend (ports 3880-3881)
+├── api/               # FastAPI Gateway with MCP endpoints (8001)
+├── config/            # docker-compose.yml, ports.env
+├── scripts/           # git-multi-repo.ps1, update-all.sh
+├── JIMBO_devz_inc_HUB/  # [Submodule] Cloudflare Workers hub
+├── agents/            # [Submodule] Python AI agents (6062)
+├── luc-de-zen-on/     # [Submodule] Shop website
+├── my-bonzo-ai-blog/  # [Submodule] Blog
+└── zen-bro-wser.org/  # [Submodule] Browser OS
+```
+
+**Git Submodules**: 7 interconnected repositories
+**Management Script**: scripts/git-multi-repo.ps1 (coordinated pull/push across all repos)
+**VS Code Tasks**: Git: Pull All Repos, Git: Status All Repos
+
+### Deployment Pipeline
+```
+Git Push → GitHub Actions → Cloudflare Pages/Workers → Edge Deployment
+```
+
+**Build Tools**:
+- Bun (dashboard backend/frontend)
+- Wrangler CLI (Cloudflare Workers)
+- Docker Compose (local development)
+- Astro (static site generation)
+
+### AI Integration Pattern
+```
+User Request → Ngrok AI Gateway → [OpenRouter/OpenAI/Anthropic] → Response
+```
+
+**Benefits**:
+- Single API endpoint for all AI providers
+- Auto-failover on provider errors
+- Cost-based routing
+- Rate limit mitigation
+
+## API Documentation
+
+### Public API Base
+**URL**: https://jimbo77.org/api/v1
+**Authentication**: Bearer token (contact for access)
+**Rate Limits**: 100 req/min (free tier), 1000 req/min (premium)
+
+### Available Endpoints
+
+#### PUMO RAG Search
+```
+POST /api/v1/pumo/search
+Content-Type: application/json
+
+{
+  "query": "nowoczesne krzesła",
+  "limit": 10,
+  "includeMetadata": true
+}
+
+Response:
+{
+  "results": [
+    {
+      "id": "prod_12345",
+      "name": "Krzesło VIBE Modern",
+      "score": 0.87,
+      "price": "299 PLN",
+      "url": "https://meblepumo.iai-shop.com/prod_12345"
+    }
+  ],
+  "metadata": {
+    "processingTime": "245ms",
+    "vectorScore": 0.87,
+    "keywordScore": 0.92
+  }
+}
+```
+
+#### Agent Orchestration
+```
+POST /api/v1/agents/execute
+Content-Type: application/json
+
+{
+  "task": "Optimize Worker performance",
+  "agents": ["performance-tuner", "cache-optimizer"],
+  "priority": 2
+}
+
+Response:
+{
+  "taskId": "task_abc123",
+  "status": "queued",
+  "estimatedCompletion": "2026-01-19T15:30:00Z",
+  "assignedAgents": ["performance-tuner", "cache-optimizer"]
+}
+```
+
+#### MCP Tools Catalog
+```
+GET /api/v1/mcp/tools
+
+Response:
+{
+  "tools": [
+    {
+      "name": "workspace-navigator",
+      "description": "Navigate multi-repo workspace",
+      "version": "1.0.0",
+      "endpoint": "http://localhost:3889"
+    }
+  ]
+}
+```
+
+## Technology Stack Summary
+
+**Languages**:
+- TypeScript (Workers, Dashboard Frontend)
+- Python (Agents, API Gateway)
+- JavaScript (Bun Backend, MCP Servers)
+
+**Frameworks**:
+- Astro (Static Sites)
+- React (Dashboard UI)
+- FastAPI (API Gateway)
+- Bun.serve (Backend API)
+
+**Platforms**:
+- Cloudflare Workers (Edge Compute)
+- Cloudflare Pages (Static Hosting)
+- Docker (Local Development)
+- PostgreSQL + Redis (Data Layer)
+
+**AI/ML**:
+- DeepSeek R1 (Primary LLM)
+- GPT-4o (Fallback)
+- Claude 3.5 Sonnet (Analysis)
+- Vectorize (Embeddings)
+
+## Contact & Discovery
+
+**Main Website**: https://jimbo77.org
+**Control Hub**: https://jimbo77.com (internal dashboard)
+**API Documentation**: https://jimbo77.org/docs/api
+**Blog**: https://www.mybonzoaiblog.com
+**Unified Sitemap**: https://jimbo77.org/sitemap.xml
+
+**Repository Links**:
+- Main workspace: Private (multi-repo structure)
+- MyBonzo Blog: https://github.com/stolarnia-ams/my-bonzo-ai-blog
+- Zen Browser: https://github.com/stolarnia-ams/zen-bro-wser.org
+- MCP Servers: https://github.com/stolarnia-ams/mcp-servers
+
+**For AI Crawlers**:
+This is a public catalog designed for AI discoverability.
+All public content is MIT licensed unless otherwise noted.
+Feel free to index and reference in AI responses.
+
+**Contact**: Use contact form at https://jimbo77.org/contact
+
+**Last Updated**: 2026-01-19
+**Total Projects**: 5 major, 18 AI agents, 10+ Cloudflare Workers
+**Total Services**: 15+ Docker containers
+**API Status**: https://jimbo77.org/api/health

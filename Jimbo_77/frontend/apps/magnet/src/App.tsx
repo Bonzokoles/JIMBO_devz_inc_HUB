@@ -1,133 +1,40 @@
 import { AppShell } from "@jimbo77/ui";
-import { PROJECTS } from "./data/projects";
-import type { ProjectMeta } from "./data/projects";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import Home from "./pages/Home";
+import ProjectDetail from "./pages/ProjectDetail";
+import { useEffect } from "react";
 
-function ProjectCard({ p }: { p: ProjectMeta }) {
-    return (
-        <div style={{
-            background: "rgba(10, 15, 25, 0.7)",
-            border: "1px solid var(--line)",
-            padding: "20px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "10px",
-            position: "relative",
-            overflow: "hidden"
-        }}>
-            <div style={{
-                position: "absolute",
-                top: 0, right: 0,
-                background: p.role === "public" ? "var(--success)" : "var(--primary)",
-                color: "#000",
-                fontSize: "10px",
-                padding: "2px 6px",
-                fontWeight: "bold",
-                fontFamily: "var(--mono)"
-            }}>
-                {p.role.toUpperCase()}
-            </div>
+function ScrollToTop() {
+  const { pathname } = useLocation();
 
-            <h3 style={{ margin: 0, fontFamily: "var(--mono)", letterSpacing: "1px", color: "var(--fg)" }}>
-                {p.id.toUpperCase()}
-            </h3>
-            <div style={{ fontSize: "12px", color: "var(--primary)", opacity: 0.8 }}>
-                {p.domain}
-            </div>
-            
-            <p style={{ fontSize: "14px", lineHeight: "1.5", color: "var(--muted)", flex: 1 }}>
-                {p.description}
-            </p>
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
-            <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginTop: "10px" }}>
-                {p.stack.map(s => (
-                    <span key={s} style={{
-                        fontSize: "10px",
-                        border: "1px solid var(--line)",
-                        padding: "2px 6px",
-                        color: "var(--faint)",
-                        fontFamily: "var(--mono)"
-                    }}>
-                        {s}
-                    </span>
-                ))}
-            </div>
-        </div>
-    );
+  return null;
 }
 
-function SchemaGenerator({ projects }: { projects: ProjectMeta[] }) {
-    const schema = {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "JIMBO77 DEVZ INC",
-        "url": "https://jimbo77.org",
-        "logo": "https://jimbo77.org/logo.png",
-        "description": "Advanced AI Development & Operations Hub",
-        "knowsAbout": projects.map(p => ({
-            "@type": "SoftwareApplication",
-            "name": p.name,
-            "url": `https://${p.domain}`,
-            "description": p.description,
-            "applicationCategory": "DeveloperApplication"
-        }))
-    };
-
+function AppContent() {
     return (
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+        <AppShell 
+            topbar={<div style={{ padding: "10px 20px", fontFamily: "monospace", fontSize: "12px", color: "#666" }}>JIMBO77 // MAGNET_OS v1.0</div>} 
+            footer={<div style={{ padding: "20px", textAlign: "center", fontSize: "12px", color: "#444", fontFamily: "monospace" }}>© 2026 JIMBO77 DEVZ INC. All systems nominal.</div>}
+        >
+            <ScrollToTop />
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/projects/:id" element={<ProjectDetail />} />
+                <Route path="*" element={<div style={{ padding: "50px", textAlign: "center" }}>404 // SECTOR_NOT_FOUND</div>} />
+            </Routes>
+        </AppShell>
     );
 }
 
 function App() {
   return (
-    <AppShell topbar={<div />} footer={null}>
-        <SchemaGenerator projects={PROJECTS} />
-        
-        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "40px 20px" }}>
-            <header style={{ marginBottom: "60px", textAlign: "center" }}>
-                <h1 style={{ 
-                    fontSize: "48px", 
-                    margin: "0 0 20px 0", 
-                    background: "linear-gradient(to right, #fff, var(--primary))",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    fontFamily: "var(--mono)",
-                    letterSpacing: "-2px"
-                }}>
-                    JIMBO // MAGNET
-                </h1>
-                <p style={{ color: "var(--muted)", fontSize: "18px", maxWidth: "600px", margin: "0 auto" }}>
-                    Public Interface & Semantic Index for the JIMBO77 Ecosystem.
-                    <br />
-                    <span style={{ fontSize: "12px", color: "var(--faint)", fontFamily: "var(--mono)" }}>
-                        SYSTEM_STATUS: ONLINE // AGENTS: LISTENING
-                    </span>
-                </p>
-            </header>
-
-            <div style={{ 
-                display: "grid", 
-                gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", 
-                gap: "20px" 
-            }}>
-                {PROJECTS.map(p => (
-                    <ProjectCard key={p.id} p={p} />
-                ))}
-            </div>
-
-            <footer style={{ 
-                marginTop: "100px", 
-                borderTop: "1px solid var(--line)", 
-                paddingTop: "40px",
-                textAlign: "center",
-                color: "var(--faint)",
-                fontSize: "12px",
-                fontFamily: "var(--mono)"
-            }}>
-                Generated by JIMBO Unified Ops (Magnet Node) <br />
-                {new Date().getFullYear()} © JIMBO77 DEVZ INC
-            </footer>
-        </div>
-    </AppShell>
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
   );
 }
 

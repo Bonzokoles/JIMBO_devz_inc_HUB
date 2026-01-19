@@ -1,0 +1,18 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "JIMBO77 Devz Inc Hub",
+  "name_for_model": "jimbo77_devz_hub",
+  "description_for_human": "AI development ecosystem with RAG systems, multi-agent orchestration, and Cloudflare Workers deployment platform.",
+  "description_for_model": "JIMBO77 Devz Inc is an advanced AI development and operations hub featuring: (1) PUMO RAG - hybrid search system for furniture e-commerce using Cloudflare Vectorize + DeepSeek R1; (2) Multi-agent orchestration with 18 specialized AI agents for deployment, monitoring, cost optimization; (3) MCP servers for VS Code integration including workspace navigation, RAG memory, semantic code analysis; (4) Technical blog (MyBonzo AI Blog) with Astro + Cloudflare Pages; (5) Privacy-first browser interface (Zen Browser OS). All projects use Cloudflare Workers for edge deployment, with PostgreSQL/Redis data layer and Docker-based development environment. Use this plugin to discover project details, API endpoints, architecture patterns, and implementation examples.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://jimbo77.org/openapi.json",
+    "is_user_authenticated": false
+  },
+  "logo_url": "https://jimbo77.org/logo.png",
+  "contact_email": "contact@jimbo77.org",
+  "legal_info_url": "https://jimbo77.org/legal"
+}

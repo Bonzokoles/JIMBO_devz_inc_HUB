@@ -1,0 +1,221 @@
+{
+  "$schema": "https://modelcontextprotocol.io/schemas/llm-context-v1.json",
+  "version": "1.0.0",
+  "name": "JIMBO77 Devz Inc Hub",
+  "description": "Advanced AI development ecosystem with RAG systems, multi-agent orchestration, and edge deployment platform",
+  "context": {
+    "organization": {
+      "name": "JIMBO77 DEVZ INC",
+      "url": "https://jimbo77.org",
+      "description": "AI-first development collective specializing in RAG systems, multi-agent orchestration, and Cloudflare Workers deployment"
+    },
+    "projects": [
+      {
+        "id": "pumo-rag",
+        "name": "PUMO RAG System",
+        "url": "https://meblepumo.iai-shop.com",
+        "description": "Hybrid RAG system for furniture e-commerce combining Cloudflare Vectorize with BM25 keyword matching",
+        "technologies": [
+          "Cloudflare Workers",
+          "Vectorize",
+          "DeepSeek R1",
+          "IdoSell API",
+          "TypeScript"
+        ],
+        "endpoints": [
+          {
+            "path": "/api/v1/search",
+            "method": "POST",
+            "description": "Search furniture catalog with natural language queries"
+          }
+        ]
+      },
+      {
+        "id": "multi-agent-orchestration",
+        "name": "AI Agent Orchestration System",
+        "url": "https://orchestrator.jimbo77.com",
+        "description": "18 specialized AI agents coordinated for deployment, monitoring, and DevOps automation",
+        "technologies": [
+          "Cloudflare Workers",
+          "DeepSeek R1",
+          "Python",
+          "Docker",
+          "KV Storage"
+        ],
+        "agents": [
+          "deployment-coordinator",
+          "guardian-agent",
+          "cost-optimizer",
+          "worker-health-monitor",
+          "research-agent",
+          "code-reviewer",
+          "documentation-generator",
+          "image-optimizer",
+          "database-manager",
+          "api-gateway-controller",
+          "cache-optimizer",
+          "log-analyzer",
+          "performance-tuner",
+          "backup-coordinator",
+          "secret-manager",
+          "dns-manager",
+          "ssl-certificate-monitor",
+          "analytics-aggregator"
+        ]
+      },
+      {
+        "id": "mybonzo-ai-blog",
+        "name": "MyBonzo AI Blog",
+        "url": "https://www.mybonzoaiblog.com",
+        "description": "Technical blog about AI development, RAG systems, and modern web architecture",
+        "technologies": [
+          "Astro",
+          "Cloudflare Pages",
+          "Cloudflare Images",
+          "R2 Storage"
+        ],
+        "topics": [
+          "RAG Systems",
+          "AI Agents",
+          "Cloudflare Workers",
+          "MCP Servers",
+          "Web Performance"
+        ]
+      },
+      {
+        "id": "zen-browser-os",
+        "name": "Zen Browser OS",
+        "url": "https://zen-bro-wser.org",
+        "description": "Privacy-first browser startup page with local AI features and zero tracking",
+        "technologies": ["Astro", "Cloudflare Pages", "Local Storage API"],
+        "features": [
+          "Local AI Chat",
+          "Zero Tracking",
+          "Bookmark Management",
+          "Search Aggregation"
+        ]
+      },
+      {
+        "id": "mcp-tools",
+        "name": "MCP Tools Suite",
+        "description": "Model Context Protocol servers for VS Code integration",
+        "technologies": ["TypeScript", "Python", "FastAPI", "ChromaDB"],
+        "tools": [
+          {
+            "name": "workspace-navigator",
+            "port": 3889,
+            "description": "Navigate multi-repo workspace with 7 Git submodules, JWT auth, risk scoring"
+          },
+          {
+            "name": "rag-memory-mcp",
+            "port": 6100,
+            "description": "Knowledge graph with vector search for code context"
+          },
+          {
+            "name": "smart-coding-mcp",
+            "port": 6300,
+            "description": "Semantic code analysis and refactoring suggestions"
+          }
+        ]
+      }
+    ],
+    "infrastructure": {
+      "workspace": {
+        "type": "multi-repo",
+        "repositories": 8,
+        "submodules": 7,
+        "root": "The_yellow_hub",
+        "indexedFiles": 14812,
+        "totalSize": "96.75 MB"
+      },
+      "cloud": {
+        "platform": "Cloudflare",
+        "services": [
+          "Workers (10+ deployed)",
+          "Pages (5 sites)",
+          "D1 (SQLite at edge)",
+          "Vectorize (embeddings)",
+          "R2 (9 buckets, 2.5GB)",
+          "KV (state storage)"
+        ]
+      },
+      "databases": {
+        "postgresql": {
+          "host": "postgres:5432",
+          "database": "bonzo_main",
+          "size": "~500 MB"
+        },
+        "redis": {
+          "host": "redis:6379",
+          "databases": {
+            "0": "API Gateway cache",
+            "1": "Agent state management"
+          }
+        },
+        "sqlite": {
+          "workspace_db": {
+            "path": "dashboard/backend/data/workspace.db",
+            "size": "96.75 MB",
+            "documents": 14812
+          }
+        }
+      },
+      "docker": {
+        "services": 15,
+        "agents": 18,
+        "totalContainers": 37
+      }
+    },
+    "capabilities": {
+      "rag_systems": [
+        "Hybrid search (vector + keyword)",
+        "Cloudflare Vectorize integration",
+        "DeepSeek R1 reasoning",
+        "BM25 keyword matching",
+        "Real-time e-commerce sync"
+      ],
+      "multi_agent": [
+        "Priority-based task scheduling",
+        "Parallel agent execution",
+        "State management with KV",
+        "Real-time monitoring",
+        "Automated DevOps workflows"
+      ],
+      "mcp_integration": [
+        "VS Code workspace navigation",
+        "Knowledge graph search",
+        "Semantic code analysis",
+        "R2 storage operations",
+        "Web research with citations"
+      ],
+      "edge_deployment": [
+        "Cloudflare Workers deployment",
+        "D1 database operations",
+        "Edge caching strategies",
+        "DNS automation",
+        "SSL certificate management"
+      ]
+    },
+    "documentation": {
+      "masterIndex": "https://jimbo77.org/llms.txt",
+      "sitemap": "https://jimbo77.org/sitemap.xml",
+      "projects": "https://jimbo77.org/projects/",
+      "api": "https://jimbo77.org/docs/api/",
+      "blog": "https://www.mybonzoaiblog.com"
+    }
+  },
+  "indexing": {
+    "priority": "high",
+    "updateFrequency": "daily",
+    "contentTypes": [
+      "technical documentation",
+      "code examples",
+      "architecture patterns",
+      "API references",
+      "implementation guides"
+    ],
+    "targetAudience": ["AI models", "developers", "researchers"]
+  },
+  "license": "MIT",
+  "lastUpdated": "2026-01-19"
+}

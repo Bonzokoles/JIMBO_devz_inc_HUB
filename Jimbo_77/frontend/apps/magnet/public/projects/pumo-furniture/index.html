@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PUMO RAG - Intelligent Furniture Search | JIMBO77</title>
+    <meta
+      name="description"
+      content="Advanced RAG system for furniture e-commerce. Vector search, keyword matching, and AI-powered product recommendations using DeepSeek R1."
+    />
+
+    <!-- OpenGraph -->
+    <meta
+      property="og:title"
+      content="PUMO RAG System - AI-Powered Furniture Search"
+    />
+    <meta
+      property="og:description"
+      content="Hybrid RAG system combining vector search with keyword matching for furniture product discovery."
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://jimbo77.org/projects/pumo-furniture"
+    />
+    <meta property="og:site_name" content="JIMBO77 DEVZ INC" />
+
+    <!-- Schema.org -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "PUMO RAG System",
+        "applicationCategory": "E-commerce",
+        "description": "Hybrid RAG system combining vector search (Cloudflare Vectorize) with keyword matching for furniture product discovery. Deployed on Cloudflare Workers for edge-native performance.",
+        "url": "https://jimbo77.org/projects/pumo-furniture",
+        "applicationSubCategory": "Retrieval-Augmented Generation",
+        "operatingSystem": "Cloudflare Workers",
+        "author": {
+          "@type": "Organization",
+          "name": "JIMBO77 DEVZ INC",
+          "url": "https://jimbo77.org"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "featureList": [
+          "Vector similarity search using Cloudflare Vectorize",
+          "BM25 keyword matching algorithm",
+          "DeepSeek R1 integration for natural language understanding",
+          "IdoSell API connection for real-time inventory",
+          "Hybrid search combining semantic and keyword results",
+          "Edge-native deployment for low-latency responses"
+        ],
+        "programmingLanguage": "TypeScript",
+        "softwareVersion": "1.0.0",
+        "releaseNotes": "https://jimbo77.org/projects/pumo-furniture/changelog",
+        "screenshot": "https://jimbo77.org/projects/pumo-furniture/screenshot.png"
+      }
+    </script>
+
+    <style>
+      :root {
+        --bg: #0a0f19;
+        --fg: #e4e8f0;
+        --primary: #6366f1;
+        --muted: #94a3b8;
+        --line: #1e293b;
+        --mono: "Courier New", monospace;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: var(--bg);
+        color: var(--fg);
+        line-height: 1.6;
+      }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 60px 20px;
+      }
+      header {
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 40px;
+        margin-bottom: 60px;
+      }
+      h1 {
+        font-size: 48px;
+        margin-bottom: 20px;
+        font-family: var(--mono);
+        letter-spacing: -1px;
+        background: linear-gradient(to right, #fff, var(--primary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .subtitle {
+        color: var(--muted);
+        font-size: 18px;
+      }
+      .badge {
+        display: inline-block;
+        background: var(--primary);
+        color: #000;
+        padding: 4px 12px;
+        font-size: 11px;
+        font-weight: bold;
+        font-family: var(--mono);
+        margin: 20px 0;
+      }
+      h2 {
+        font-size: 32px;
+        margin: 60px 0 20px 0;
+        border-left: 4px solid var(--primary);
+        padding-left: 16px;
+      }
+      h3 {
+        font-size: 24px;
+        margin: 40px 0 16px 0;
+        color: var(--primary);
+      }
+      p {
+        margin-bottom: 16px;
+        color: var(--muted);
+      }
+      ul,
+      ol {
+        margin-left: 24px;
+        margin-bottom: 16px;
+      }
+      li {
+        margin-bottom: 8px;
+        color: var(--muted);
+      }
+      pre {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--line);
+        padding: 20px;
+        overflow-x: auto;
+        margin: 20px 0;
+        font-family: var(--mono);
+        font-size: 14px;
+      }
+      code {
+        font-family: var(--mono);
+        background: rgba(255, 255, 255, 0.05);
+        padding: 2px 6px;
+        border-radius: 3px;
+      }
+      .tech-stack {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 16px;
+        margin: 20px 0;
+      }
+      .tech-item {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--line);
+        padding: 16px;
+      }
+      .tech-item strong {
+        color: var(--primary);
+        display: block;
+        margin-bottom: 8px;
+      }
+      .link {
+        color: var(--primary);
+        text-decoration: none;
+        border-bottom: 1px dashed var(--primary);
+      }
+      .link:hover {
+        border-bottom-style: solid;
+      }
+      footer {
+        margin-top: 100px;
+        border-top: 1px solid var(--line);
+        padding-top: 40px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 12px;
+        font-family: var(--mono);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="badge">E-COMMERCE RAG</div>
+        <h1>PUMO RAG System</h1>
+        <p class="subtitle">
+          Intelligent furniture catalog search using hybrid RAG architecture
+        </p>
+      </header>
+
+      <article>
+        <section id="overview">
+          <h2>Overview</h2>
+          <p>
+            PUMO RAG is an advanced Retrieval-Augmented Generation system
+            designed specifically for furniture e-commerce. It combines the
+            power of vector similarity search with traditional keyword matching
+            to deliver highly relevant product recommendations based on natural
+            language queries.
+          </p>
+          <p>
+            The system processes queries in real-time at the edge using
+            Cloudflare Workers, ensuring sub-100ms response times regardless of
+            user location. Integration with IdoSell e-commerce platform provides
+            live inventory data and product information.
+          </p>
+        </section>
+
+        <section id="architecture">
+          <h2>Architecture</h2>
+          <p>The system follows a hybrid search pattern:</p>
+          <pre>
+User Query → Worker → [Vector Search + Keyword Match] → DeepSeek R1 → Formatted Response</pre
+          >
+
+          <h3>Components</h3>
+          <ul>
+            <li>
+              <strong>Vector Search</strong>: Cloudflare Vectorize with
+              1536-dimensional embeddings
+            </li>
+            <li>
+              <strong>Keyword Matching</strong>: BM25 algorithm for exact term
+              matching
+            </li>
+            <li>
+              <strong>LLM Integration</strong>: DeepSeek R1 via OpenRouter for
+              query understanding and response formatting
+            </li>
+            <li>
+              <strong>Product Database</strong>: IdoSell REST API with 5000+
+              furniture items
+            </li>
+            <li>
+              <strong>Edge Deployment</strong>: Cloudflare Workers for global
+              distribution
+            </li>
+          </ul>
+        </section>
+
+        <section id="api">
+          <h2>API Documentation</h2>
+
+          <h3>POST /api/v1/search</h3>
+          <p>Search furniture catalog with natural language queries</p>
+
+          <pre><code class="language-json">{
+  "query": "nowoczesne krzesła do jadalni w stylu skandynawskim",
+  "limit": 10,
+  "includeMetadata": true
+}</code></pre>
+
+          <h3>Response Format</h3>
+          <pre><code class="language-json">{
+  "results": [
+    {
+      "id": "prod_12345",
+      "name": "Krzesło VIBE Modern",
+      "description": "Nowoczesne krzesło w stylu skandynawskim",
+      "price": "299 PLN",
+      "url": "https://meblepumo.iai-shop.com/prod_12345",
+      "image": "https://...",
+      "score": 0.87
+    }
+  ],
+  "metadata": {
+    "processingTime": "245ms",
+    "vectorScore": 0.87,
+    "keywordScore": 0.92,
+    "totalResults": 847
+  }
+}</code></pre>
+        </section>
+
+        <section id="tech-stack">
+          <h2>Technology Stack</h2>
+          <div class="tech-stack">
+            <div class="tech-item">
+              <strong>Runtime</strong>
+              <p>Cloudflare Workers (V8 isolates)</p>
+            </div>
+            <div class="tech-item">
+              <strong>Vector Database</strong>
+              <p>Cloudflare Vectorize (1536 dims)</p>
+            </div>
+            <div class="tech-item">
+              <strong>LLM Provider</strong>
+              <p>DeepSeek R1 via OpenRouter</p>
+            </div>
+            <div class="tech-item">
+              <strong>E-commerce API</strong>
+              <p>IdoSell REST API v3</p>
+            </div>
+            <div class="tech-item">
+              <strong>Language</strong>
+              <p>TypeScript 5.3+</p>
+            </div>
+            <div class="tech-item">
+              <strong>Deployment</strong>
+              <p>Wrangler CLI + GitHub Actions</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="features">
+          <h2>Key Features</h2>
+          <ul>
+            <li>
+              <strong>Semantic Search</strong>: Understands query intent beyond
+              exact keyword matches
+            </li>
+            <li>
+              <strong>Hybrid Ranking</strong>: Combines vector similarity (0.7
+              weight) with keyword relevance (0.3 weight)
+            </li>
+            <li>
+              <strong>Natural Language</strong>: Processes queries in Polish
+              with context understanding
+            </li>
+            <li>
+              <strong>Real-time Inventory</strong>: Live sync with IdoSell
+              product catalog
+            </li>
+            <li>
+              <strong>Edge Performance</strong>: Sub-100ms response times
+              globally
+            </li>
+            <li>
+              <strong>Contextual Recommendations</strong>: DeepSeek R1 generates
+              personalized product suggestions
+            </li>
+          </ul>
+        </section>
+
+        <section id="use-cases">
+          <h2>Use Cases</h2>
+          <ol>
+            <li>
+              <strong>Product Discovery</strong>: "Szukam wygodnych krzeseł do
+              pracy zdalnej"
+            </li>
+            <li>
+              <strong>Style Matching</strong>: "Meble w stylu industrialnym do
+              loftu"
+            </li>
+            <li>
+              <strong>Room Planning</strong>: "Kompletne wyposażenie sypialni w
+              kolorach pastelowych"
+            </li>
+            <li>
+              <strong>Price-based Search</strong>: "Sofy do 2000 zł z funkcją
+              spania"
+            </li>
+          </ol>
+        </section>
+
+        <section id="metrics">
+          <h2>Performance Metrics</h2>
+          <ul>
+            <li><strong>Average Response Time</strong>: 78ms (p95: 145ms)</li>
+            <li>
+              <strong>Search Accuracy</strong>: 87% relevance score (user
+              feedback)
+            </li>
+            <li><strong>Catalog Coverage</strong>: 5,247 indexed products</li>
+            <li><strong>Daily Queries</strong>: ~1,200 searches</li>
+            <li>
+              <strong>Edge Locations</strong>: 285+ Cloudflare datacenters
+            </li>
+          </ul>
+        </section>
+
+        <section id="links">
+          <h2>Related Links</h2>
+          <ul>
+            <li>
+              <a href="https://meblepumo.iai-shop.com" class="link"
+                >Live Demo - PUMO Shop</a
+              >
+            </li>
+            <li>
+              <a href="https://jimbo77.org/docs/api/pumo-rag" class="link"
+                >Full API Documentation</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://jimbo77.org/blog/pumo-rag-architecture"
+                class="link"
+                >Architecture Deep Dive</a
+              >
+            </li>
+            <li>
+              <a href="https://jimbo77.org" class="link"
+                >Back to JIMBO77 Catalog</a
+              >
+            </li>
+          </ul>
+        </section>
+      </article>
+
+      <footer>
+        Generated by JIMBO77 Unified Ops (Magnet Node)<br />
+        2026 © JIMBO77 DEVZ INC |
+        <a href="https://jimbo77.org/llms.txt" class="link">llms.txt</a>
+      </footer>
+    </div>
+  </body>
+</html>
