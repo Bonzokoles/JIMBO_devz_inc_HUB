@@ -21,6 +21,8 @@ from .routes import (
     agents,
     execute,
     moe_rag,
+    network,
+    vpn,
 )
 from .security.rbac import current_actor
 
@@ -86,6 +88,8 @@ app.include_router(
     execute.router, prefix="/api/agents"
 )  # Agent Execution (for Orchestrator)
 app.include_router(moe_rag.router)  # MoE-RAG System (already has /api/moe-rag prefix)
+app.include_router(network.router)  # Network Control Center (PowerShell, Port Monitoring)
+app.include_router(vpn.router)  # Proton VPN Status & Control
 
 # Agent compatibility routes (no /v1 prefix)
 app.include_router(commands.router, prefix="/api")

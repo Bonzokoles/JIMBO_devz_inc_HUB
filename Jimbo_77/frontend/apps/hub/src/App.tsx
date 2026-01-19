@@ -43,6 +43,16 @@ export default function App() {
         return <BunkerWarRoom />;
       case "agents":
         return <div className="text-gray-500 p-10 flex items-center justify-center font-mono">AGENT MANAGEMENT [COMING SOON]</div>;
+      case "network":
+        return (
+          <div className="h-full">
+            <iframe
+              src="http://localhost:5173"
+              className="w-full h-full border-0"
+              title="Network Control Center"
+            />
+          </div>
+        );
       case "services":
          return <div className="text-gray-500 p-10 flex items-center justify-center font-mono">MICROSERVICES [COMING SOON]</div>;
       default:
@@ -93,6 +103,13 @@ export default function App() {
             label="AGENTS"
             id="agents"
             active={activeTab === "agents"}
+            onClick={setActiveTab}
+          />
+          <SidebarItem
+            icon="🌐"
+            label="NETWORK CTRL"
+            id="network"
+            active={activeTab === "network"}
             onClick={setActiveTab}
           />
           <SidebarItem
