@@ -1,0 +1,16 @@
+name = "ai-marketplace"
+main = "src/index.ts"
+compatibility_date = "2024-01-15"
+compatibility_flags = ["nodejs_compat"]
+
+# D1 Database
+[[d1_databases]]
+binding = "DB"
+database_name = "ai-marketplace-db"
+database_id = "d43dafdc-b7bd-4d76-9ce9-8f2dfe56fbaf"
+
+# Secrets (set via: wrangler secret put <NAME>)
+# OPENAI_API_KEY
+# ANTHROPIC_API_KEY  
+# MISTRAL_API_KEY
+# JWT_SECRET
