@@ -1,0 +1,32 @@
+# worker_registry.yml – źródło prawdy o workerach
+workers:
+  - id: win
+    url: https://win.jimbo77.org
+    kind: windows
+    capabilities: ["exec", "files", "net-check", "monitor"]
+    max_parallel: 2
+    timeout_s: 300
+  - id: s1
+    url: https://s1.jimbo77.org
+    kind: satellite
+    capabilities: ["monitor", "web-check"]
+    max_parallel: 2
+    timeout_s: 180
+  - id: s2
+    url: https://s2.jimbo77.org
+    kind: satellite
+    capabilities: ["monitor", "web-check"]
+    max_parallel: 2
+    timeout_s: 180
+  - id: s3
+    url: https://s3.jimbo77.org
+    kind: satellite
+    capabilities: ["monitor", "web-check"]
+    max_parallel: 2
+    timeout_s: 180
+  - id: s4
+    url: https://s4.jimbo77.org
+    kind: satellite
+    capabilities: ["monitor", "web-check"]
+    max_parallel: 2
+    timeout_s: 180

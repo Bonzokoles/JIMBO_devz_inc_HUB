@@ -1,0 +1,28 @@
+# domains.yml – mapa subdomen -> usługa
+public:
+  dashboard:
+    host: jimbo77.com
+    type: pages
+private_access:
+  api:
+    host: api.jimbo77.org
+    type: origin
+  stream:
+    host: stream.jimbo77.org
+    type: origin
+private_service:
+  win:
+    host: win.jimbo77.org
+    type: tunnel
+  s1:
+    host: s1.jimbo77.org
+    type: tunnel
+  s2:
+    host: s2.jimbo77.org
+    type: tunnel
+  s3:
+    host: s3.jimbo77.org
+    type: tunnel
+  s4:
+    host: s4.jimbo77.org
+    type: tunnel

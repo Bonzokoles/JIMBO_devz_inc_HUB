@@ -1,0 +1,13 @@
+{
+  "windows": {
+    "allowed": [
+      "ping",
+      "tracert",
+      "ipconfig",
+      "curl",
+      "powershell:Get-Service",
+      "powershell:Get-Process"
+    ],
+    "blocked": ["format", "diskpart", "reg delete", "shutdown", "restart-computer"]
+  }
+}

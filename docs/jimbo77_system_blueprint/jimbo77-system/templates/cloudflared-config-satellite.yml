@@ -1,0 +1,9 @@
+# cloudflared config template (Satellite worker)
+
+tunnel: SAT_TUNNEL_ID
+credentials-file: /etc/cloudflared/SAT_TUNNEL_ID.json
+
+ingress:
+  - hostname: sX.jimbo77.org
+    service: http://127.0.0.1:7777
+  - service: http_status:404

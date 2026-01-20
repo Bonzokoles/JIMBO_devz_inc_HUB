@@ -1,0 +1,10 @@
+# cloudflared config template (Windows worker)
+# Place near the cloudflared service install path.
+
+tunnel: WIN_TUNNEL_ID
+credentials-file: C:\\cloudflared\\WIN_TUNNEL_ID.json
+
+ingress:
+  - hostname: win.jimbo77.org
+    service: http://127.0.0.1:7777
+  - service: http_status:404
