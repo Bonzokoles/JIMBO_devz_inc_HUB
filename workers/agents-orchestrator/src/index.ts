@@ -60,29 +60,97 @@ export default {
           status: "healthy",
           orchestrator: "online",
           model: "deepseek/deepseek-r1",
-          agents: 18,
+          agents: 20,
+          special_agents: {
+            "agent-zero": {
+              status: "online",
+              endpoint: "https://agent-zero-bridge.stolarnia-ams.workers.dev",
+              capabilities: [
+                "code_execution",
+                "terminal",
+                "file_ops",
+                "web_search",
+              ],
+            },
+            "zeno-browser": {
+              status: "online",
+              endpoint: "https://zeno-browser-bridge.stolarnia-ams.workers.dev",
+              capabilities: [
+                "web_navigation",
+                "content_analysis",
+                "web_search",
+                "bookmark_manager",
+                "page_summarizer",
+                "link_extractor",
+              ],
+            },
+          },
         });
+      }
+
+      // Simple Chat Endpoint
+      if (url.pathname === "/api/chat" && request.method === "POST") {
+        const response = await handleChat(request, env);
+        return addCors(response);
       }
 
       // Get task status
       if (url.pathname.startsWith("/task/")) {
         const taskId = url.pathname.split("/")[2];
         const status = await env.AGENT_STATE?.get(`task:${taskId}`, "json");
-        return Response.json(status || { error: "Task not found" });
+        return addCors(Response.json(status || { error: "Task not found" }));
       }
 
-      return Response.json({ error: "Not found" }, { status: 404 });
+      return addCors(Response.json({ error: "Not found" }, { status: 404 }));
     } catch (error: any) {
-      return Response.json(
+      return addCors(Response.json(
         {
           error: error?.message || String(error),
           stack: error?.stack,
         },
         { status: 500 },
-      );
+      ));
     }
   },
 };
+
+/**
+ * Add CORS headers to an existing response
+ */
+function addCors(response: Response): Response {
+  const newHeaders = new Headers(response.headers);
+  newHeaders.set("Access-Control-Allow-Origin", "*");
+  newHeaders.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  newHeaders.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers: newHeaders,
+  });
+}
+
+/**
+ * Handle simple chat requests
+ */
+async function handleChat(request: Request, env: Env): Promise<Response> {
+  try {
+    const body: any = await request.json();
+    const { message, model = "deepseek/deepseek-r1" } = body;
+
+    if (!message) {
+      return Response.json({ error: "Message required" }, { status: 400 });
+    }
+
+    const systemPrompt = "You are CAY_DEN, an advanced AI assistant within the Jimbo77 ecosystem. Be helpful, concise, and professional.";
+    const response = await callAI(systemPrompt, message, model, env);
+
+    return Response.json({ response });
+  } catch (error: any) {
+    console.error("Chat error:", error);
+    return Response.json({ error: error.message }, { status: 500 });
+  }
+}
 
 /**
  * Main orchestration handler
@@ -96,7 +164,7 @@ async function handleOrchestrate(
   const { query, context = {}, model = "deepseek/deepseek-r1" } = body;
 
   if (!query) {
-    return Response.json({ error: "Query required" }, { status: 400 });
+    return addCors(Response.json({ error: "Query required" }, { status: 400 }));
   }
 
   const taskId = crypto.randomUUID();
@@ -144,7 +212,7 @@ async function handleOrchestrate(
     { expirationTtl: 3600 },
   );
 
-  return Response.json({
+  return addCors(Response.json({
     taskId,
     query,
     plan: plan.tasks,
@@ -152,7 +220,7 @@ async function handleOrchestrate(
     answer: finalResult,
     execution_time: executionTime,
     model_used: model,
-  });
+  }));
 }
 
 /**
@@ -164,7 +232,8 @@ async function analyzeAndPlan(
   model: string,
   env: Env,
 ): Promise<{ reasoning: string; tasks: AgentTask[] }> {
-  const systemPrompt = `You are an AI orchestrator managing 18 specialized agents. Analyze the user's request and create an execution plan.
+// ... rest of file unchanged ...
+  const systemPrompt = `You are an AI orchestrator managing 18 specialized agents + 2 special tools. Analyze the user's request and create an execution plan.
 
 Available Agents:
 1. research-agent (6062): web search, trends analysis, data mining
@@ -185,6 +254,10 @@ Available Agents:
 16. web-crawler (6107): web scraping, data extraction
 17. code-reviewer (6108): code analysis, quality checks
 18. data-analyst (6109): data analysis, visualization
+
+SPECIAL TOOLS (use when standard agents can't help):
+19. agent-zero: ULTIMATE code execution, terminal access, file operations, conversation continuity (via Cloudflare Tunnel)
+20. zeno-browser: Advanced web browser with 6 MCP tools - web navigation, content analysis, web search (Tavily/Brave), bookmark management, page summarization, link extraction
 
 Respond in JSON format:
 {
@@ -299,6 +372,16 @@ async function executeAgentTask(
   env: Env,
   taskId: string,
 ): Promise<any> {
+  // Special handling for Agent Zero (external Cloudflare bridge)
+  if (task.agentId === "agent-zero") {
+    return await executeAgentZero(task, taskId);
+  }
+
+  // Special handling for ZENO Browser (external Cloudflare bridge)
+  if (task.agentId === "zeno-browser") {
+    return await executeZenoBrowser(task, taskId);
+  }
+
   const apiBase = env.AGENTS_API_BASE || "http://localhost:8001";
   const url = `${apiBase}/api/agents/execute/${task.agentId}`;
 
@@ -321,6 +404,185 @@ async function executeAgentTask(
   }
 
   return await response.json();
+}
+
+/**
+ * Execute Agent Zero task via Cloudflare bridge
+ */
+async function executeAgentZero(task: AgentTask, taskId: string): Promise<any> {
+  const bridgeUrl =
+    "https://agent-zero-bridge.stolarnia-ams.workers.dev/message";
+
+  console.log(`[${taskId}] Calling Agent Zero via bridge: ${task.action}`);
+
+  // Construct message from task data
+  const message =
+    typeof task.data === "string"
+      ? task.data
+      : task.data.message || task.data.query || JSON.stringify(task.data);
+
+  const response = await fetch(bridgeUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      message: message,
+      context_id: taskId,
+      lifetime_hours: 24,
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`Agent Zero bridge failed: ${error}`);
+  }
+
+  const result: any = await response.json();
+
+  // Return result in standard format
+  return {
+    agent: "Agent Zero",
+    success: result.success || false,
+    response: result.response || result,
+    via_tunnel: result.via_tunnel,
+    timestamp: new Date().toISOString(),
+  };
+}
+
+/**
+ * Execute ZENO Browser task via Cloudflare bridge
+ */
+async function executeZenoBrowser(
+  task: AgentTask,
+  taskId: string,
+): Promise<any> {
+  const bridgeUrl =
+    "https://zeno-browser-bridge.stolarnia-ams.workers.dev/execute";
+
+  console.log(`[${taskId}] Calling ZENO Browser via bridge: ${task.action}`);
+
+  // Parse task to determine tool and action
+  const { tool, action, params } = parseZenoTask(task);
+
+  const response = await fetch(bridgeUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      tool,
+      action,
+      params,
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`ZENO Browser bridge failed: ${error}`);
+  }
+
+  const result: any = await response.json();
+
+  return {
+    agent: "ZENO Browser",
+    tool,
+    action,
+    success: result.success || false,
+    data: result.data,
+    timestamp: result.timestamp,
+  };
+}
+
+/**
+ * Parse task to extract ZENO tool, action, and params
+ */
+function parseZenoTask(task: AgentTask): {
+  tool: string;
+  action: string;
+  params: any;
+} {
+  const taskStr = JSON.stringify(task).toLowerCase();
+
+  // Detect tool based on keywords
+  if (taskStr.includes("search") || taskStr.includes("find")) {
+    return {
+      tool: "web_search",
+      action: "search",
+      params: { query: task.data.query || task.data.message || task.action },
+    };
+  }
+
+  if (
+    taskStr.includes("navigate") ||
+    taskStr.includes("open") ||
+    taskStr.includes("browse")
+  ) {
+    return {
+      tool: "web_navigation",
+      action: "navigate",
+      params: {
+        url:
+          task.data.url || extractUrlFromText(task.data.message || task.action),
+      },
+    };
+  }
+
+  if (taskStr.includes("analyze") || taskStr.includes("content")) {
+    return {
+      tool: "content_analysis",
+      action: "analyze_html",
+      params: {
+        url:
+          task.data.url || extractUrlFromText(task.data.message || task.action),
+      },
+    };
+  }
+
+  if (taskStr.includes("bookmark")) {
+    return {
+      tool: "bookmark_manager",
+      action: task.data.action || "list",
+      params: task.data.params || {},
+    };
+  }
+
+  if (taskStr.includes("summarize") || taskStr.includes("summary")) {
+    return {
+      tool: "page_summarizer",
+      action: "summarize",
+      params: {
+        url:
+          task.data.url || extractUrlFromText(task.data.message || task.action),
+      },
+    };
+  }
+
+  if (taskStr.includes("extract") && taskStr.includes("link")) {
+    return {
+      tool: "link_extractor",
+      action: "extract_all",
+      params: {
+        url:
+          task.data.url || extractUrlFromText(task.data.message || task.action),
+      },
+    };
+  }
+
+  // Default to web search
+  return {
+    tool: "web_search",
+    action: "search",
+    params: { query: task.data.query || task.data.message || task.action },
+  };
+}
+
+/**
+ * Extract URL from text
+ */
+function extractUrlFromText(text: string): string | undefined {
+  const urlMatch = text.match(/https?:\/\/[^\s]+/);
+  return urlMatch ? urlMatch[0] : undefined;
 }
 
 /**

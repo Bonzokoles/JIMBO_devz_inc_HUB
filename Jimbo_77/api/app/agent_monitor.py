@@ -191,7 +191,7 @@ class LogAggregator:
     
     def __init__(self, log_dir: Path):
         self.log_dir = log_dir
-        self.log_dir.mkdir(exist_ok=True)
+        self.log_dir.mkdir(parents=True, exist_ok=True)
     
     async def get_agent_logs(self, agent_id: str, lines: int = 100) -> List[str]:
         """Get recent logs for an agent"""

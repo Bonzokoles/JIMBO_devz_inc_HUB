@@ -3,6 +3,7 @@ from typing import List, Dict, Any, Optional
 import psutil
 import subprocess
 import json
+import os
 from pydantic import BaseModel
 import httpx
 from datetime import datetime
@@ -10,9 +11,10 @@ from datetime import datetime
 router = APIRouter(prefix="/api/network", tags=["network"])
 
 # Orchestration Service Integration
-AGENT_ZERO_URL = "http://localhost:50100/api/v1/chat"
+AGENT_ZERO_URL = "http://localhost:50202/a2a"  # A2A protocol endpoint
+AGENT_ZERO_TOKEN = "t-e7ac0786668e0ff0"
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
-OPENROUTER_KEY = None  # Set from env
+OPENROUTER_KEY = os.getenv("OPENROUTER_API_KEY")
 
 
 class PowerShellCommand(BaseModel):
@@ -214,17 +216,18 @@ def calculate_vulnerability_score(port: int, ip: str) -> int:
 
 
 async def call_ai(prompt: str, system_prompt: str) -> Dict[str, Any]:
-    """Call Agent Zero, fallback to OpenRouter"""
+    """Call Agent Zero via A2A protocol, fallback to OpenRouter"""
 
-    # Try Agent Zero first (local, fast, free)
+    # Try Agent Zero first (local, fast, A2A protocol)
     try:
         async with httpx.AsyncClient(timeout=30.0) as client:
             response = await client.post(
                 AGENT_ZERO_URL,
+                headers={"Authorization": f"Bearer {AGENT_ZERO_TOKEN}"},
                 json={
-                    "message": prompt,
-                    "system": system_prompt,
-                    "context": "orchestration",
+                    "message": f"{system_prompt}\n\n{prompt}",
+                    "attachments": [],
+                    "reset": False,
                 },
             )
 
@@ -232,14 +235,14 @@ async def call_ai(prompt: str, system_prompt: str) -> Dict[str, Any]:
                 data = response.json()
                 return {
                     "success": True,
-                    "content": data.get("response", data.get("message", "")),
-                    "provider": "agent-zero",
+                    "content": data.get("response", data.get("message", str(data))),
+                    "provider": "agent-zero-a2a",
                 }
 
     except Exception as e:
-        print(f"⚠️ Agent Zero failed: {e}, falling back to OpenRouter")
+        print(f"⚠️ Agent Zero A2A failed: {e}, falling back to OpenRouter")
 
-    # Fallback to OpenRouter (cloud, slower, paid)
+    # Fallback to OpenRouter
     if not OPENROUTER_KEY:
         return {"success": False, "error": "Both Agent Zero and OpenRouter unavailable"}
 

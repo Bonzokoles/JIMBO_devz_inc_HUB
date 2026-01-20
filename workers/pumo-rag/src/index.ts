@@ -60,48 +60,167 @@ export default {
         );
       }
 
-      // API Catalog endpoint - for AI crawlers to discover all products
-      if (url.pathname === "/api/catalog" && request.method === "GET") {
+      // llms.txt - AI crawler discovery file
+      if (url.pathname === "/llms.txt") {
+        return new Response(
+          `# PUMO Furniture RAG API
+
+# API Information
+API Name: PUMO RAG
+API Version: 1.0.0
+API Description: Semantic search API for Polish furniture products with 14,315 items
+Base URL: https://pumo-rag.stolarnia-ams.workers.dev
+
+# Main Search Endpoint
+POST /api/search
+Description: Semantic product search using vector embeddings (768-dim BGE model)
+Content-Type: application/json
+Body: {"query": "your search query", "limit": 10}
+Response: JSON with products, relevance scores, and metadata
+
+# Catalog Discovery
+GET /api/catalog
+Description: Get catalog metadata, categories, and capabilities
+Public: Yes
+Cache: 1 hour
+
+# Documentation
+GET /api/docs
+Description: Complete API documentation with examples
+Public: Yes
+
+# AI Usage Guidelines
+- Use natural language queries (Polish or English)
+- Optimal result limit: 10-20 items
+- Relevance scores >0.5 are highly relevant
+- Results cached for 5 minutes
+- 14,315 products indexed with categories, prices, descriptions
+
+# Example Queries
+"tanie meble do salonu"
+"nowoczesne krzesła biurowe"
+"białe regały z drewna"
+"sofa rozkładana w stylu skandynawskim"
+
+# Rate Limits
+Public API: 100 requests/minute
+No authentication required for search
+
+# Contact
+For API support or integration questions, see /api/docs`,
+          {
+            headers: {
+              "Content-Type": "text/plain; charset=utf-8",
+              "Cache-Control": "public, max-age=86400",
+              "Access-Control-Allow-Origin": "*",
+            },
+          },
+        );
+      }
+
+      // AI Plugin manifest (.well-known/ai-plugin.json)
+      if (url.pathname === "/.well-known/ai-plugin.json") {
         return new Response(
           JSON.stringify({
-            name: "PUMO Furniture Catalog",
-            description:
-              "Polish furniture e-commerce catalog with 14,315 products",
-            totalProducts: 14315,
-            vectorIndexed: true,
-            searchEndpoint: "/api/search",
-            capabilities: [
-              "semantic_search",
-              "product_recommendations",
-              "category_filtering",
-              "price_filtering",
-            ],
-            categories: [
-              "Meblościanki",
-              "Regały",
-              "Stoliki kawowe",
-              "Krzesła",
-              "Fotele",
-              "Sofy",
-              "Stoły",
-              "Szafy",
-              "Komody",
-            ],
-            priceRange: {
-              min: 50,
-              max: 15000,
-              currency: "PLN",
+            schema_version: "v1",
+            name_for_human: "PUMO Furniture Search",
+            name_for_model: "pumo_rag",
+            description_for_human:
+              "Search Polish furniture catalog with 14,315 products using semantic AI search",
+            description_for_model:
+              "Semantic search API for Polish furniture e-commerce. Query in Polish or English. Returns relevant products with prices, categories, and descriptions. Use for furniture recommendations, price comparisons, and product discovery.",
+            auth: {
+              type: "none",
             },
-            lastUpdated: "2026-01-18T22:21:40.694Z",
+            api: {
+              type: "openapi",
+              url: "https://pumo-rag.stolarnia-ams.workers.dev/api/docs",
+              is_user_authenticated: false,
+            },
+            logo_url:
+              "https://www.meblepumo.pl/themes/PumoCom/assets/img/logo.png",
+            contact_email: "api@jimbo77.com",
+            legal_info_url: "https://www.meblepumo.pl/pl/page/terms",
           }),
           {
             headers: {
               "Content-Type": "application/json",
+              "Cache-Control": "public, max-age=86400",
               "Access-Control-Allow-Origin": "*",
-              "Cache-Control": "public, max-age=3600",
             },
           },
         );
+      }
+
+      // API Catalog endpoint - for AI crawlers to discover all products
+      if (url.pathname === "/api/catalog" && request.method === "GET") {
+        const catalogData = {
+          "@context": "https://schema.org",
+          "@type": "DataCatalog",
+          name: "PUMO Furniture Catalog",
+          description:
+            "Polish furniture e-commerce catalog with 14,315 products. Semantic search API powered by vector embeddings.",
+          url: "https://pumo-rag.stolarnia-ams.workers.dev/api/catalog",
+          provider: {
+            "@type": "Organization",
+            name: "JIMBO77 AI Systems",
+            url: "https://jimbo77.com",
+          },
+          dataset: {
+            "@type": "Dataset",
+            name: "PUMO Product Embeddings",
+            description:
+              "768-dimensional vector embeddings of 14,315 furniture products",
+            keywords: [
+              "furniture",
+              "meble",
+              "e-commerce",
+              "semantic search",
+              "vector database",
+            ],
+            distribution: {
+              "@type": "DataDownload",
+              contentUrl:
+                "https://pumo-rag.stolarnia-ams.workers.dev/api/search",
+              encodingFormat: "application/json",
+            },
+          },
+          totalProducts: 14315,
+          vectorIndexed: true,
+          searchEndpoint: "/api/search",
+          capabilities: [
+            "semantic_search",
+            "product_recommendations",
+            "category_filtering",
+            "price_filtering",
+          ],
+          categories: [
+            "Meblościanki",
+            "Regały",
+            "Stoliki kawowe",
+            "Krzesła",
+            "Fotele",
+            "Sofy",
+            "Stoły",
+            "Szafy",
+            "Komody",
+          ],
+          priceRange: {
+            "@type": "MonetaryAmount",
+            currency: "PLN",
+            minValue: 50,
+            maxValue: 15000,
+          },
+          lastUpdated: "2026-01-18T22:21:40.694Z",
+        };
+
+        return new Response(JSON.stringify(catalogData, null, 2), {
+          headers: {
+            "Content-Type": "application/ld+json",
+            "Access-Control-Allow-Origin": "*",
+            "Cache-Control": "public, max-age=3600",
+          },
+        });
       }
 
       // Internal agent endpoint (requires auth)
