@@ -11,7 +11,6 @@ import { useState } from "react";
 import { UnifiedOpsView } from "./features/unified/UnifiedOpsView";
 import { PublishingView } from "./features/publishing/PublishingView";
 import BunkerWarRoom from "./features/analysis/BunkerWarRoom";
-import { CaydenChatView } from "./features/cayden";
 import { ZenonView } from "./features/zenon";
 import { MoaFlowVisualizer } from "./features/moa";
 // import { ServicesPage } from "./features/services/ServicesPage"; // Optional: Re-enable later
@@ -43,8 +42,6 @@ export default function App() {
         return <PublishingView />;
       case "wild_bunch":
         return <BunkerWarRoom />;
-      case "cayden_chat":
-        return <CaydenChatView />;
       case "zenon_prompts":
         return <ZenonView />;
       case "moa_flow":
@@ -138,13 +135,6 @@ export default function App() {
             label="WILD BUNCH"
             id="wild_bunch"
             active={activeTab === "wild_bunch"}
-            onClick={setActiveTab}
-          />
-          <SidebarItem
-            icon="💬"
-            label="CAY_DEN CHAT"
-            id="cayden_chat"
-            active={activeTab === "cayden_chat"}
             onClick={setActiveTab}
           />
           <SidebarItem
