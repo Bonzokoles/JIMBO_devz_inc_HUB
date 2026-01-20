@@ -6,13 +6,15 @@ export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
     return {
       server: {
-        port: 5770,
+        port: 5173,
         host: '0.0.0.0',
       },
       plugins: [react()],
       define: {
-        'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-        'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
+        'process.env.VITE_OPENROUTER_API_KEY': JSON.stringify(env.VITE_OPENROUTER_API_KEY),
+        'process.env.VITE_BACKEND_API_URL': JSON.stringify(env.VITE_BACKEND_API_URL),
+        'process.env.VITE_AGENT_ZERO_API_URL': JSON.stringify(env.VITE_AGENT_ZERO_API_URL),
+        'process.env.VITE_AGENT_ZERO_API_KEY': JSON.stringify(env.VITE_AGENT_ZERO_API_KEY)
       },
       resolve: {
         alias: {

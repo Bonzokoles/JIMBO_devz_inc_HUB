@@ -13,7 +13,8 @@
     "./layout/AppShell": "./src/layout/AppShell.tsx",
     "./layout/Topbar": "./src/layout/Topbar.tsx",
     "./components/CommandDrawer": "./src/components/CommandDrawer.tsx",
-    "./components/DangerConfirmModal": "./src/components/DangerConfirmModal.tsx"
+    "./components/DangerConfirmModal": "./src/components/DangerConfirmModal.tsx",
+    "./styles/ops.css": "./src/styles/ops.css"
   },
   "dependencies": {
     "chart.js": "^4.5.1",

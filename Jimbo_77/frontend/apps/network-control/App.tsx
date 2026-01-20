@@ -81,6 +81,17 @@ const MOCK_TUNNELS: TunnelConfig[] = [
     isPersistent: true,
     bandwidth: "240 KB/s",
   },
+  {
+    id: "t-docker-1",
+    label: "Agent Zero Access",
+    obfuscatedId: "boxing-operator",
+    provider: "Cloudflare",
+    localPort: 50100,
+    publicUrl: "https://boxing-operator-smithsonian-rocks.trycloudflare.com",
+    isActive: true,
+    isPersistent: true,
+    bandwidth: "Live",
+  },
 ];
 
 const App: React.FC = () => {

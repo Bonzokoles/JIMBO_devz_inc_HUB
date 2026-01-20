@@ -55,17 +55,23 @@ export default function OrchestrationPanel() {
     setResult(null);
 
     try {
+      // Use the Agent Zero API URL environment variable or fallback to localhost:50100
+      const apiUrl = (import.meta.env.VITE_AGENT_ZERO_API_URL || "http://localhost:50100") + "/api_message"; 
+      const apiKey = import.meta.env.VITE_AGENT_ZERO_API_KEY || "";
+ 
+      
       const response = await fetch(
-        "http://localhost:3885/api/network/orchestrate",
+        apiUrl,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "X-API-KEY": apiKey,
           },
           body: JSON.stringify({
-            task: task,
-            context: null,
-            agents: null,
+            message: task, // Agent Zero expects 'message'
+            context_id: "orchestrator-" + Date.now(),
+            attachments: [],
           }),
         },
       );

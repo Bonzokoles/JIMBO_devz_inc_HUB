@@ -1,0 +1,16 @@
+HTTP/1.1 500 Internal Server Error
+Date: Tue, 20 Jan 2026 05:46:17 GMT
+Content-Type: application/json
+Content-Length: 84
+Connection: keep-alive
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Headers: Content-Type, Authorization
+Access-Control-Allow-Methods: GET, POST, OPTIONS
+Vary: accept-encoding
+Report-To: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=SUn4wlUTkTCrdFNLqHQHvP6ZiDFpHbn2VWLwGfF5gvSAnl5xeXE4AtECC0SbrGwdPePORmfDenvXPs0YffL4LjgpXmqo4DlDKhDsi%2BA0gGcde0Xkq3rOcEHlZM0GNCkl4KQYJQINt7zIfsLrMTCgzsr4TeMX"}]}
+Nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+Server: cloudflare
+CF-RAY: 9c0c45432b34558d-WAW
+alt-svc: h3=":443"; ma=86400
+
+{"error":"Expected ':' after property name in JSON at position 4 (line 1 column 5)"}

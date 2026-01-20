@@ -13,6 +13,9 @@ import NetworkGraph from "./components/NetworkGraph";
 import TunnelStatus from "./components/TunnelStatus";
 import SpeedTest from "./components/SpeedTest";
 import CreateTunnelModal from "./components/CreateTunnelModal";
+import TaskOrchestration from "./components/TaskOrchestration";
+import ZenoBrowserPanel from "./components/ZenoBrowserPanel";
+import "./components/TaskOrchestration.css";
 import {
   generateAgentReport,
   analyzeConnectionSecurity,
@@ -88,7 +91,9 @@ const MOCK_TUNNELS: TunnelConfig[] = [
 ];
 
 const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<"dashboard" | "arch">("dashboard");
+  const [activeTab, setActiveTab] = useState<
+    "dashboard" | "arch" | "orchestration" | "zeno-browser"
+  >("dashboard");
   const [services, setServices] = useState<NetworkService[]>(MOCK_SERVICES);
   const [vpn] = useState<VpnStatus>(MOCK_VPN);
   const [agents, setAgents] = useState<Agent[]>([
@@ -145,14 +150,14 @@ const App: React.FC = () => {
               status: AgentStatus.WORKING,
               lastActivity: "Teraz",
             }
-          : a
-      )
+          : a,
+      ),
     );
     setTimeout(() => {
       setAgents((prev) =>
         prev.map((a) =>
-          a.id === agentId ? { ...a, status: AgentStatus.IDLE } : a
-        )
+          a.id === agentId ? { ...a, status: AgentStatus.IDLE } : a,
+        ),
       );
     }, 2000);
   }, []);
@@ -165,12 +170,12 @@ const App: React.FC = () => {
           if (t.isPersistent && !t.isActive) {
             addAgentLog(
               "a-1",
-              `WATCHDOG: Przywracanie tunelu ${t.obfuscatedId}...`
+              `WATCHDOG: Przywracanie tunelu ${t.obfuscatedId}...`,
             );
             return { ...t, isActive: true };
           }
           return t;
-        })
+        }),
       );
     }, 5000);
     return () => clearInterval(interval);
@@ -183,14 +188,14 @@ const App: React.FC = () => {
     setServices((prev) => prev.filter((s) => s.pid !== pid));
     addAgentLog(
       "g-1",
-      `KILLTASK: Proces ${service.name} (PID: ${pid}) został unicestwiony.`
+      `KILLTASK: Proces ${service.name} (PID: ${pid}) został unicestwiony.`,
     );
   };
 
   const handleOpenTask = () => {
     const name = window.prompt(
       "Podaj nazwę nowej usługi (np. api-v2, worker-node):",
-      "new-service"
+      "new-service",
     );
 
     if (name && name.trim()) {
@@ -209,7 +214,7 @@ const App: React.FC = () => {
       setServices((prev) => [...prev, newService]);
       addAgentLog(
         "a-1",
-        `OPENTASK: Inicjalizacja ${newService.name} na localhost:${newPort} (PID: ${newPid}).`
+        `OPENTASK: Inicjalizacja ${newService.name} na localhost:${newPort} (PID: ${newPid}).`,
       );
     }
   };
@@ -218,19 +223,19 @@ const App: React.FC = () => {
     const tunnel = tunnels.find((t) => t.id === id);
     setTunnels((prev) =>
       prev.map((t) =>
-        t.id === id ? { ...t, isPersistent: !t.isPersistent } : t
-      )
+        t.id === id ? { ...t, isPersistent: !t.isPersistent } : t,
+      ),
     );
     addAgentLog(
       "a-1",
-      `TRWAŁOŚĆ: Zmieniono tryb tunelu ${tunnel?.obfuscatedId || id}.`
+      `TRWAŁOŚĆ: Zmieniono tryb tunelu ${tunnel?.obfuscatedId || id}.`,
     );
   };
 
   const handleCreateTunnel = (
     port: number,
     serviceName: string,
-    obfuscate: boolean
+    obfuscate: boolean,
   ) => {
     const randomSuffix = Math.random().toString(36).substring(2, 7);
     const obfuscatedId = obfuscate
@@ -252,7 +257,7 @@ const App: React.FC = () => {
     setTunnels((prev) => [...prev, newTunnel]);
     addAgentLog(
       "a-1",
-      `GATEWAY: Zestawiono nowy tunel dla ${serviceName} (Port ${port}). ID: ${obfuscatedId}`
+      `GATEWAY: Zestawiono nowy tunel dla ${serviceName} (Port ${port}). ID: ${obfuscatedId}`,
     );
   };
 
@@ -267,8 +272,8 @@ const App: React.FC = () => {
       config.provider === "Cloudflare"
         ? "cf"
         : config.provider === "ngrok"
-        ? "ng"
-        : "lc";
+          ? "ng"
+          : "lc";
     const obfuscatedId = config.obfuscate
       ? `${prefix}-${randomSuffix}-${Math.floor(Math.random() * 99)}`
       : `${prefix}-${config.label.toLowerCase().replace(/\s+/g, "-")}`;
@@ -288,7 +293,7 @@ const App: React.FC = () => {
     setTunnels((prev) => [...prev, newTunnel]);
     addAgentLog(
       "a-1",
-      `GATEWAY: Inicjalizacja tunelu ${config.provider} dla portu ${config.port}. Nazwa: ${config.label}`
+      `GATEWAY: Inicjalizacja tunelu ${config.provider} dla portu ${config.port}. Nazwa: ${config.label}`,
     );
   };
 
@@ -318,6 +323,26 @@ const App: React.FC = () => {
             }`}
           >
             Dashboard
+          </button>
+          <button
+            onClick={() => setActiveTab("orchestration")}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded text-sm transition-all ${
+              activeTab === "orchestration"
+                ? "bg-blue-600/10 text-blue-400 border-l-2 border-blue-600"
+                : "text-slate-500 hover:text-white"
+            }`}
+          >
+            🎯 Orchestration
+          </button>
+          <button
+            onClick={() => setActiveTab("zeno-browser")}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded text-sm transition-all ${
+              activeTab === "zeno-browser"
+                ? "bg-blue-600/10 text-blue-400 border-l-2 border-blue-600"
+                : "text-slate-500 hover:text-white"
+            }`}
+          >
+            🌐 ZENO Browser
           </button>
           <button
             onClick={() => setActiveTab("arch")}
@@ -398,7 +423,11 @@ const App: React.FC = () => {
         </header>
 
         <div className="p-8 space-y-8 max-w-[1440px] mx-auto">
-          {activeTab === "dashboard" ? (
+          {activeTab === "orchestration" ? (
+            <TaskOrchestration className="max-w-5xl mx-auto" />
+          ) : activeTab === "zeno-browser" ? (
+            <ZenoBrowserPanel />
+          ) : activeTab === "dashboard" ? (
             <div className="grid grid-cols-12 gap-8">
               <div className="col-span-12 lg:col-span-8 space-y-8">
                 <NetworkGraph
@@ -418,14 +447,14 @@ const App: React.FC = () => {
                     onToggle={(id) =>
                       setTunnels((prev) =>
                         prev.map((t) =>
-                          t.id === id ? { ...t, isActive: !t.isActive } : t
-                        )
+                          t.id === id ? { ...t, isActive: !t.isActive } : t,
+                        ),
                       )
                     }
                     onRefresh={() =>
                       addAgentLog(
                         "a-1",
-                        "Odświeżanie statystyk bram Cloudflare..."
+                        "Odświeżanie statystyk bram Cloudflare...",
                       )
                     }
                   />

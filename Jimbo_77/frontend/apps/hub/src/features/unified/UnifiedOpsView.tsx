@@ -1,4 +1,7 @@
-import { AICrawlerWidget } from "../pumo/components/AICrawlerWidget";
+import { DashboardHeader } from "../../components/dashboard/DashboardHeader";
+import { KpiCard } from "../../components/dashboard/KpiCard";
+import { AgentSwarm } from "../../components/dashboard/AgentSwarm";
+import { StatisticBanner } from "../../components/dashboard/StatisticBanner";
 
 interface UnifiedOpsViewProps {
   onOpenPumo?: () => void;
@@ -26,857 +29,127 @@ export function UnifiedOpsView({
         paddingBottom: 50,
       }}
     >
-      {/* Header */}
-      <div className="card">
-        <h2 style={{ margin: 0, letterSpacing: "2px" }}>UNIFIED OPERATIONS</h2>
-        <div style={{ marginTop: 10, fontSize: 12, color: "var(--muted)" }}>
-          Central Operations Dashboard - All Systems
-        </div>
-      </div>
+      {/* 1. Header Section */}
+      <DashboardHeader />
 
-      {/* Dashboard Cards Grid */}
+      {/* 2. Main Dashboard Cards Grid */}
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
+          gridTemplateColumns: "repeat(3, 1fr)",
           gap: 20,
         }}
       >
-        {/* Workers Monitoring */}
-        <div className="card">
-          <div
-            style={{
-              borderBottom: "1px solid var(--line)",
-              paddingBottom: 12,
-              marginBottom: 12,
-            }}
-          >
-            <div
-              style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}
-            >
-              CLOUDFLARE
-            </div>
-            <h3
-              style={{
-                margin: 0,
-                fontSize: 14,
-                fontWeight: 900,
-                letterSpacing: 1,
-              }}
-            >
-              WORKERS MONITORING
-            </h3>
-          </div>
-          <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-            <div
-              style={{
-                width: 42,
-                height: 42,
-                minWidth: 42,
-                border: "1px solid var(--line)",
-                background:
-                  "repeating-linear-gradient(45deg, rgba(255, 143, 0, .12) 0px, rgba(255, 143, 0, .12) 1px, transparent 1px, transparent 4px)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 16,
-                fontWeight: 900,
-                color: "#ff8f00",
-              }}
-            >
-              ⚙️
-            </div>
-            <div style={{ flex: 1 }}>
-              <h4 style={{ margin: 0, fontSize: 13, fontWeight: 800 }}>
-                35 Workers Real-Time Status
-              </h4>
-              <p
-                style={{
-                  margin: "4px 0 0",
-                  fontSize: 12,
-                  color: "var(--muted)",
-                }}
-              >
-                Live monitoring, health checks, cost tracking & deployment
-                control
-              </p>
-              <button
-                type="button"
-                className="btn"
-                style={{
-                  marginTop: 12,
-                  width: "100%",
-                  justifyContent: "center",
-                }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (onOpenMonitoring) onOpenMonitoring();
-                }}
-              >
-                OPEN MONITORING →
-              </button>
-            </div>
-          </div>
-        </div>
+        {/* Card 1: Workers Monitoring */}
+        <KpiCard
+          subtitle="CLOUDFLARE"
+          title="WORKERS MONITORING"
+          icon="⚙️"
+          color="#ff8f00"
+          mainMetric="35 Workers Real-Time Status"
+          subText="Live monitoring, health checks, cost tracking & deployment control"
+          buttonText="OPEN MONITORING →"
+          onButtonClick={onOpenMonitoring}
+        />
 
-        {/* Multi-Domain Analytics */}
-        <div className="card">
-          <div
-            style={{
-              borderBottom: "1px solid var(--line)",
-              paddingBottom: 12,
-              marginBottom: 12,
-            }}
-          >
-            <div
-              style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}
-            >
-              ANALYTICS
-            </div>
-            <h3
-              style={{
-                margin: 0,
-                fontSize: 14,
-                fontWeight: 900,
-                letterSpacing: 1,
-              }}
-            >
-              MULTI-DOMAIN ANALYTICS
-            </h3>
-          </div>
-          <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-            <div
-              style={{
-                width: 42,
-                height: 42,
-                minWidth: 42,
-                border: "1px solid var(--line)",
-                background:
-                  "repeating-linear-gradient(45deg, rgba(157, 106, 255, .12) 0px, rgba(157, 106, 255, .12) 1px, transparent 1px, transparent 4px)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 16,
-                fontWeight: 900,
-                color: "#9d6aff",
-              }}
-            >
-              📊
-            </div>
-            <div style={{ flex: 1 }}>
-              <h4 style={{ margin: 0, fontSize: 13, fontWeight: 800 }}>
-                5 Domains Traffic Analysis
-              </h4>
-              <p
-                style={{
-                  margin: "4px 0 0",
-                  fontSize: 12,
-                  color: "var(--muted)",
-                }}
-              >
-                Real-time traffic comparison, AI crawler detection & conversion
-                funnels
-              </p>
-              <button
-                type="button"
-                className="btn"
-                style={{
-                  marginTop: 12,
-                  width: "100%",
-                  justifyContent: "center",
-                }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (onOpenAnalytics) onOpenAnalytics();
-                }}
-              >
-                OPEN ANALYTICS →
-              </button>
-            </div>
-          </div>
-        </div>
+        {/* Card 2: Multi-Domain Analytics */}
+        <KpiCard
+          subtitle="ANALYTICS"
+          title="MULTI-DOMAIN ANALYTICS"
+          icon="📊"
+          color="#9d6aff"
+          mainMetric="5 Domains Traffic Analysis"
+          subText="Real-time traffic comparison, AI crawler detection & conversion funnels"
+          buttonText="OPEN ANALYTICS →"
+          onButtonClick={onOpenAnalytics}
+        />
 
-        {/* Deployment Control Panel */}
-        <div className="card">
-          <div
-            style={{
-              borderBottom: "1px solid var(--line)",
-              paddingBottom: 12,
-              marginBottom: 12,
-            }}
-          >
-            <div
-              style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}
-            >
-              GITHUB ACTIONS
-            </div>
-            <h3
-              style={{
-                margin: 0,
-                fontSize: 14,
-                fontWeight: 900,
-                letterSpacing: 1,
-              }}
-            >
-              DEPLOYMENT CONTROL PANEL
-            </h3>
-          </div>
-          <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-            <div
-              style={{
-                width: 42,
-                height: 42,
-                minWidth: 42,
-                border: "1px solid var(--line)",
-                background:
-                  "repeating-linear-gradient(45deg, rgba(106, 255, 184, .12) 0px, rgba(106, 255, 184, .12) 1px, transparent 1px, transparent 4px)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 16,
-                fontWeight: 900,
-                color: "#6affb8",
-              }}
-            >
-              🚀
-            </div>
-            <div style={{ flex: 1 }}>
-              <h4 style={{ margin: 0, fontSize: 13, fontWeight: 800 }}>
-                8 Repos Deployment Manager
-              </h4>
-              <p
-                style={{
-                  margin: "4px 0 0",
-                  fontSize: 12,
-                  color: "var(--muted)",
-                }}
-              >
-                Manual deploys, rollbacks, secrets management & GitHub Actions
-                status
-              </p>
-              <button
-                type="button"
-                className="btn"
-                style={{
-                  marginTop: 12,
-                  width: "100%",
-                  justifyContent: "center",
-                }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (onOpenDeployment) onOpenDeployment();
-                }}
-              >
-                OPEN DEPLOYMENT →
-              </button>
-            </div>
-          </div>
-        </div>
+        {/* Card 3: Deployment Control Panel */}
+        <KpiCard
+          subtitle="GITHUB ACTIONS"
+          title="DEPLOYMENT CONTROL PANEL"
+          icon="🚀"
+          color="#6affb8"
+          mainMetric="8 Repos Deployment Manager"
+          subText="Manual deploys, rollbacks, secrets management & GitHub Actions status"
+          buttonText="OPEN DEPLOYMENT →"
+          onButtonClick={onOpenDeployment}
+        />
 
-        {/* Main Dashboard */}
-        <div className="card">
-          <div
-            style={{
-              borderBottom: "1px solid var(--line)",
-              paddingBottom: 12,
-              marginBottom: 12,
-            }}
-          >
-            <div
-              style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}
-            >
-              PORT 4560
-            </div>
-            <h3
-              style={{
-                margin: 0,
-                fontSize: 14,
-                fontWeight: 900,
-                letterSpacing: 1,
-              }}
-            >
-              MAIN DASHBOARD
-            </h3>
-          </div>
-          <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-            <div
-              style={{
-                width: 42,
-                height: 42,
-                minWidth: 42,
-                border: "1px solid var(--line)",
-                background:
-                  "repeating-linear-gradient(45deg, rgba(106, 166, 255, .12) 0px, rgba(106, 166, 255, .12) 1px, transparent 1px, transparent 4px)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 16,
-                fontWeight: 900,
-                color: "var(--cold)",
-              }}
-            >
-              ⚡
-            </div>
-            <div style={{ flex: 1 }}>
-              <h4 style={{ margin: 0, fontSize: 13, fontWeight: 800 }}>
-                Dashboard Server
-              </h4>
-              <p
-                style={{
-                  margin: "4px 0 0",
-                  fontSize: 12,
-                  color: "var(--muted)",
-                }}
-              >
-                Main control panel with system cards and component status
-              </p>
-              <button
-                className="btn"
-                style={{
-                  marginTop: 12,
-                  width: "100%",
-                  justifyContent: "center",
-                  opacity: 0.5,
-                  cursor: "not-allowed",
-                }}
-                disabled
-              >
-                COMING SOON
-              </button>
-            </div>
-          </div>
-        </div>
+        {/* Card 4: Control Center */}
+        <KpiCard
+          subtitle="PORT 4569"
+          title="CONTROL CENTER"
+          icon="⚙️"
+          color="#10a6ff" // var(--cold) approx
+          mainMetric="Server Control"
+          subText="Process management, service restart and system control"
+          buttonText="OPEN CONTROLS →"
+          onButtonClick={onOpenControlCenter}
+        />
 
-        {/* Control Center */}
-        <div className="card">
-          <div
-            style={{
-              borderBottom: "1px solid var(--line)",
-              paddingBottom: 12,
-              marginBottom: 12,
-            }}
-          >
-            <div
-              style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}
-            >
-              PORT 4569
-            </div>
-            <h3
-              style={{
-                margin: 0,
-                fontSize: 14,
-                fontWeight: 900,
-                letterSpacing: 1,
-              }}
-            >
-              CONTROL CENTER
-            </h3>
-          </div>
-          <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-            <div
-              style={{
-                width: 42,
-                height: 42,
-                minWidth: 42,
-                border: "1px solid var(--line)",
-                background:
-                  "repeating-linear-gradient(45deg, rgba(106, 166, 255, .12) 0px, rgba(106, 166, 255, .12) 1px, transparent 1px, transparent 4px)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 16,
-                fontWeight: 900,
-                color: "var(--cold)",
-              }}
-            >
-              ⚙️
-            </div>
-            <div style={{ flex: 1 }}>
-              <h4 style={{ margin: 0, fontSize: 13, fontWeight: 800 }}>
-                Server Control
-              </h4>
-              <p
-                style={{
-                  margin: "4px 0 0",
-                  fontSize: 12,
-                  color: "var(--muted)",
-                }}
-              >
-                Process management, service restart and system control
-              </p>
-              <button
-                type="button"
-                className="btn"
-                style={{
-                  marginTop: 12,
-                  width: "100%",
-                  justifyContent: "center",
-                }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (onOpenControlCenter) onOpenControlCenter();
-                }}
-              >
-                OPEN CONTROLS →
-              </button>
-            </div>
-          </div>
-        </div>
+        {/* Card 5: PUMO Diagnostic Hub */}
+        <KpiCard
+          subtitle="ANALYTICS"
+          title="PUMO DIAGNOSTIC HUB"
+          icon="📊"
+          color="#7cffb2" // var(--hot) approx
+          mainMetric="Business Intelligence"
+          subText="Revenue tracking, traffic analysis, and conversion metrics"
+          buttonText="OPEN DASHBOARD (LEGACY) →"
+          onButtonClick={() => {
+            console.log("Opening PUMO...");
+            window.open("/pumo-dashboard.html", "_blank");
+            if (onOpenPumo) onOpenPumo();
+          }}
+        />
 
-        {/* PUMO Diagnostic Hub */}
-        <div className="card">
-          <div
-            style={{
-              borderBottom: "1px solid var(--line)",
-              paddingBottom: 12,
-              marginBottom: 12,
-            }}
-          >
-            <div
-              style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}
-            >
-              ANALYTICS
-            </div>
-            <h3
-              style={{
-                margin: 0,
-                fontSize: 14,
-                fontWeight: 900,
-                letterSpacing: 1,
-              }}
-            >
-              PUMO DIAGNOSTIC HUB
-            </h3>
-          </div>
-          <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-            <div
-              style={{
-                width: 42,
-                height: 42,
-                minWidth: 42,
-                border: "1px solid var(--line)",
-                background:
-                  "repeating-linear-gradient(45deg, rgba(124, 255, 178, .12) 0px, rgba(124, 255, 178, .12) 1px, transparent 1px, transparent 4px)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 16,
-                fontWeight: 900,
-                color: "var(--hot)",
-              }}
-            >
-              📊
-            </div>
-            <div style={{ flex: 1 }}>
-              <h4 style={{ margin: 0, fontSize: 13, fontWeight: 800 }}>
-                Business Intelligence
-              </h4>
-              <p
-                style={{
-                  margin: "4px 0 0",
-                  fontSize: 12,
-                  color: "var(--muted)",
-                }}
-              >
-                Revenue tracking, traffic analysis, and conversion metrics
-              </p>
-              <button
-                type="button"
-                className="btn"
-                style={{
-                  marginTop: 12,
-                  width: "100%",
-                  justifyContent: "center",
-                }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  console.log("Opening PUMO...");
-                  if (onOpenPumo) onOpenPumo();
-                }}
-              >
-                OPEN DASHBOARD →
-              </button>
-            </div>
-          </div>
-        </div>
+        {/* Card 6: Advanced Matrix (Coming Soon) */}
+        <KpiCard
+          subtitle="PORT 4575"
+          title="ADVANCED MATRIX"
+          icon="🎯"
+          color="#10a6ff"
+          mainMetric="Matrix Dashboard"
+          subText="Advanced system view with GPU monitoring and visualizations"
+          buttonText="COMING SOON"
+          isDisabled={true}
+        />
 
-        {/* Advanced Matrix */}
-        <div className="card">
-          <div
-            style={{
-              borderBottom: "1px solid var(--line)",
-              paddingBottom: 12,
-              marginBottom: 12,
-            }}
-          >
-            <div
-              style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}
-            >
-              PORT 4575
-            </div>
-            <h3
-              style={{
-                margin: 0,
-                fontSize: 14,
-                fontWeight: 900,
-                letterSpacing: 1,
-              }}
-            >
-              ADVANCED MATRIX
-            </h3>
-          </div>
-          <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-            <div
-              style={{
-                width: 42,
-                height: 42,
-                minWidth: 42,
-                border: "1px solid var(--line)",
-                background:
-                  "repeating-linear-gradient(45deg, rgba(106, 166, 255, .12) 0px, rgba(106, 166, 255, .12) 1px, transparent 1px, transparent 4px)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 16,
-                fontWeight: 900,
-                color: "var(--cold)",
-              }}
-            >
-              🎯
-            </div>
-            <div style={{ flex: 1 }}>
-              <h4 style={{ margin: 0, fontSize: 13, fontWeight: 800 }}>
-                Matrix Dashboard
-              </h4>
-              <p
-                style={{
-                  margin: "4px 0 0",
-                  fontSize: 12,
-                  color: "var(--muted)",
-                }}
-              >
-                Advanced system view with GPU monitoring and visualizations
-              </p>
-              <button
-                className="btn"
-                style={{
-                  marginTop: 12,
-                  width: "100%",
-                  justifyContent: "center",
-                  opacity: 0.5,
-                  cursor: "not-allowed",
-                }}
-                disabled
-              >
-                COMING SOON
-              </button>
-            </div>
-          </div>
-        </div>
+        {/* Card 7: Library Catalog (Coming Soon) */}
+        <KpiCard
+          subtitle="PORT 6030"
+          title="LIBRARY CATALOG"
+          icon="📚"
+          color="#7cffb2"
+          mainMetric="Unified Libraries"
+          subText="Catalog of all 60 libraries (51k+ files) - Control Center + Eastwood DEVZ"
+          buttonText="COMING SOON"
+          isDisabled={true}
+        />
 
-        {/* Library Catalog */}
-        <div className="card">
-          <div
-            style={{
-              borderBottom: "1px solid var(--line)",
-              paddingBottom: 12,
-              marginBottom: 12,
-            }}
-          >
-            <div
-              style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}
-            >
-              PORT 6030
-            </div>
-            <h3
-              style={{
-                margin: 0,
-                fontSize: 14,
-                fontWeight: 900,
-                letterSpacing: 1,
-              }}
-            >
-              LIBRARY CATALOG
-            </h3>
-          </div>
-          <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-            <div
-              style={{
-                width: 42,
-                height: 42,
-                minWidth: 42,
-                border: "1px solid var(--line)",
-                background:
-                  "repeating-linear-gradient(45deg, rgba(124, 255, 178, .12) 0px, rgba(124, 255, 178, .12) 1px, transparent 1px, transparent 4px)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 16,
-                fontWeight: 900,
-                color: "var(--hot)",
-              }}
-            >
-              📚
-            </div>
-            <div style={{ flex: 1 }}>
-              <h4 style={{ margin: 0, fontSize: 13, fontWeight: 800 }}>
-                Unified Libraries
-              </h4>
-              <p
-                style={{
-                  margin: "4px 0 0",
-                  fontSize: 12,
-                  color: "var(--muted)",
-                }}
-              >
-                Catalog of all 60 libraries (51k+ files) - Control Center +
-                Eastwood DEVZ
-              </p>
-              <button
-                className="btn"
-                style={{
-                  marginTop: 12,
-                  width: "100%",
-                  justifyContent: "center",
-                  opacity: 0.5,
-                  cursor: "not-allowed",
-                }}
-                disabled
-              >
-                COMING SOON
-              </button>
-            </div>
-          </div>
-        </div>
+        {/* Card 8: Eastwood DEVZ */}
+        <KpiCard
+          subtitle="PORT 6062"
+          title="EASTWOOD DEVZ"
+          icon="💼"
+          color="#7cffb2" // Assuming same hot green color from original or close to it
+          mainMetric="Business Intelligence Libs"
+          subText="AI Agents: Retention, Idea, Shadow, Trend + Money Machine (52 ideas)"
+          buttonText="OPEN EASTWOOD →"
+          onButtonClick={onOpenEastwood}
+        />
 
-        {/* Eastwood DEVZ */}
-        <div className="card">
-          <div
-            style={{
-              borderBottom: "1px solid var(--line)",
-              paddingBottom: 12,
-              marginBottom: 12,
-            }}
-          >
-            <div
-              style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}
-            >
-              PORT 6062
-            </div>
-            <h3
-              style={{
-                margin: 0,
-                fontSize: 14,
-                fontWeight: 900,
-                letterSpacing: 1,
-              }}
-            >
-              EASTWOOD DEVZ
-            </h3>
-          </div>
-          <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-            <div
-              style={{
-                width: 42,
-                height: 42,
-                minWidth: 42,
-                border: "1px solid var(--line)",
-                background:
-                  "repeating-linear-gradient(45deg, rgba(124, 255, 178, .12) 0px, rgba(124, 255, 178, .12) 1px, transparent 1px, transparent 4px)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 16,
-                fontWeight: 900,
-                color: "var(--hot)",
-              }}
-            >
-              💼
-            </div>
-            <div style={{ flex: 1 }}>
-              <h4 style={{ margin: 0, fontSize: 13, fontWeight: 800 }}>
-                Business Intelligence Libs
-              </h4>
-              <p
-                style={{
-                  margin: "4px 0 0",
-                  fontSize: 12,
-                  color: "var(--muted)",
-                }}
-              >
-                AI Agents: Retention, Idea, Shadow, Trend + Money Machine (52
-                ideas)
-              </p>
-              <button
-                type="button"
-                className="btn"
-                style={{
-                  marginTop: 12,
-                  width: "100%",
-                  justifyContent: "center",
-                }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (onOpenEastwood) onOpenEastwood();
-                }}
-              >
-                OPEN EASTWOOD →
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* AGENT MANAGER (NEW) */}
-        <div className="card">
-          <div
-            style={{
-              borderBottom: "1px solid var(--line)",
-              paddingBottom: 12,
-              marginBottom: 12,
-            }}
-          >
-            <div
-              style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}
-            >
-              AUTOMATION
-            </div>
-            <h3
-              style={{
-                margin: 0,
-                fontSize: 14,
-                fontWeight: 900,
-                letterSpacing: 1,
-              }}
-            >
-              AGENT MANAGER
-            </h3>
-          </div>
-          <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-            <div
-              style={{
-                width: 42,
-                height: 42,
-                minWidth: 42,
-                border: "1px solid var(--line)",
-                background:
-                  "repeating-linear-gradient(45deg, rgba(106, 166, 255, .12) 0px, rgba(106, 166, 255, .12) 1px, transparent 1px, transparent 4px)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 16,
-                fontWeight: 900,
-                color: "var(--cold)",
-              }}
-            >
-              🤖
-            </div>
-            <div style={{ flex: 1 }}>
-              <h4 style={{ margin: 0, fontSize: 13, fontWeight: 800 }}>
-                AI Agents Control
-              </h4>
-              <p
-                style={{
-                  margin: "4px 0 0",
-                  fontSize: 12,
-                  color: "var(--muted)",
-                }}
-              >
-                Manage and monitor AI agents, scrapers, and automation tasks
-              </p>
-              <button
-                className="btn"
-                style={{
-                  marginTop: 12,
-                  width: "100%",
-                  justifyContent: "center",
-                  opacity: 0.5,
-                  cursor: "not-allowed",
-                }}
-                disabled
-              >
-                COMING SOON
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* AI Crawler Widget (Live Data) */}
-        <AICrawlerWidget />
-
-        {/* System Monitor (NEW) */}
-        <div className="card">
-          <div
-            style={{
-              borderBottom: "1px solid var(--line)",
-              paddingBottom: 12,
-              marginBottom: 12,
-            }}
-          >
-            <div
-              style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}
-            >
-              MONITORING
-            </div>
-            <h3
-              style={{
-                margin: 0,
-                fontSize: 14,
-                fontWeight: 900,
-                letterSpacing: 1,
-              }}
-            >
-              SYSTEM MONITOR
-            </h3>
-          </div>
-          <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-            <div
-              style={{
-                width: 42,
-                height: 42,
-                minWidth: 42,
-                border: "1px solid var(--line)",
-                background:
-                  "repeating-linear-gradient(45deg, rgba(124, 255, 178, .12) 0px, rgba(124, 255, 178, .12) 1px, transparent 1px, transparent 4px)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 16,
-                fontWeight: 900,
-                color: "var(--hot)",
-              }}
-            >
-              📊
-            </div>
-            <div style={{ flex: 1 }}>
-              <h4 style={{ margin: 0, fontSize: 13, fontWeight: 800 }}>
-                Real-time Monitoring
-              </h4>
-              <p
-                style={{
-                  margin: "4px 0 0",
-                  fontSize: 12,
-                  color: "var(--muted)",
-                }}
-              >
-                CPU, RAM, disk usage, network traffic, and service health
-              </p>
-              <button
-                className="btn"
-                style={{
-                  marginTop: 12,
-                  width: "100%",
-                  justifyContent: "center",
-                  opacity: 0.5,
-                  cursor: "not-allowed",
-                }}
-                disabled
-              >
-                COMING SOON
-              </button>
-            </div>
-          </div>
-        </div>
+        {/* 3. Statistic Banner */}
+        <StatisticBanner
+          label="TOTAL_AI_CRAWLERS_HITS"
+          value={1420}
+          color="#ff3333"
+        />
       </div>
+
+      {/* 4. Agents Swarm Grid */}
+      <AgentSwarm />
     </div>
   );
 }
