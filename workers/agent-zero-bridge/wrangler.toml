@@ -1,0 +1,9 @@
+name = "agent-zero-bridge"
+main = "src/index.ts"
+compatibility_date = "2026-01-19"
+workers_dev = true
+
+[vars]
+AGENT_ZERO_TUNNEL = "https://boxing-operator-smithsonian-rocks.trycloudflare.com"
+AGENT_ZERO_LOCAL_PORT = "50100"
+AGENT_ZERO_API_KEY = "jvDOr1gqaGXKZ-l8"

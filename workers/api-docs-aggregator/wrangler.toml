@@ -1,0 +1,19 @@
+name = "jimbo77-api-docs"
+main = "src/index.ts"
+compatibility_date = "2026-01-19"
+workers_dev = true
+
+# Production routes
+[env.production]
+name = "jimbo77-api-docs"
+routes = [
+  { pattern = "jimbo77.org/docs/api/*", zone_name = "jimbo77.org" }
+]
+
+[vars]
+# API endpoints to aggregate
+API_ENDPOINTS = [
+  "https://pumo-api.jimbo77.com",
+  "https://api.jimbo77.com",
+  "https://orchestrator.jimbo77.com"
+]

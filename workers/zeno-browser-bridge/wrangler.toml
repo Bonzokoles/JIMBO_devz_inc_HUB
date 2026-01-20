@@ -1,0 +1,8 @@
+name = "zeno-browser-bridge"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+account_id = "7f490d58a478c6baccb0ae01ea1d87c3"
+
+[vars]
+ZENO_BROWSER_URL = "https://zenbrowsers.org"
+ZENO_API_URL = "https://zeno-browser-api.stolarnia-ams.workers.dev"
