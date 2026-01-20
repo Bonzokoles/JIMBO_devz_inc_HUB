@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bonzo PraisonAI Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      .status-healthy {
+        @apply bg-green-500;
+      }
+      .status-degraded {
+        @apply bg-yellow-500;
+      }
+      .status-offline {
+        @apply bg-red-500;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-900 text-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+      <!-- Header -->
+      <div class="mb-8">
+        <h1
+          class="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent"
+        >
+          Bonzo PraisonAI Dashboard
+        </h1>
+        <p class="text-gray-400">
+          AI-Powered Agent Monitoring | Updated: {{ timestamp }}
+        </p>
+      </div>
+
+      <!-- Overall Status -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        {% for agent in agents %}
+        <div
+          class="bg-gray-800 rounded-lg p-6 border border-gray-700 hover:border-gray-600 transition-all"
+        >
+          <div class="flex items-start justify-between mb-4">
+            <div>
+              <h3 class="text-xl font-semibold mb-1">{{ agent.name }}</h3>
+              <p class="text-sm text-gray-400">
+                {{ agent.url.split('/')[-1].split(':')[-1] or 'N/A' }}
+              </p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span
+                class="w-3 h-3 rounded-full status-{{ agent.status }}"
+              ></span>
+              <span class="text-sm font-medium uppercase"
+                >{{ agent.status }}</span
+              >
+            </div>
+          </div>
+
+          {% if agent.status == 'healthy' and agent.data %}
+          <div class="space-y-2 text-sm">
+            {% for key, value in agent.data.items() %} {% if key not in
+            ['status', 'agent'] %}
+            <div class="flex justify-between">
+              <span class="text-gray-400"
+                >{{ key.replace('_', ' ').title() }}:</span
+              >
+              <span class="font-mono text-gray-200">{{ value }}</span>
+            </div>
+            {% endif %} {% endfor %}
+          </div>
+          {% else %}
+          <div class="text-gray-500 text-sm">Agent offline or unreachable</div>
+          {% endif %}
+
+          <div class="mt-4 pt-4 border-t border-gray-700">
+            <a
+              href="{{ agent.url }}"
+              target="_blank"
+              class="text-blue-400 hover:text-blue-300 text-sm flex items-center gap-1"
+            >
+              <i data-lucide="external-link" class="w-4 h-4"></i>
+              Open API
+            </a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="bg-gray-800 rounded-lg p-6 border border-gray-700 mb-8">
+        <h2 class="text-2xl font-bold mb-4">Quick Actions</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <button
+            onclick="fetchCostAnalysis()"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-all flex items-center justify-center gap-2"
+          >
+            <i data-lucide="dollar-sign" class="w-5 h-5"></i>
+            Run Cost Analysis
+          </button>
+          <button
+            onclick="fetchSystemStatus()"
+            class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-lg transition-all flex items-center justify-center gap-2"
+          >
+            <i data-lucide="shield" class="w-5 h-5"></i>
+            Check System Status
+          </button>
+          <button
+            onclick="fetchWorkerHealth()"
+            class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-all flex items-center justify-center gap-2"
+          >
+            <i data-lucide="activity" class="w-5 h-5"></i>
+            Worker Health Check
+          </button>
+        </div>
+      </div>
+
+      <!-- Results Area -->
+      <div
+        id="results"
+        class="bg-gray-800 rounded-lg p-6 border border-gray-700 hidden"
+      >
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-bold">Results</h2>
+          <button
+            onclick="document.getElementById('results').classList.add('hidden')"
+            class="text-gray-400 hover:text-gray-300"
+          >
+            <i data-lucide="x" class="w-6 h-6"></i>
+          </button>
+        </div>
+        <div id="results-content" class="space-y-4">
+          <!-- Results will be inserted here -->
+        </div>
+      </div>
+
+      <!-- Info Footer -->
+      <div class="mt-8 text-center text-gray-500 text-sm">
+        <p>
+          Powered by
+          <span class="text-blue-400 font-semibold">PraisonAI</span> | Connected
+          to <span class="text-purple-400 font-semibold">Agent-Zero MCP</span>
+        </p>
+        <p class="mt-2">Bonzokoles JIMBO DevZ Hub © 2026</p>
+      </div>
+    </div>
+
+    <script>
+      // Initialize Lucide icons
+      lucide.createIcons();
+
+      // Auto-refresh every 30 seconds
+      setInterval(() => location.reload(), 30000);
+
+      async function fetchCostAnalysis() {
+        showResults("Loading cost analysis...", "loading");
+        try {
+          const response = await fetch("/api/cost-analysis");
+          const data = await response.json();
+
+          let html = '<div class="space-y-4">';
+          html += `<div class="bg-gray-900 rounded p-4">`;
+          html += `<h3 class="text-lg font-semibold mb-2">Cost Report - ${data.period}</h3>`;
+          html += `<div class="grid grid-cols-2 gap-4 text-sm">`;
+          html += `<div><span class="text-gray-400">Total Cost:</span> <span class="text-green-400 font-bold">$${data.total_cost?.toFixed(2)}</span></div>`;
+          html += `<div><span class="text-gray-400">Budget:</span> <span class="font-mono">$${data.budget_limit?.toFixed(2)}</span></div>`;
+          html += `<div><span class="text-gray-400">Usage:</span> <span class="font-mono">${data.budget_used_percent?.toFixed(1)}%</span></div>`;
+          html += `<div><span class="text-gray-400">Status:</span> <span class="uppercase font-semibold">${data.status}</span></div>`;
+          html += `</div></div>`;
+
+          if (data.ai_insights?.length > 0) {
+            html += `<div class="bg-blue-900/20 border border-blue-700 rounded p-4">`;
+            html += `<h4 class="font-semibold mb-2 text-blue-400">🤖 AI Insights</h4>`;
+            html += `<ul class="list-disc list-inside space-y-1 text-sm">`;
+            data.ai_insights.forEach((insight) => {
+              html += `<li>${insight}</li>`;
+            });
+            html += `</ul></div>`;
+          }
+
+          if (data.optimizations?.length > 0) {
+            html += `<div class="bg-purple-900/20 border border-purple-700 rounded p-4">`;
+            html += `<h4 class="font-semibold mb-2 text-purple-400">💡 Optimizations</h4>`;
+            data.optimizations.forEach((opt) => {
+              html += `<div class="mb-3 p-3 bg-gray-900 rounded">`;
+              html += `<div class="font-semibold">${opt.title}</div>`;
+              html += `<div class="text-sm text-gray-400 mt-1">${opt.description}</div>`;
+              html += `<div class="text-sm text-green-400 mt-1">Potential savings: $${opt.estimated_savings?.toFixed(2)}</div>`;
+              html += `</div>`;
+            });
+            html += `</div>`;
+          }
+
+          html += "</div>";
+          showResults(html);
+        } catch (error) {
+          showResults(
+            `<div class="text-red-400">Error: ${error.message}</div>`,
+            "error",
+          );
+        }
+      }
+
+      async function fetchSystemStatus() {
+        showResults("Loading system status...", "loading");
+        try {
+          const response = await fetch("/api/system-status");
+          const data = await response.json();
+
+          let html = '<div class="space-y-4">';
+          html += `<div class="bg-gray-900 rounded p-4">`;
+          html += `<h3 class="text-lg font-semibold mb-2">System Status</h3>`;
+          html += `<div class="text-sm">Overall: <span class="uppercase font-semibold">${data.overall_status}</span></div>`;
+          html += `</div>`;
+
+          if (data.agents) {
+            data.agents.forEach((agent) => {
+              html += `<div class="bg-gray-900 rounded p-4">`;
+              html += `<div class="flex items-center gap-2 mb-2">`;
+              html += `<span class="w-2 h-2 rounded-full status-${agent.status}"></span>`;
+              html += `<span class="font-semibold">${agent.agent_url}</span>`;
+              html += `</div>`;
+              html += `<div class="text-sm text-gray-400">Response: ${agent.response_time_ms?.toFixed(0)}ms</div>`;
+              html += `</div>`;
+            });
+          }
+
+          html += "</div>";
+          showResults(html);
+        } catch (error) {
+          showResults(
+            `<div class="text-red-400">Error: ${error.message}</div>`,
+            "error",
+          );
+        }
+      }
+
+      async function fetchWorkerHealth() {
+        showResults("Loading worker health...", "loading");
+        try {
+          const response = await fetch("/api/worker-health/jimbo-gateway");
+          const data = await response.json();
+
+          let html = '<div class="space-y-4">';
+          html += `<div class="bg-gray-900 rounded p-4">`;
+          html += `<h3 class="text-lg font-semibold mb-2">Worker: ${data.worker_name}</h3>`;
+          html += `<div class="text-sm">Status: <span class="uppercase font-semibold">${data.status}</span></div>`;
+          html += `</div>`;
+
+          if (data.metrics) {
+            html += `<div class="bg-gray-900 rounded p-4">`;
+            html += `<h4 class="font-semibold mb-2">Metrics</h4>`;
+            html += `<div class="grid grid-cols-2 gap-2 text-sm">`;
+            html += `<div>Invocations: ${data.metrics.invocations}</div>`;
+            html += `<div>Errors: ${data.metrics.errors}</div>`;
+            html += `<div>Error Rate: ${data.metrics.error_rate?.toFixed(2)}%</div>`;
+            html += `<div>Avg Duration: ${data.metrics.avg_duration_ms?.toFixed(1)}ms</div>`;
+            html += `</div></div>`;
+          }
+
+          if (data.anomaly?.detected) {
+            html += `<div class="bg-red-900/20 border border-red-700 rounded p-4">`;
+            html += `<h4 class="font-semibold mb-2 text-red-400">⚠️ Anomaly Detected</h4>`;
+            html += `<div class="text-sm">${data.anomaly.description}</div>`;
+            html += `<div class="text-sm text-gray-400 mt-2">Type: ${data.anomaly.anomaly_type}</div>`;
+            html += `</div>`;
+          }
+
+          html += "</div>";
+          showResults(html);
+        } catch (error) {
+          showResults(
+            `<div class="text-red-400">Error: ${error.message}</div>`,
+            "error",
+          );
+        }
+      }
+
+      function showResults(content, type = "success") {
+        const resultsDiv = document.getElementById("results");
+        const contentDiv = document.getElementById("results-content");
+
+        resultsDiv.classList.remove("hidden");
+
+        if (type === "loading") {
+          contentDiv.innerHTML = `<div class="flex items-center gap-3"><div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div><span>${content}</span></div>`;
+        } else {
+          contentDiv.innerHTML = content;
+        }
+
+        resultsDiv.scrollIntoView({ behavior: "smooth" });
+      }
+    </script>
+  </body>
+</html>

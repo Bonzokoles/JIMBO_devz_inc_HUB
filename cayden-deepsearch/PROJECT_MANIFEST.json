@@ -1,0 +1,234 @@
+{
+  "projectId": "cayden-deepsearch",
+  "name": "CAY_DEN - Multi-Modal AI Suite",
+  "version": "3.0.0",
+  "description": "Advanced chat interface z Graph Canvas, multi-provider support, RAG knowledge base i ReAct agent system",
+
+  "urls": {
+    "production": "https://www.mybonzoaiblog.com/cayden",
+    "staging": "http://localhost:5173",
+    "docs": "https://github.com/jimbo77/cayden-deepsearch"
+  },
+
+  "tech_stack": {
+    "frontend": ["React 18", "TypeScript", "Tailwind CSS", "Vite 5"],
+    "ai_providers": [
+      "Google Gemini",
+      "OpenRouter",
+      "Ollama",
+      "OpenAI",
+      "DeepSeek"
+    ],
+    "search_apis": ["Google Search", "Google Maps", "Tavily", "Exa", "Brave"],
+    "vector_db": ["Client-side (in-memory)", "LocalStorage caching"]
+  },
+
+  "features": {
+    "chat_system": {
+      "description": "Multi-provider streaming chat with tools",
+      "providers": [
+        {
+          "name": "Gemini",
+          "models": ["gemini-2.5-flash", "gemini-2.5-pro"],
+          "capabilities": ["text", "image", "audio", "tools"]
+        },
+        {
+          "name": "OpenRouter",
+          "models": ["gpt-4o", "claude-3.5-sonnet", "mistral-7b", "gemma-2-9b"],
+          "capabilities": ["text", "tools"]
+        },
+        {
+          "name": "Ollama",
+          "models": ["llama3", "mistral", "codellama"],
+          "capabilities": ["text", "local inference"]
+        },
+        {
+          "name": "OpenAI",
+          "models": ["gpt-4", "gpt-3.5-turbo"],
+          "capabilities": ["text", "tools"]
+        },
+        {
+          "name": "DeepSeek",
+          "models": ["deepseek-chat", "deepseek-coder"],
+          "capabilities": ["text", "code generation"]
+        }
+      ],
+      "streaming": {
+        "method": "Server-Sent Events (SSE)",
+        "real_time": true,
+        "chunk_parsing": "Incremental token display"
+      },
+      "tools": [
+        {
+          "name": "Google Search",
+          "enabled_by_default": true,
+          "description": "Real-time web results"
+        },
+        {
+          "name": "Google Maps",
+          "enabled_by_default": true,
+          "description": "Location search and geocoding"
+        },
+        {
+          "name": "Knowledge Base (RAG)",
+          "enabled_by_default": true,
+          "description": "Semantic search across uploaded documents"
+        }
+      ],
+      "multimodal": {
+        "image_analysis": "Gemini only - Vision capabilities",
+        "audio_transcription": "Gemini only - Auto-transcribe audio files"
+      }
+    },
+
+    "graph_canvas": {
+      "description": "Node-based workflow system ('Noodles')",
+      "features": [
+        "Drag-and-drop node creation",
+        "Parent-child context inheritance",
+        "Result linking (merge contexts)",
+        "Pan/Zoom controls",
+        "Export/Import workflows"
+      ],
+      "advanced": [
+        {
+          "name": "Self-Improvement Loop",
+          "description": "AI critiques own responses and refines (max 3 iterations)"
+        },
+        {
+          "name": "Webhooks",
+          "description": "Integration with Flowise, n8n, ActivePieces",
+          "method": "POST to external URL with prompt + context"
+        },
+        {
+          "name": "Code Mode",
+          "description": "Specialized Python/Data Science prompting"
+        },
+        {
+          "name": "Document Analysis",
+          "description": "Upload PDF → Auto-generate Q&A nodes"
+        }
+      ]
+    },
+
+    "rag_system": {
+      "description": "Client-side vector store for knowledge base",
+      "embedding_model": "gemini-embedding-004",
+      "storage": "In-memory array + localStorage cache",
+      "chunking": {
+        "method": "Semantic chunks",
+        "max_chunk_size": 500,
+        "overlap": 50
+      },
+      "search": {
+        "algorithm": "Cosine similarity",
+        "top_k": 5,
+        "threshold": 0.6
+      },
+      "supported_formats": [
+        "TXT",
+        "MD",
+        "JSON",
+        "PDF (via extract)",
+        "Code files"
+      ]
+    },
+
+    "agent_system": {
+      "architecture": "ReAct (Reasoning + Acting)",
+      "execution_flow": [
+        "Think - LLM decides next action based on goal + past steps",
+        "Act - Execute tool (search, RAG, code)",
+        "Observe - Record result",
+        "Repeat - Loop until goal met or max iterations"
+      ],
+      "max_iterations": 10,
+      "tools_available": [
+        "Web Search (Tavily/Exa/Brave)",
+        "RAG Query",
+        "Calculator",
+        "File Operations"
+      ]
+    }
+  },
+
+  "ui_components": [
+    "Chat.tsx - Main chat interface (761 lines)",
+    "GraphCanvas.tsx - Node system with pan/zoom",
+    "KnowledgeBase.tsx - RAG interface (uploads, list)",
+    "Settings.tsx - API key management",
+    "Sidebar.tsx - Navigation",
+    "Agents.tsx - ReAct agent interface",
+    "PromptLibrary.tsx - Pre-built prompts"
+  ],
+
+  "api_integrations": {
+    "google_generative_ai": {
+      "sdk": "@google/generative-ai",
+      "models": ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-embedding-004"],
+      "tools": ["googleSearch", "googleMaps"]
+    },
+    "openrouter": {
+      "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+      "auth": "Bearer token",
+      "models": "50+ models (Claude, GPT-4, Mistral, Gemma)"
+    },
+    "ollama": {
+      "endpoint": "http://localhost:11434/api/chat",
+      "local": true,
+      "privacy": "100% local inference"
+    },
+    "search_apis": {
+      "tavily": "Deep web search",
+      "exa": "AI-focused search",
+      "brave": "Privacy-focused search"
+    }
+  },
+
+  "deployment": {
+    "cloudflare_pages": {
+      "project_name": "cayden-deepsearch",
+      "build_command": "npm run build",
+      "build_output": "dist",
+      "environment_variables": [
+        "API_KEY (Gemini)",
+        "OPENROUTER_API_KEY",
+        "OPENAI_API_KEY",
+        "DEEPSEEK_API_KEY",
+        "OLLAMA_URL",
+        "TAVILY_API_KEY",
+        "EXA_API_KEY",
+        "BRAVE_API_KEY"
+      ]
+    }
+  },
+
+  "session_management": {
+    "storage": "sessionStorage",
+    "persisted_data": [
+      "messages[]",
+      "provider",
+      "model",
+      "systemPrompt",
+      "tools settings"
+    ],
+    "auto_save": "On every message"
+  },
+
+  "metadata": {
+    "author": "JIMBO77 DevZ",
+    "created": "2025-01-10",
+    "last_updated": "2026-01-19",
+    "license": "MIT",
+    "tags": [
+      "AI",
+      "Chat",
+      "Multi-Modal",
+      "RAG",
+      "Agents",
+      "Graph",
+      "React",
+      "TypeScript"
+    ]
+  }
+}

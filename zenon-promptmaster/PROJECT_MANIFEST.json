@@ -1,0 +1,132 @@
+{
+  "projectId": "zenon-promptmaster",
+  "name": "ZENON - The PromptMaster",
+  "version": "2.0.0",
+  "description": "Inteligentna biblioteka 234 promptów z AI-powered kategoryzacją i integracją z JIMBO Libraries",
+
+  "urls": {
+    "production": "https://www.mybonzoaiblog.com/zenon",
+    "staging": "http://localhost:5173",
+    "api": "http://localhost:3001",
+    "docs": "https://github.com/jimbo77/zenon-promptmaster"
+  },
+
+  "tech_stack": {
+    "frontend": ["React 18", "Vite 5", "TypeScript", "Tailwind CSS"],
+    "backend": ["Express.js", "TypeScript", "Node.js"],
+    "ai": ["Google Gemini 2.0 Flash", "Gemini Embedding API"],
+    "storage": ["LocalStorage", "File System (JIMBO Libraries)"]
+  },
+
+  "features": {
+    "core": [
+      "234+ ready-to-use prompts across 15 categories",
+      "AI-powered prompt extraction from JIMBO Deep Sea Archives",
+      "Smart categorization (coding, business, creative, technical)",
+      "Batch import from local libraries",
+      "Semantic search with fuzzy matching",
+      "LocalStorage caching for offline use"
+    ],
+    "categories": [
+      "Coding & Development",
+      "Business & Strategy",
+      "Creative Writing",
+      "Technical Documentation",
+      "Marketing & Sales",
+      "Data Analysis",
+      "Education & Training",
+      "Research & Innovation",
+      "Customer Support",
+      "Product Management",
+      "Design & UX",
+      "Operations & Logistics",
+      "Finance & Accounting",
+      "HR & Recruitment",
+      "General Purpose"
+    ],
+    "api_endpoints": [
+      {
+        "method": "GET",
+        "path": "/api/resources",
+        "description": "Lista wszystkich zasobów"
+      },
+      {
+        "method": "GET",
+        "path": "/api/categories",
+        "description": "Dostępne kategorie"
+      },
+      {
+        "method": "POST",
+        "path": "/api/search",
+        "description": "Wyszukiwanie zasobów",
+        "body": {
+          "query": "string",
+          "category": "string (optional)"
+        }
+      },
+      {
+        "method": "GET",
+        "path": "/api/resources/:id",
+        "description": "Szczegóły zasobu"
+      },
+      {
+        "method": "GET",
+        "path": "/api/stats",
+        "description": "Statystyki bibliotek"
+      }
+    ]
+  },
+
+  "integration": {
+    "jimbo_libraries_path": "U:\\JIMBO_INC_CONTROL_CENTER\\LIBRARIES",
+    "deep_sea_archives": "U:\\JIMBO_INC_CONTROL_CENTER\\jimbo_deep_sea_arch",
+    "total_resources": 234,
+    "file_formats": ["JSON", "MD", "TXT"]
+  },
+
+  "deployment": {
+    "cloudflare_pages": {
+      "project_name": "zenon-promptmaster",
+      "build_command": "npm run build",
+      "build_output": "dist",
+      "environment_variables": ["API_KEY (Google Gemini)", "BACKEND_API_URL"]
+    },
+    "backend_server": {
+      "port": 3001,
+      "start_command": "npm run dev",
+      "prod_command": "npm run start"
+    }
+  },
+
+  "ai_capabilities": {
+    "gemini_models": [
+      "gemini-2.0-flash (default)",
+      "gemini-embedding-004 (search)"
+    ],
+    "prompt_extraction": {
+      "description": "AI Agent analizuje pliki JSON/MD z JIMBO Libraries i ekstraktuje prompty",
+      "rate_limiting": "1 request/second",
+      "batch_size": 50
+    },
+    "categorization": {
+      "method": "Semantic analysis + keyword matching",
+      "confidence_threshold": 0.7
+    }
+  },
+
+  "ui_components": [
+    "PromptCard.tsx - Wizualizacja pojedynczego promptu",
+    "LocalImportModal.tsx - Import z lokalnych bibliotek (multi-select)",
+    "PromptDetailModal.tsx - Widok szczegółowy z edycją",
+    "CreateEditModal.tsx - Tworzenie/edycja promptów",
+    "UserGuideModal.tsx - Instrukcja obsługi"
+  ],
+
+  "metadata": {
+    "author": "JIMBO77 DevZ",
+    "created": "2024-12-15",
+    "last_updated": "2026-01-19",
+    "license": "MIT",
+    "tags": ["AI", "Prompts", "Gemini", "Library", "React", "TypeScript"]
+  }
+}

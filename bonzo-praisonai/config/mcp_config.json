@@ -1,0 +1,31 @@
+{
+  "agent_zero": {
+    "url": "http://host.docker.internal:50100",
+    "mcp_endpoint": "http://host.docker.internal:50100/mcp/t-tv7qMZOoxtLgM29q",
+    "enabled_servers": [
+      "deepseek",
+      "tavily-mcp",
+      "brave-search",
+      "knowledge-graph",
+      "cloudflare",
+      "github",
+      "perplexity-mcp"
+    ],
+    "timeout": 30
+  },
+  "tools": {
+    "cost_analysis": {
+      "server": "deepseek",
+      "model": "deepseek-chat",
+      "temperature": 0.3
+    },
+    "web_search": {
+      "server": "tavily-mcp",
+      "fallback": "brave-search"
+    },
+    "cloudflare_monitoring": {
+      "server": "cloudflare",
+      "metrics": ["workers", "r2", "kv"]
+    }
+  }
+}

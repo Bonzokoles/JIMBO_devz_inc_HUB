@@ -1,0 +1,108 @@
+services:
+  # Cost Optimizer AI Agent
+  cost-optimizer-ai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bonzo-cost-optimizer-ai
+    ports:
+      - "6012:6002"
+    environment:
+      - COST_OPTIMIZER_PORT=6002
+      - REDIS_URL=${REDIS_URL}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN}
+      - CLOUDFLARE_ACCOUNT_ID=${CLOUDFLARE_ACCOUNT_ID}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - DAILY_BUDGET_USD=${DAILY_BUDGET_USD}
+      - MONTHLY_BUDGET_USD=${MONTHLY_BUDGET_USD}
+      - AGENT_ZERO_URL=${AGENT_ZERO_URL}
+      - AGENT_ZERO_MCP_TOKEN=${AGENT_ZERO_MCP_TOKEN}
+      - LOG_LEVEL=${LOG_LEVEL}
+    command: python agents/cost_optimizer.py
+    networks:
+      - bonzo-network
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # Guardian AI Agent
+  guardian-ai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bonzo-guardian-ai
+    ports:
+      - "6014:6004"
+    environment:
+      - GUARDIAN_AGENT_PORT=6004
+      - REDIS_URL=${REDIS_URL}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - AGENT_URLS=http://host.docker.internal:6001,http://host.docker.internal:6002,http://host.docker.internal:6003
+      - EMERGENCY_STOP_ENABLED=${EMERGENCY_STOP_ENABLED}
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - GITHUB_ORG=${GITHUB_ORG}
+      - SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL}
+      - AGENT_ZERO_URL=${AGENT_ZERO_URL}
+      - AGENT_ZERO_MCP_TOKEN=${AGENT_ZERO_MCP_TOKEN}
+      - LOG_LEVEL=${LOG_LEVEL}
+    command: python agents/guardian_agent.py
+    networks:
+      - bonzo-network
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # Worker Health Monitor AI Agent
+  health-monitor-ai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bonzo-health-monitor-ai
+    ports:
+      - "6013:6003"
+    environment:
+      - WORKER_HEALTH_MONITOR_PORT=6003
+      - REDIS_URL=${REDIS_URL}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN}
+      - CLOUDFLARE_ACCOUNT_ID=${CLOUDFLARE_ACCOUNT_ID}
+      - CHECK_INTERVAL_SECONDS=${CHECK_INTERVAL_SECONDS}
+      - AGENT_ZERO_URL=${AGENT_ZERO_URL}
+      - AGENT_ZERO_MCP_TOKEN=${AGENT_ZERO_MCP_TOKEN}
+      - LOG_LEVEL=${LOG_LEVEL}
+    command: python agents/health_monitor.py
+    networks:
+      - bonzo-network
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # Dashboard
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bonzo-praisonai-dashboard
+    ports:
+      - "6100:6100"
+    environment:
+      - DASHBOARD_PORT=6100
+      - REDIS_URL=${REDIS_URL}
+      - COST_OPTIMIZER_URL=http://cost-optimizer-ai:6002
+      - GUARDIAN_URL=http://guardian-ai:6004
+      - HEALTH_MONITOR_URL=http://health-monitor-ai:6003
+    command: python dashboard/app.py
+    networks:
+      - bonzo-network
+    restart: unless-stopped
+    depends_on:
+      - cost-optimizer-ai
+      - guardian-ai
+      - health-monitor-ai
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+networks:
+  bonzo-network:
+    driver: bridge
