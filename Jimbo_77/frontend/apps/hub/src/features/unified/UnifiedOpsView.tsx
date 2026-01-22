@@ -140,16 +140,10 @@ export function UnifiedOpsView({
           onButtonClick={onOpenEastwood}
         />
 
-        {/* 3. Statistic Banner */}
-        <StatisticBanner
-          label="TOTAL_AI_CRAWLERS_HITS"
-          value={1420}
-          color="#ff3333"
-        />
       </div>
 
       {/* 4. Agents Swarm Grid */}
-      <AgentSwarm />
+      <AgentSwarm crawlerHits={1420} />
     </div>
   );
 }

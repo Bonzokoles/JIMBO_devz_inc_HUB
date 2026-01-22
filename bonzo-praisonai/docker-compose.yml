@@ -20,6 +20,12 @@ services:
       - AGENT_ZERO_MCP_TOKEN=${AGENT_ZERO_MCP_TOKEN}
       - LOG_LEVEL=${LOG_LEVEL}
     command: python agents/cost_optimizer.py
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     networks:
       - bonzo-network
     restart: unless-stopped
@@ -47,6 +53,12 @@ services:
       - AGENT_ZERO_MCP_TOKEN=${AGENT_ZERO_MCP_TOKEN}
       - LOG_LEVEL=${LOG_LEVEL}
     command: python agents/guardian_agent.py
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6004/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     networks:
       - bonzo-network
     restart: unless-stopped
@@ -72,6 +84,12 @@ services:
       - AGENT_ZERO_MCP_TOKEN=${AGENT_ZERO_MCP_TOKEN}
       - LOG_LEVEL=${LOG_LEVEL}
     command: python agents/health_monitor.py
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6003/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     networks:
       - bonzo-network
     restart: unless-stopped
@@ -93,6 +111,12 @@ services:
       - GUARDIAN_URL=http://guardian-ai:6004
       - HEALTH_MONITOR_URL=http://health-monitor-ai:6003
     command: python dashboard/app.py
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6100/api/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     networks:
       - bonzo-network
     restart: unless-stopped

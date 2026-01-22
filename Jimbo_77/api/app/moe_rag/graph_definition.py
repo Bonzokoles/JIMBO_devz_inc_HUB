@@ -18,6 +18,7 @@ from typing import Optional
 from .graph_state import GraphState, RoutingDecision
 from .gating_network import GatingNetwork, ExpertType
 from .embeddings import get_indices_registry
+from app.ai.llm_client import get_llm_client
 
 logger = logging.getLogger(__name__)
 
@@ -162,10 +163,10 @@ async def run_moe_rag(
         )
 
         # ====================================================================
-        # STEP 3: SYNTHESIS - Generate response
+        # STEP 3: SYNTHESIS - Generate response using LLM
         # ====================================================================
 
-        logger.info("[SYNTHESIS] Generating response...")
+        logger.info("[SYNTHESIS] Generating response with LLM...")
 
         synthesis_start = time.time()
 
@@ -177,47 +178,77 @@ async def run_moe_rag(
             )
             state["metadata"]["response_confidence"] = 0.3
         else:
-            # Generate response from top documents
-            top_doc = retrieved_docs[0]
-            source = top_doc["source"]
-            content = top_doc["content"]
-            score = top_doc["score"]
+            try:
+                # Get LLM client
+                llm_client = get_llm_client()
+                if not llm_client.is_available():
+                    logger.warning("No LLM API keys configured, using template response")
+                    raise ValueError("No LLM providers available")
 
-            # Template-based response (simple for now)
-            if source == "FAQ":
-                state["final_response"] = f"{content}"
-                confidence = min(score, 0.95)
-            elif source == "PUMO":
-                # Product information
-                metadata = top_doc.get("metadata", {})
-                price = metadata.get("price")
-                stock = metadata.get("stock", 0)
-
-                response_parts = [content]
-                if price:
-                    response_parts.append(f"Cena: ${price}")
-                if stock > 0:
-                    response_parts.append(f"Dostępność: {stock} szt.")
+                # Choose model based on routing decision and expert type
+                expert_type = state["metadata"].get("expert_type", "research")
+                if expert_type == "research":
+                    model = "deepseek"  # Use DeepSeek for research queries
+                elif expert_type == "system":
+                    model = "qwen"  # Use Qwen for system/technical queries
                 else:
-                    response_parts.append("Produkt chwilowo niedostępny.")
+                    model = "qwen"  # Default to Qwen
 
-                state["final_response"] = " | ".join(response_parts)
-                confidence = score * 0.9
-            else:
-                # Technical or other content
-                state["final_response"] = content
-                confidence = score * 0.85
+                # Generate response using LLM with retrieved documents
+                llm_result = await llm_client.generate_response(
+                    query=query,
+                    retrieved_docs=retrieved_docs,
+                    model=model,
+                    max_tokens=1500,
+                    temperature=0.7,
+                )
 
-            state["metadata"]["response_confidence"] = confidence
+                state["final_response"] = llm_result["response"]
+                state["metadata"]["response_confidence"] = min(llm_result.get("cost_usd", 0.01) * 100, 0.95)  # Placeholder confidence
+                
+                # Store LLM metadata
+                state["metadata"]["llm_model"] = llm_result["model_name"]
+                state["metadata"]["tokens_input"] = llm_result["tokens_input"]
+                state["metadata"]["tokens_output"] = llm_result["tokens_output"]
+                state["metadata"]["llm_cost_usd"] = llm_result["cost_usd"]
 
-            # Add source attribution
-            if len(retrieved_docs) > 1:
-                other_sources = [doc["source"] for doc in retrieved_docs[1:3]]
-                unique_sources = list(set(other_sources))
-                if unique_sources:
-                    state[
-                        "final_response"
-                    ] += f"\n\n(Dodatkowe źródła: {', '.join(unique_sources)})"
+                # Add source attribution
+                if len(retrieved_docs) > 1:
+                    sources = list(set(doc["source"] for doc in retrieved_docs[:3]))
+                    if sources:
+                        state["final_response"] += f"\n\n(Źródła: {', '.join(sources)})"
+
+            except Exception as e:
+                logger.warning(f"LLM generation failed, falling back to template: {e}")
+                # Fallback to template-based response
+                top_doc = retrieved_docs[0]
+                source = top_doc["source"]
+                content = top_doc["content"]
+                score = top_doc["score"]
+
+                if source == "FAQ":
+                    state["final_response"] = f"{content}"
+                    confidence = min(score, 0.95)
+                elif source == "PUMO":
+                    metadata = top_doc.get("metadata", {})
+                    price = metadata.get("price")
+                    stock = metadata.get("stock", 0)
+                    response_parts = [content]
+                    if price:
+                        response_parts.append(f"Cena: ${price}")
+                    if stock > 0:
+                        response_parts.append(f"Dostępność: {stock} szt.")
+                    else:
+                        response_parts.append("Produkt chwilowo niedostępny.")
+                    state["final_response"] = " | ".join(response_parts)
+                    confidence = score * 0.9
+                else:
+                    state["final_response"] = content
+                    confidence = score * 0.85
+
+                state["metadata"]["response_confidence"] = confidence
+                state["metadata"]["llm_fallback"] = True
+                state["metadata"]["llm_error"] = str(e)
 
         synthesis_time = int((time.time() - synthesis_start) * 1000)
         state["metadata"]["synthesis_time_ms"] = synthesis_time
@@ -231,18 +262,28 @@ async def run_moe_rag(
         state["metadata"]["total_latency_ms"] = total_time
         state["metadata"]["timestamp"] = time.time()
 
-        # Mock cost calculation (simplified)
-        # In real version, this would sum actual LLM token costs
-        estimated_cost = 0.001 * (len(query) / 100)  # ~$0.001 per 100 chars
-        state["metadata"]["cost_usd"] = estimated_cost
+        # Use actual LLM cost if available, otherwise estimate
+        if "llm_cost_usd" in state["metadata"]:
+            state["metadata"]["cost_usd"] = state["metadata"]["llm_cost_usd"]
+        else:
+            # Fallback cost estimation
+            estimated_cost = 0.001 * (len(query) / 100)  # ~$0.001 per 100 chars
+            state["metadata"]["cost_usd"] = estimated_cost
 
-        # Mock tokens (for compatibility)
-        state["metadata"]["tokens_used"] = {
-            "input": len(query.split()),
-            "output": (
-                len(state["final_response"].split()) if state["final_response"] else 0
-            ),
-        }
+        # Use actual tokens if available
+        if "tokens_input" in state["metadata"] and "tokens_output" in state["metadata"]:
+            state["metadata"]["tokens_used"] = {
+                "input": state["metadata"]["tokens_input"],
+                "output": state["metadata"]["tokens_output"],
+            }
+        else:
+            # Mock tokens (for compatibility)
+            state["metadata"]["tokens_used"] = {
+                "input": len(query.split()),
+                "output": (
+                    len(state["final_response"].split()) if state["final_response"] else 0
+                ),
+            }
 
         # Cache hit (always false in this simple version)
         state["metadata"]["cache_hit"] = False

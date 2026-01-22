@@ -10,7 +10,7 @@
  * - GET /health - Health check
  */
 
-import { ragChat } from "./rag-engine";
+import { ragChat } from "./RAGResponse";
 import { logQuery } from "./logging";
 
 export interface Env {

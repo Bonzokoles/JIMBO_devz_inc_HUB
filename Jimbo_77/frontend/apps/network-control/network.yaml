@@ -1,0 +1,20 @@
+devices:
+  - id: "Router_Main"
+    name: "Główny Router (ASUS)"
+    ip: "192.168.1.1"
+    login_url: "http://192.168.1.1/Main_Login.asp"
+    selectors:
+      username: "input[name='login_username']"
+      password: "input[name='login_passwd']"
+      submit: ".button"
+    credentials_env_prefix: "ROUTER_MAIN"
+
+  - id: "Switch_PoE"
+    name: "Switch PoE (TP-Link)"
+    ip: "192.168.1.2"
+    login_url: "http://192.168.1.2/"
+    selectors:
+      username: "#username"
+      password: "#password"
+      submit: "#login-btn"
+    credentials_env_prefix: "SWITCH_POE"

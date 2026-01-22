@@ -1,0 +1,45 @@
+{
+	"folders": [
+		{
+			"name": "The_yellow_hub",
+			"path": ".."
+		},
+		{
+			"path": "../docs"
+		}
+	],
+	"settings": {
+		"git.enableSmartCommit": true,
+		"git.confirmSync": false,
+		"git.autofetch": true,
+		"git.autoRepositoryDetection": "subFolders",
+		"git.detectSubmodules": true,
+		"git.detectSubmodulesLimit": 20,
+		"git.ignoreLimitWarning": true,
+		"scm.defaultViewMode": "tree",
+		"scm.repositories.visible": 10,
+		"scm.alwaysShowRepositories": true,
+		"files.exclude": {
+			"**/.git": false,
+			"**/node_modules": true,
+			"**/.astro": true,
+			"**/.next": true,
+			"**/dist": true,
+			"**/__pycache__": true,
+			"ZZ_files": true
+		},
+		"search.exclude": {
+			"**/node_modules": true,
+			"**/dist": true,
+			"**/.astro": true,
+			"**/.next": true,
+			"**/build": true,
+			"ZZ_files": true
+		},
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"[python]": {
+			"editor.defaultFormatter": "ms-python.black-formatter"
+		}
+	}
+}

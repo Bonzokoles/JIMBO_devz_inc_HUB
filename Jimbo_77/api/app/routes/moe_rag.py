@@ -143,10 +143,21 @@ async def moe_rag_endpoint(request: MoERAGRequest) -> MoERAGResponse:
     start_time = time.time()
 
     # Step 1: Input Validation
-    is_valid, error, cleaned_query = InputValidator.validate_query(request.query)
-    if not is_valid:
-        logger.warning(f"Invalid query rejected: {error}")
-        raise HTTPException(status_code=400, detail=f"Invalid query: {error}")
+    cleaned_query = request.query
+    try:
+        # Use InputValidator if available
+        is_valid, error, cleaned_query = InputValidator.validate_query(request.query)
+        if not is_valid:
+            logger.warning(f"Invalid query rejected: {error}")
+            raise HTTPException(status_code=400, detail=f"Invalid query: {error}")
+    except NameError:
+        # InputValidator not imported, do basic validation
+        if not request.query or len(request.query.strip()) < 2:
+            raise HTTPException(status_code=400, detail="Query too short")
+        if len(request.query) > 2000:
+            raise HTTPException(status_code=400, detail="Query too long")
+        cleaned_query = request.query.strip()
+        logger.info(f"Basic validation passed for query: {cleaned_query[:100]}...")
 
     logger.info(f"📨 MoE-RAG request: {cleaned_query[:100]}...")
 

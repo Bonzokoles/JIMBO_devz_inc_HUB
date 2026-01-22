@@ -87,8 +87,8 @@ ${content}`;
           background: "linear-gradient(90deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 100%)",
           padding: "20px"
       }}>
-        <h2 style={{ margin: 0, fontSize: "1.8rem", letterSpacing: "1px" }}>OMNI PUBLISHER <span style={{color:"var(--neon)"}}>2.0</span></h2>
-        <p style={{ color: "var(--muted)", margin: "8px 0 0", fontSize: "1.1rem" }}>
+        <h2 style={{ margin: 0, fontSize: "1.8rem", letterSpacing: "1px", paddingLeft: "20px" }}>OMNI PUBLISHER <span style={{color:"var(--neon)"}}>2.0</span></h2>
+        <p style={{ color: "var(--muted)", margin: "8px 0 0", fontSize: "1.1rem", paddingLeft: "20px" }}>
             AI-Powered Content Engine: Brainstorm ➡️ Generate ➡️ Deploy
         </p>
       </div>
@@ -99,15 +99,15 @@ ${content}`;
         <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
             {/* BRAINSTORM PANEL */}
             <div className="card" style={{ border: "1px solid var(--active)", boxShadow: "0 4px 20px rgba(0,0,0,0.2)" }}>
-                <h3 style={{ borderBottom: "1px solid var(--line)", paddingBottom: 10, margin: "0 0 15px 0", color: "var(--neon)" }}>
+                <h3 style={{ borderBottom: "1px solid var(--line)", paddingBottom: 10, margin: "0 0 15px 0", color: "var(--neon)", paddingLeft: 10 }}>
                     🧠 AI BRAINSTORM
                 </h3>
-                <p style={{ fontSize: 13, color: "var(--muted)", lineHeight: "1.5" }}>
+                <p style={{ fontSize: 13, color: "var(--muted)", lineHeight: "1.5", paddingLeft: 10 }}>
                     Input a high-level topic. The **MOA Swarm** (Research, SEO, Writer) will research trends and generate a full article.
                 </p>
                 
                 <div style={{ marginTop: 20 }}>
-                    <label style={{ display: "block", color: "var(--fg)", marginBottom: 8, fontWeight: "bold" }}>TARGET TOPIC</label>
+                    <label style={{ display: "block", color: "var(--fg)", marginBottom: 8, fontWeight: "bold", paddingLeft: 10 }}>TARGET TOPIC</label>
                     <input
                       className="btn"
                       style={{ 
@@ -177,7 +177,7 @@ ${content}`;
               </div>
 
               <div>
-                <label style={{ display: "block", color: "var(--muted)", marginBottom: 6, fontSize: 12, textTransform: "uppercase" }}>Article Title</label>
+                <label style={{ display: "block", color: "var(--muted)", marginBottom: 6, fontSize: 12, textTransform: "uppercase", paddingLeft: 10 }}>Article Title</label>
                 <input
                   className="btn"
                   style={{ 
@@ -197,7 +197,7 @@ ${content}`;
               </div>
     
               <div style={{ flex: 1 }}>
-                <label style={{ display: "block", color: "var(--muted)", marginBottom: 6, fontSize: 12, textTransform: "uppercase" }}>Content Body (Markdown)</label>
+                <label style={{ display: "block", color: "var(--muted)", marginBottom: 6, fontSize: 12, textTransform: "uppercase", paddingLeft: 10 }}>Content Body (Markdown)</label>
                 <textarea
                   className="btn"
                   style={{ 
@@ -244,11 +244,11 @@ ${content}`;
                 <button 
                   className="btn" 
                   style={{ 
-                      background: loading ? "var(--muted)" : "var(--hot)", 
+                      background: loading ? "var(--muted)" : "#10b981", // Standard emerald-500, less neon
                       color: "white", 
                       fontWeight: "bold",
                       padding: "12px 30px",
-                      boxShadow: "0 4px 15px rgba(231, 76, 60, 0.4)"
+                      boxShadow: "none", // Killed the glow completely
                   }}
                   onClick={handlePublish}
                   disabled={loading}

@@ -2,49 +2,21 @@ import React from "react";
 
 export const DashboardHeader: React.FC = () => {
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 30,
-        padding: "40px 0 20px 0",
-        position: "relative",
-        minHeight: 160,
-      }}
-    >
+    <div className="flex flex-col md:flex-row items-center justify-center gap-8 py-12 relative min-h-[180px] group">
+      {/* Background Glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-32 bg-primary/20 blur-[100px] rounded-full opacity-50 pointer-events-none"></div>
+
       <img
         src="/apple-touch-icon.png"
         alt="Logo"
-        style={{
-          width: 100,
-          height: 100,
-          filter: "drop-shadow(0 0 20px rgba(255, 51, 51, 0.8))",
-        }}
+        className="w-24 h-24 md:w-32 md:h-32 drop-shadow-[0_0_25px_rgba(255,51,51,0.5)] hover:scale-105 transition-transform duration-500 hover:rotate-3"
       />
-      <div style={{ textAlign: "left" }}>
-        <h2
-          style={{
-            margin: 0,
-            letterSpacing: "4px",
-            fontFamily: "var(--font-brand)",
-            fontSize: 72,
-            lineHeight: 1,
-            textShadow: "0 0 10px rgba(255,255,255,0.1)",
-          }}
-        >
-          the open computa operations V2.2
+      <div className="text-center md:text-left relative z-10">
+        <h2 className="font-brand text-5xl md:text-7xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-100 to-gray-400 drop-shadow-sm">
+          the open computa operations <span className="text-primary text-4xl align-top">V2.2</span>
         </h2>
-        <div
-          style={{
-            marginTop: 10,
-            fontSize: 24,
-            color: "var(--muted)",
-            fontFamily: "var(--font-brand)",
-            letterSpacing: "2px",
-            opacity: 0.8,
-          }}
-        >
+        <div className="mt-2 text-xl md:text-2xl text-gray-400 font-display tracking-[0.3em] uppercase opacity-80 flex items-center gap-3 justify-center md:justify-start">
+          <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
           Central Operations Dashboard - Jimbo77 Systems
         </div>
       </div>

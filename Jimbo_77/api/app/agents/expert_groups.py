@@ -304,6 +304,20 @@ class ExpertGroupsRegistry:
         return stats
 
 
+def get_expert_groups() -> Dict[ExpertType, ExpertGroup]:
+    """
+    Get all expert groups mapped by type
+
+    Returns:
+        Dict mapping ExpertType to ExpertGroup
+    """
+    return {
+        ExpertType.RESEARCH: EXPERT_GROUP_A,
+        ExpertType.WRITING: EXPERT_GROUP_B,
+        ExpertType.SYSTEM: EXPERT_GROUP_C,
+    }
+
+
 # Example usage
 if __name__ == "__main__":
     registry = ExpertGroupsRegistry()

@@ -7,7 +7,7 @@ Cloudflare Worker that bridges Agent Zero with JIMBO77 Agents Orchestrator.
 **Agent Zero Instance:**
 
 - Local Port: 50100
-- Cloudflare Tunnel: https://boxing-operator-smithsonian-rocks.trycloudflare.com
+- Cloudflare Tunnel: https://sperm-penn-configurations-conf.trycloudflare.com
 - API Key: jVD0r1eqaoXKz-18
 
 ## Endpoints
@@ -23,7 +23,7 @@ Health check for Agent Zero connection.
   "success": true,
   "agent": "Agent Zero",
   "status": "online",
-  "tunnel": "https://boxing-operator-smithsonian-rocks.trycloudflare.com",
+  "tunnel": "https://sperm-penn-configurations-conf.trycloudflare.com",
   "local_port": "50100"
 }
 ```

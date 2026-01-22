@@ -1,211 +1,91 @@
 import { useState } from "react";
-// Remove AppShell, Topbar, CommandDrawer if not used in new design, or re-integrate them.
-// For "Bunker War Room", we want a full screen distinct look, but maybe consistent for other tabs.
-// The user approved "Bunker War Room" which implies a distinct look.
-// I will keep the clean Sidebar approach I proposed.
-
-// import { api } from "@jimbo77/core/api";
-// import type { Project } from "@jimbo77/core/types";
-
 // Views
 import { UnifiedOpsView } from "./features/unified/UnifiedOpsView";
 import { PublishingView } from "./features/publishing/PublishingView";
 import BunkerWarRoom from "./features/analysis/BunkerWarRoom";
 import { ZenonView } from "./features/zenon";
 import { MoaFlowVisualizer } from "./features/moa";
-// import { ServicesPage } from "./features/services/ServicesPage"; // Optional: Re-enable later
-// import { AgentsView } from "./features/agents/AgentsView"; // Optional
-
-// Components
-const SidebarItem = ({ icon, label, id, active, onClick }: any) => (
-  <button
-    onClick={() => onClick(id)}
-    className={`w-full flex items-center space-x-3 px-4 py-3 rounded m-1 transition-all duration-200 font-mono text-sm ${
-      active
-        ? "bg-yellow-500 text-black font-bold shadow-lg shadow-yellow-500/20"
-        : "text-gray-400 hover:bg-gray-800 hover:text-white"
-    }`}
-  >
-    <span className="text-xl">{icon}</span>
-    <span>{label}</span>
-  </button>
-);
+import { Sidebar } from "./components/Sidebar";
 
 export default function App() {
   const [activeTab, setActiveTab] = useState("dashboard");
 
   const renderContent = () => {
     switch (activeTab) {
-      case "dashboard":
-        return <UnifiedOpsView />;
-      case "publisher":
-        return <PublishingView />;
-      case "wild_bunch":
-        return <BunkerWarRoom />;
-      case "zenon_prompts":
-        return <ZenonView />;
-      case "moa_flow":
-        return <MoaFlowVisualizer />;
+      case "dashboard": return <UnifiedOpsView />;
+      case "publisher": return <PublishingView />;
+      case "wild_bunch": return <BunkerWarRoom />;
+      case "zenon_prompts": return <ZenonView />;
+      case "moa_flow": return <MoaFlowVisualizer />;
       case "agents":
         return (
-          <div className="text-gray-500 p-10 flex items-center justify-center font-mono">
-            AGENT MANAGEMENT [COMING SOON]
+          <div className="h-full flex items-center justify-center p-10">
+            <div className="glass-panel p-10 rounded-2xl border border-dashed border-gray-700 text-center">
+              <div className="text-6xl mb-4 animate-bounce">🚧</div>
+              <h2 className="text-2xl font-bold text-primary mb-2">AGENT MANAGEMENT</h2>
+              <p className="text-gray-400 font-mono">Under Construction by JIMBO_77</p>
+            </div>
           </div>
         );
       case "network":
         return (
-          <div className="h-full">
+          <div className="h-full w-full bg-black relative">
             <iframe
               src="http://localhost:5173"
-              className="w-full h-full border-0"
+              className="w-full h-full border-0 opacity-90 hover:opacity-100 transition-opacity"
               title="Network Control Center"
             />
           </div>
         );
       case "services":
         return (
-          <div className="text-gray-500 p-10 flex items-center justify-center font-mono">
-            MICROSERVICES [COMING SOON]
+           <div className="h-full flex items-center justify-center p-10">
+            <div className="glass-panel p-10 rounded-2xl border border-dashed border-gray-700 text-center">
+              <div className="text-6xl mb-4 animate-spin-slow">⚙️</div>
+              <h2 className="text-2xl font-bold text-accent mb-2">MICROSERVICES</h2>
+              <p className="text-gray-400 font-mono">System Optimization in Progress...</p>
+            </div>
           </div>
         );
-      default:
-        return <UnifiedOpsView />;
+      default: return <UnifiedOpsView />;
     }
   };
 
   return (
-    <div className="flex h-screen bg-gray-900 text-white font-sans overflow-hidden selection:bg-yellow-500 selection:text-black">
-      {/* Sidebar - Fixed Width */}
-      <div className="w-80 bg-gray-950 border-r border-gray-800 flex flex-col shadow-2xl z-10">
-        <div className="p-6 border-b border-gray-800 flex flex-col">
-          <h1
-            style={{
-              margin: 0,
-              fontSize: 48,
-              lineHeight: 1,
-              fontFamily: "var(--font-brand)",
-              fontWeight: 400,
-              background: "linear-gradient(45deg, #fff, #888)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              letterSpacing: 0,
-              width: "100%",
-              textAlign: "left",
-            }}
-          >
-            JIMBO<span className="text-white">_77</span>
-          </h1>
-          <span
-            style={{
-              display: "block",
-              fontSize: 18,
-              fontFamily: "var(--font-brand)",
-              color: "#ff3333",
-              marginTop: 4,
-            }}
-          >
-            DEVZ_hub
-          </span>
-        </div>
-
-        <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
-          <div className="text-xs font-bold text-gray-600 px-4 py-2 mt-2 mb-1 tracking-wider">
-            MAIN
-          </div>
-          <SidebarItem
-            icon="📊"
-            label="DASHBOARD"
-            id="dashboard"
-            active={activeTab === "dashboard"}
-            onClick={setActiveTab}
-          />
-          <SidebarItem
-            icon="📢"
-            label="PUBLISHER"
-            id="publisher"
-            active={activeTab === "publisher"}
-            onClick={setActiveTab}
-          />
-
-          <div className="text-xs font-bold text-gray-600 px-4 py-2 mt-6 mb-1 tracking-wider">
-            INTELLIGENCE
-          </div>
-          <SidebarItem
-            icon="☢️"
-            label="WILD BUNCH"
-            id="wild_bunch"
-            active={activeTab === "wild_bunch"}
-            onClick={setActiveTab}
-          />
-          <SidebarItem
-            icon="🧠"
-            label="ZENON PROMPTS"
-            id="zenon_prompts"
-            active={activeTab === "zenon_prompts"}
-            onClick={setActiveTab}
-          />
-          <SidebarItem
-            icon="🔄"
-            label="MOA FLOW"
-            id="moa_flow"
-            active={activeTab === "moa_flow"}
-            onClick={setActiveTab}
-          />
-
-          <div className="text-xs font-bold text-gray-600 px-4 py-2 mt-6 mb-1 tracking-wider">
-            SYSTEM
-          </div>
-
-          <SidebarItem
-            icon="🤖"
-            label="AGENTS"
-            id="agents"
-            active={activeTab === "agents"}
-            onClick={setActiveTab}
-          />
-          <SidebarItem
-            icon="🌐"
-            label="NETWORK CTRL"
-            id="network"
-            active={activeTab === "network"}
-            onClick={setActiveTab}
-          />
-          <SidebarItem
-            icon="🛠️"
-            label="SERVICES"
-            id="services"
-            active={activeTab === "services"}
-            onClick={setActiveTab}
-          />
-          <SidebarItem
-            icon="🛒"
-            label="AI MARKETPLACE"
-            id="marketplace"
-            active={activeTab === "marketplace"}
-            onClick={() =>
-              window.open(
-                "https://ai-marketplace.stolarnia-ams.workers.dev",
-                "_blank",
-              )
-            }
-          />
-        </nav>
-
-        <div className="p-4 bg-gray-900 border-t border-gray-800">
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-yellow-400 to-yellow-600 border border-yellow-300"></div>
-            <div className="text-sm">
-              <div className="font-bold text-gray-200">Admin User</div>
-              <div className="text-xs text-green-500">● Online</div>
-            </div>
-          </div>
-        </div>
+    <div className="flex h-screen gap-[10px] bg-background text-gray-200 font-sans overflow-hidden selection:bg-accent selection:text-white">
+      {/* Background Ambience */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-[100px] animate-pulse-glow" />
+          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent/10 rounded-full blur-[120px] animate-pulse-glow" style={{ animationDelay: '1s' }} />
       </div>
 
-      {/* Main Content - Flex Grow */}
-      <div className="flex-1 overflow-hidden bg-gray-900 relative">
-        <div className="absolute inset-0 overflow-auto">{renderContent()}</div>
-      </div>
+      {/* Main Sidebar */}
+      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+
+      {/* Main Content Area */}
+      <main className="flex-1 relative z-10 overflow-hidden flex flex-col bg-black/20 backdrop-blur-sm">
+        {/* Top Header / Breadcrumb (Optional, simplistic for now) */}
+        <header className="h-16 border-b border-glass-border flex items-center justify-between px-8 bg-glass-bg/50 backdrop-blur-sm">
+             <div className="flex items-center space-x-2 text-sm font-mono text-gray-500">
+                <span>JIMBO_HUB</span>
+                <span>/</span>
+                <span className="text-primary font-bold uppercase tracking-wider">{activeTab.replace('_', ' ')}</span>
+             </div>
+             
+             {/* Right Side Actions */}
+             <div className="flex items-center space-x-4">
+                <button className="p-2 hover:bg-white/10 rounded-full transition-colors text-gray-400 hover:text-white relative">
+                   🔔
+                   <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-black"></span>
+                </button>
+             </div>
+        </header>
+
+        {/* Dynamic Content */}
+        <div className="flex-1 overflow-auto p-0 relative scrollbar-thin scrollbar-thumb-gray-800">
+           {renderContent()}
+        </div>
+      </main>
     </div>
   );
 }

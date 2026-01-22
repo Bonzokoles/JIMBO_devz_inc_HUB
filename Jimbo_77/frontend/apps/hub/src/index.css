@@ -1,27 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@400;700;900&family=Outfit:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @font-face {
-  font-family: 'Twobit Italic';
+  font-family: 'Twobit';
   src: url('/fonts/Twobit Italic.ttf') format('truetype');
-  font-weight: normal;
   font-style: italic;
 }
 
 @font-face {
-  font-family: 'Steelfish Eb It';
+  font-family: 'Steelfish';
   src: url('/fonts/Steelfish Eb It.otf') format('opentype');
-  font-weight: normal;
   font-style: italic;
 }
 
 :root {
-  --font-brand: 'Twobit Italic', cursive;
-  --font-text: 'Steelfish Eb It', sans-serif;
-  --sans: 'Steelfish Eb It', sans-serif; /* Override tailwind default or ops system */
+  --glass-border: rgba(255, 255, 255, 0.08); /* Slightly more visible border */
+  --glass-bg: rgba(26, 31, 46, 0.7); /* Lighter glass */
 }
 
 body {
-  font-family: var(--font-text) !important;
+  @apply bg-background text-gray-200 antialiased font-sans overflow-hidden;
+  background-image: 
+    radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.03), transparent 25%),
+    radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.03), transparent 25%);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-700/50 rounded-full hover:bg-primary/50 transition-colors;
+}
+
+/* Utilities */
+@layer utilities {
+  .glass-panel {
+    @apply bg-opacity-70 backdrop-blur-md border border-white/10 shadow-glass;
+  }
+  
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500;
+  }
+
+  .text-gradient-gold {
+     @apply bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-orange-500;
+  }
 }
