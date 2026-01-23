@@ -356,7 +356,7 @@ export function MultiDomainAnalyticsView() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                {domains.map((domain, idx) => (
+                {domains.map((domain) => (
                   <tr
                     key={domain.domain}
                     onClick={() => setSelectedDomain(domain.domain)}

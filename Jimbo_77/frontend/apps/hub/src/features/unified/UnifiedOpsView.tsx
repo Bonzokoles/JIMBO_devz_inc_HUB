@@ -1,7 +1,6 @@
 import { DashboardHeader } from "../../components/dashboard/DashboardHeader";
 import { KpiCard } from "../../components/dashboard/KpiCard";
 import { AgentSwarm } from "../../components/dashboard/AgentSwarm";
-import { StatisticBanner } from "../../components/dashboard/StatisticBanner";
 
 interface UnifiedOpsViewProps {
   onOpenPumo?: () => void;

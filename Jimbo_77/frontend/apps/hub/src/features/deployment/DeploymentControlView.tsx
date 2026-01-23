@@ -168,18 +168,19 @@ export function DeploymentControlView() {
     setDeploymentLog([newAction, ...deploymentLog]);
   };
 
-  const getStatusColor = (status: Repository["status"]) => {
-    switch (status) {
-      case "success":
-        return "var(--success)";
-      case "failure":
-        return "var(--danger)";
-      case "pending":
-        return "var(--warning)";
-      default:
-        return "var(--muted)";
-    }
-  };
+  // Unused for now, but might be useful later
+  // const getStatusColor = (status: Repository["status"]) => {
+  //   switch (status) {
+  //     case "success":
+  //       return "var(--success)";
+  //     case "failure":
+  //       return "var(--danger)";
+  //     case "pending":
+  //       return "var(--warning)";
+  //     default:
+  //       return "var(--muted)";
+  //   }
+  // };
 
   const getStatusIcon = (status: Repository["status"]) => {
     switch (status) {
