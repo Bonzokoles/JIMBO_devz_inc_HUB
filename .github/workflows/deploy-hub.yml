@@ -35,7 +35,7 @@ jobs:
           cache-dependency-path: "Jimbo_77/frontend/pnpm-lock.yaml"
 
       - name: Install Dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
         working-directory: Jimbo_77/frontend
 
       - name: Build Frontend (Hub)
