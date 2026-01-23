@@ -1,5 +1,3 @@
-import { motion, AnimatePresence } from "framer-motion";
-
 // Icons (Using simple emojis for now, but wrapped in sleek spans)
 const menuItems = [
   { id: "dashboard", label: "COMMAND", icon: "📊", category: "MAIN" },

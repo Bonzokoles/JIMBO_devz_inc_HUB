@@ -138,7 +138,6 @@ export function UnifiedOpsView({
           buttonText="OPEN EASTWOOD →"
           onButtonClick={onOpenEastwood}
         />
-
       </div>
 
       {/* 4. Agents Swarm Grid */}
