@@ -56,11 +56,18 @@ app = FastAPI(
 
 # 2. CORS Configuration
 # Allow Cloudflare Pages and local development
-origins = ["*"]
+origins = [
+    "http://localhost:3002",  # PUMO Frontend (Task 1.3 requirement)
+    "http://localhost:3880",  # Dashboard Frontend
+    "http://localhost:5173",  # Vite dev server
+    "https://*.pages.dev",  # Cloudflare Pages deployments
+    "https://jimbo77.com",  # Production domain
+    "https://*.jimbo77.com",  # Subdomains
+]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # Use explicit list for credentials support
+    allow_origins=origins,  # Explicit origins for security
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -88,7 +95,9 @@ app.include_router(
     execute.router, prefix="/api/agents"
 )  # Agent Execution (for Orchestrator)
 app.include_router(moe_rag.router)  # MoE-RAG System (already has /api/moe-rag prefix)
-app.include_router(network.router)  # Network Control Center (PowerShell, Port Monitoring)
+app.include_router(
+    network.router
+)  # Network Control Center (PowerShell, Port Monitoring)
 app.include_router(vpn.router)  # Proton VPN Status & Control
 
 # Agent compatibility routes (no /v1 prefix)

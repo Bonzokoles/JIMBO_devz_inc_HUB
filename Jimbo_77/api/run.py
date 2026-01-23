@@ -6,12 +6,16 @@ Direct startup script
 
 import sys
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file (Task 1.3)
+load_dotenv()
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import uvicorn
-from app.main import app
 
 if __name__ == "__main__":
-    # Use port 3885 for RAG API (reserved in config/ports.env)
-    uvicorn.run(app, host="0.0.0.0", port=3885, reload=False)
+    # Use port from .env or default to 8001 (FAZA 1 Task 1.1)
+    port = int(os.getenv("API_PORT", 8001))
+    uvicorn.run("app.main:app", host="0.0.0.0", port=port, reload=True)

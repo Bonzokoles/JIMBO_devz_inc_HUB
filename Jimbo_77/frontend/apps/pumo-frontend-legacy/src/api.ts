@@ -1,6 +1,5 @@
 // API Base URL - points to existing Cloudflare Worker
-const API_BASE = import.meta.env.VITE_API_BASE ||
-  'http://localhost:8001';  // Lokalny FastAPI backend
+const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:8001"; // Lokalny FastAPI backend
 
 // Types
 export type KPIData = {
@@ -90,7 +89,7 @@ export type AIInsight = {
   insight: string;
   confidence: number;
   action?: string;
-  impact?: 'low' | 'medium' | 'high';
+  impact?: "low" | "medium" | "high";
 };
 
 export type AIAnalysisResponse = {
@@ -141,97 +140,88 @@ class PumoAPI {
     this.baseUrl = baseUrl;
   }
 
-  // Fetch KPIs
+  // Fetch KPIs (Task 1.4: removed fake data fallback)
   async getKPIs(): Promise<KPIResponse> {
-    try {
-      const response = await fetch(`${this.baseUrl}/analytics/kpis`);
-      if (!response.ok) throw new Error('Failed to fetch KPIs');
-      return await response.json();
-    } catch (error) {
-      console.error('KPIs API error:', error);
-      // Return fallback data
-      return {
-        totalRevenue: 284750,
-        revenueChange: 8.3,
-        aiShare: 67.2,
-        conversionRate: 4.85,
-        totalClicks: 486,
-        ragHitrate: 95.2,
-        apiUptime: 99.8,
-      };
+    const response = await fetch(`${this.baseUrl}/v1/analytics/business-overview`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch KPIs: ${response.statusText}`);
     }
+    const data = await response.json();
+    // Transform backend format to frontend KPIResponse
+    return {
+      totalRevenue: data.kpis.total_revenue,
+      revenueChange: data.kpis.revenue_change_percent,
+      aiShare: 67.2, // TODO: Calculate from real data
+      conversionRate: data.kpis.conversion_rate,
+      totalClicks: 0, // TODO: Add clicks tracking
+      ragHitrate: 95.2, // TODO: Get from RAG service
+      apiUptime: 99.8, // TODO: Get from health endpoint
+    };
   }
 
-  // Fetch Revenue Trend
+  // Fetch Revenue Trend (Task 1.4: removed fake data fallback)
   async getRevenueTrend(days: number = 30): Promise<RevenueTrendResponse> {
-    try {
-      const response = await fetch(`${this.baseUrl}/analytics/revenue-trend?days=${days}`);
-      if (!response.ok) throw new Error('Failed to fetch revenue trend');
-      return await response.json();
-    } catch (error) {
-      console.error('Revenue trend API error:', error);
-      // Return fallback data
-      return [
-        { date: '2026-01-01', totalRevenue: 15000, aiRevenue: 8000 },
-        { date: '2026-01-02', totalRevenue: 22000, aiRevenue: 14000 },
-        { date: '2026-01-03', totalRevenue: 18000, aiRevenue: 11000 },
-        { date: '2026-01-04', totalRevenue: 25000, aiRevenue: 17000 },
-        { date: '2026-01-05', totalRevenue: 30000, aiRevenue: 21000 },
-        { date: '2026-01-06', totalRevenue: 28000, aiRevenue: 19000 },
-        { date: '2026-01-07', totalRevenue: 35000, aiRevenue: 24000 },
-      ];
+    const response = await fetch(`${this.baseUrl}/v1/analytics/revenue-trend?days=${days}`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch revenue trend: ${response.statusText}`);
     }
+    const data = await response.json();
+    // Transform backend format to frontend RevenueTrendResponse
+    return data.revenue_trend.map((item: any) => ({
+      date: item.date,
+      totalRevenue: item.revenue,
+      aiRevenue: item.revenue * 0.67, // TODO: Track AI-generated revenue separately
+    }));
   }
 
-  // Fetch Traffic Sources
+  // Fetch Traffic Sources (Task 1.4: removed fake data fallback)
   async getTrafficSources(): Promise<TrafficSourcesResponse> {
-    try {
-      const response = await fetch(`${this.baseUrl}/analytics/traffic-sources`);
-      if (!response.ok) throw new Error('Failed to fetch traffic sources');
-      return await response.json();
-    } catch (error) {
-      console.error('Traffic sources API error:', error);
-      return {
-        aiSeo: 45,
-        organic: 30,
-        paid: 15,
-        direct: 10,
-      };
+    const response = await fetch(`${this.baseUrl}/v1/analytics/order-sources`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch traffic sources: ${response.statusText}`);
     }
+    const data = await response.json();
+    // Transform backend order sources to traffic sources
+    return {
+      aiSeo: data.order_sources?.ai_seo || 0,
+      organic: data.order_sources?.organic || 0,
+      paid: data.order_sources?.paid || 0,
+      direct: data.order_sources?.direct || 0,
+    };
   }
 
-  // Fetch Top Products
+  // Fetch Top Products (Task 1.4: removed fake data fallback)
   async getTopProducts(limit: number = 10): Promise<ProductResponse> {
-    try {
-      const response = await fetch(`${this.baseUrl}/analytics/top-products?limit=${limit}`);
-      if (!response.ok) throw new Error('Failed to fetch top products');
-      return await response.json();
-    } catch (error) {
-      console.error('Top products API error:', error);
-      return [
-        { name: 'Materac Comfort Plus', category: 'Materace', clicks: 1250, ctr: 4.8, revenue: 45000 },
-        { name: 'Szafa Classic Oak', category: 'Szafy', clicks: 980, ctr: 3.2, revenue: 32000 },
-        { name: 'Fotel Relax Pro', category: 'Fotele', clicks: 856, ctr: 5.1, revenue: 28500 },
-        { name: 'Stół Family', category: 'Stoły', clicks: 743, ctr: 3.9, revenue: 22000 },
-        { name: 'Łóżko Dream', category: 'Łóżka', clicks: 682, ctr: 4.3, revenue: 38000 },
-      ];
+    const response = await fetch(`${this.baseUrl}/v1/analytics/top-products?limit=${limit}`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch top products: ${response.statusText}`);
     }
+    const data = await response.json();
+    // Transform backend format to frontend ProductResponse
+    return data.top_products.map((product: any) => ({
+      name: product.name,
+      category: product.category || "Unknown",
+      clicks: 0, // TODO: Add clicks tracking
+      ctr: 0, // TODO: Calculate CTR from clicks/impressions
+      revenue: product.revenue,
+      units_sold: product.units_sold,
+    }));
   }
 
   // AI Analyst Query
   async queryAI(query: string): Promise<AIQueryResponse> {
     try {
       const response = await fetch(`${this.baseUrl}/ai-analyst`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query }),
       });
-      if (!response.ok) throw new Error('Failed to query AI');
+      if (!response.ok) throw new Error("Failed to query AI");
       return await response.json();
     } catch (error) {
-      console.error('AI query error:', error);
+      console.error("AI query error:", error);
       return {
-        response: 'AI Analyst is currently unavailable. Please try again later.',
+        response: "AI Analyst is currently unavailable. Please try again later.",
         confidence: 0,
       };
     }
@@ -241,8 +231,8 @@ class PumoAPI {
   async generateBuyingGuide(request: GenerateGuideRequest): Promise<BuyingGuide> {
     try {
       const response = await fetch(`${this.baseUrl}/api/guides/generate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(request),
       });
       if (!response.ok) {
@@ -251,7 +241,7 @@ class PumoAPI {
       }
       return await response.json();
     } catch (error) {
-      console.error('Generate guide error:', error);
+      console.error("Generate guide error:", error);
       throw error;
     }
   }
@@ -259,14 +249,14 @@ class PumoAPI {
   async getBuyingGuides(category?: string, limit: number = 50): Promise<BuyingGuide[]> {
     try {
       const params = new URLSearchParams();
-      if (category) params.append('category', category);
-      params.append('limit', limit.toString());
+      if (category) params.append("category", category);
+      params.append("limit", limit.toString());
 
       const response = await fetch(`${this.baseUrl}/api/guides?${params}`);
-      if (!response.ok) throw new Error('Failed to fetch guides');
+      if (!response.ok) throw new Error("Failed to fetch guides");
       return await response.json();
     } catch (error) {
-      console.error('Get guides error:', error);
+      console.error("Get guides error:", error);
       return [];
     }
   }
@@ -276,11 +266,11 @@ class PumoAPI {
       const response = await fetch(`${this.baseUrl}/api/guides/${id}`);
       if (!response.ok) {
         if (response.status === 404) return null;
-        throw new Error('Failed to fetch guide');
+        throw new Error("Failed to fetch guide");
       }
       return await response.json();
     } catch (error) {
-      console.error('Get guide error:', error);
+      console.error("Get guide error:", error);
       return null;
     }
   }
@@ -288,12 +278,12 @@ class PumoAPI {
   async deleteBuyingGuide(id: string): Promise<boolean> {
     try {
       const response = await fetch(`${this.baseUrl}/api/guides/${id}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
-      if (!response.ok) throw new Error('Failed to delete guide');
+      if (!response.ok) throw new Error("Failed to delete guide");
       return true;
     } catch (error) {
-      console.error('Delete guide error:', error);
+      console.error("Delete guide error:", error);
       return false;
     }
   }
@@ -301,11 +291,11 @@ class PumoAPI {
   async getGuideCategories(): Promise<string[]> {
     try {
       const response = await fetch(`${this.baseUrl}/api/guides/categories/list`);
-      if (!response.ok) throw new Error('Failed to fetch categories');
+      if (!response.ok) throw new Error("Failed to fetch categories");
       const data = await response.json();
       return data.categories || [];
     } catch (error) {
-      console.error('Get categories error:', error);
+      console.error("Get categories error:", error);
       return [];
     }
   }
