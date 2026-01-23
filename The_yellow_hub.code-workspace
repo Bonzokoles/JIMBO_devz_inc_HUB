@@ -6,6 +6,9 @@
 		},
 		{
 			"path": "../docs"
+		},
+		{
+			"path": "../ZZ_files/Antygravity_skills"
 		}
 	],
 	"settings": {
