@@ -312,6 +312,32 @@ For API support or integration questions, see /api/docs`,
         );
       }
 
+      // Vectorize DELETE BY IDs endpoint for cleanup/reindexing
+      if (
+        url.pathname === "/api/vectorize/delete" &&
+        request.method === "POST"
+      ) {
+        const body = (await request.json()) as {
+          ids: string[];
+        };
+
+        // Delete vectors by IDs using VECTORIZE binding
+        const deleted = await env.VECTORIZE.deleteByIds(body.ids);
+
+        return new Response(
+          JSON.stringify({
+            success: true,
+            result: { count: deleted.count },
+          }),
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+            },
+          },
+        );
+      }
+
       // Simple search endpoint
       if (url.pathname === "/api/search" && request.method === "POST") {
         const body = (await request.json()) as {

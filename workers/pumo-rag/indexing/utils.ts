@@ -8,7 +8,11 @@ import { resolve } from "path";
 // --- CSV PARSER (Robust State Machine) ---
 // Robust CSV parser that handles broken quotes by resetting on new ID lines
 export async function parseCSV(filePath: string): Promise<PumoProduct[]> {
-  const content = await Bun.file(filePath).text();
+  // Explicitly read as UTF-8
+  const file = Bun.file(filePath);
+  const buffer = await file.arrayBuffer();
+  const content = new TextDecoder('utf-8').decode(buffer);
+
   const lines = content.split(/\r?\n/);
   const rows: string[][] = [];
   let currentRowLines: string[] = [];
