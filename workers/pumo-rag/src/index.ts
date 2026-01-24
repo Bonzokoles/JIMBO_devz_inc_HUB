@@ -345,7 +345,8 @@ For API support or integration questions, see /api/docs`,
                 url:
                   m.metadata.url ||
                   `https://www.meblepumo.pl/pl/products/${m.id}`,
-                description: m.metadata.description,
+                description: m.metadata.short_desc || "",
+                image: m.metadata.image_url || "",
               },
             })),
             meta: {
