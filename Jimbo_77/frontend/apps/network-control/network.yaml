@@ -21,8 +21,8 @@ devices:
 
 # Agent Zero Integration
 agents:
-  - id: "AgentZero_MCP"
-    name: "Agent Zero Autonomous"
+  - id: "AgentZero_Main"
+    name: "Agent Zero Unified (Conda/SQL/MCP)"
     url: "http://localhost:50082"
     public_url: "https://jump-column-guardian-deeper.trycloudflare.com"
     type: "autonomous_agent"
