@@ -23,43 +23,13 @@ import {
   aiService,
 } from "./services/aiService";
 
-const MOCK_SERVICES: NetworkService[] = [
-  {
-    pid: 1201,
-    name: "nginx-main",
-    port: 80,
-    protocol: "TCP",
-    status: "LISTEN",
-    isExposed: true,
-    vulnerabilityScore: 12,
-  },
-  {
-    pid: 3452,
-    name: "fastapi-backend",
-    port: 8000,
-    protocol: "TCP",
-    status: "LISTEN",
-    isExposed: false,
-    vulnerabilityScore: 45,
-  },
-  {
-    pid: 991,
-    name: "redis-cache",
-    port: 6379,
-    protocol: "TCP",
-    status: "LISTEN",
-    isExposed: false,
-    vulnerabilityScore: 5,
-  },
-  {
-    pid: 8821,
-    name: "unsecured-dev-srv",
-    port: 8080,
-    protocol: "TCP",
-    status: "LISTEN",
-    isExposed: true,
-    vulnerabilityScore: 88,
-  },
+const ARCH_SERVICES: NetworkService[] = [
+  { pid: 5001, name: "agent-zero-mcp", port: 50082, protocol: "TCP", status: "LISTEN", isExposed: true, vulnerabilityScore: 0 },
+  { pid: 6001, name: "deployment-coordinator", port: 6001, protocol: "TCP", status: "LISTEN", isExposed: false, vulnerabilityScore: 0 },
+  { pid: 6002, name: "cost-optimizer", port: 6002, protocol: "TCP", status: "LISTEN", isExposed: false, vulnerabilityScore: 0 },
+  { pid: 6003, name: "worker-health", port: 6003, protocol: "TCP", status: "LISTEN", isExposed: false, vulnerabilityScore: 0 },
+  { pid: 6004, name: "guardian-agent", port: 6004, protocol: "TCP", status: "LISTEN", isExposed: false, vulnerabilityScore: 0 },
+  { pid: 6062, name: "research-agent", port: 6062, protocol: "TCP", status: "LISTEN", isExposed: false, vulnerabilityScore: 0 },
 ];
 
 const MOCK_VPN: VpnStatus = {
@@ -72,22 +42,11 @@ const MOCK_VPN: VpnStatus = {
 const MOCK_TUNNELS: TunnelConfig[] = [
   {
     id: "t-1",
-    label: "Cloudflare Prod Bridge",
-    obfuscatedId: "cf-x9j-22a",
+    label: "Agent Zero Bridge",
+    obfuscatedId: "cf-az-01",
     provider: "Cloudflare",
-    localPort: 8000,
-    publicUrl: "https://cf-x9j-22a.jimbo.net",
-    isActive: true,
-    isPersistent: true,
-    bandwidth: "240 KB/s",
-  },
-  {
-    id: "t-docker-1",
-    label: "Agent Zero Access",
-    obfuscatedId: "boxing-operator",
-    provider: "Cloudflare",
-    localPort: 50100,
-    publicUrl: "https://boxing-operator-smithsonian-rocks.trycloudflare.com",
+    localPort: 50082,
+    publicUrl: "https://agent-zero.jimbo77.com",
     isActive: true,
     isPersistent: true,
     bandwidth: "Live",
@@ -98,25 +57,17 @@ const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<
     "dashboard" | "arch" | "metrics" | "tools" | "orchestration"
   >("dashboard");
-  const [services, setServices] = useState<NetworkService[]>(MOCK_SERVICES);
+  const [services, setServices] = useState<NetworkService[]>(ARCH_SERVICES);
   const [tunnels, setTunnels] = useState<TunnelConfig[]>(MOCK_TUNNELS);
   const [vpn] = useState<VpnStatus>(MOCK_VPN);
   const [agents, setAgents] = useState<Agent[]>([
     {
-      id: "g-1",
-      name: "Strażnik Portów",
-      role: "Security Ops",
-      status: AgentStatus.IDLE,
-      lastActivity: "Teraz",
-      log: ["System uzbrojony.", "Analiza nginx-main: Brak podatności."],
-    },
-    {
       id: "a-1",
-      name: "Architekt Połączeń",
-      role: "System Orchestrator",
-      status: AgentStatus.IDLE,
-      lastActivity: "Teraz",
-      log: ["Hub gotowy.", "Mapowanie cf-x9j-22a zakończone pomyślnie."],
+      name: "Orchestrator Logic",
+      role: "System Core",
+      status: AgentStatus.WORKING,
+      lastActivity: "Monitoring",
+      log: ["System Architecture Loaded", "Checking local containers..."],
     },
   ]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -124,7 +75,7 @@ const App: React.FC = () => {
   // Track app initialization
   useEffect(() => {
     metricsService.trackEvent("app_initialized", {
-      initial_services_count: MOCK_SERVICES.length,
+      initial_services_count: ARCH_SERVICES.length,
       initial_tunnels_count: MOCK_TUNNELS.length,
       timestamp: new Date().toISOString(),
     });
@@ -133,6 +84,38 @@ const App: React.FC = () => {
     if (typeof window !== "undefined") {
       (window as any).metricsService = metricsService;
     }
+
+    // Check Agent Zero Health & Fetch Real Services
+    const initSystem = async () => {
+      // 1. Check Agent Zero
+      const isUp = await aiService.checkHealth();
+      if (isUp) {
+        setAgents(prev => [
+          {
+            id: 'az-core',
+            name: 'Agent Zero (MCP)',
+            role: 'AI Commander',
+            status: AgentStatus.WORKING,
+            lastActivity: 'Active via API',
+            log: ['Connected to 50082', 'API accessible']
+          },
+          ...prev
+        ]);
+      }
+
+      // 2. Fetch Real Docker Services
+      const realServices = await aiService.getNetworkServices();
+      if (realServices && realServices.length > 0) {
+          setServices(realServices);
+          // Update logs
+          setAgents(prev => prev.map(a => 
+              a.id === 'a-1' 
+              ? { ...a, log: [`Loaded ${realServices.length} containers from Backend`, ...a.log] } 
+              : a
+          ));
+      }
+    };
+    initSystem();
   }, []);
 
   const addAgentLog = useCallback((agentId: string, message: string) => {

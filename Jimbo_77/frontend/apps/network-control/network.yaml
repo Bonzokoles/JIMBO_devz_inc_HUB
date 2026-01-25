@@ -18,3 +18,26 @@ devices:
       password: "#password"
       submit: "#login-btn"
     credentials_env_prefix: "SWITCH_POE"
+
+# Agent Zero Integration
+agents:
+  - id: "AgentZero_MCP"
+    name: "Agent Zero Autonomous"
+    url: "http://localhost:50082"
+    public_url: "https://jump-column-guardian-deeper.trycloudflare.com"
+    type: "autonomous_agent"
+    api_endpoints:
+      status: "/api/status"
+      execute: "/api/execute"
+      files: "/api/files"
+    capabilities:
+      - web_navigation
+      - code_execution
+      - file_operations
+      - docker_control
+      - openrouter_integration
+    credentials_env_prefix: "AGENT_ZERO"
+    tunnel:
+      provider: "Cloudflare"
+      active: true
+      created: "2026-01-23"

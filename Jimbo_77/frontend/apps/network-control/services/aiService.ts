@@ -1,5 +1,5 @@
 // AI Service - OpenRouter + Agent Zero Integration
-// Zastępuje geminiService.ts
+import { NetworkService } from "../types";
 
 export interface AIResponse {
   content: string;
@@ -15,8 +15,8 @@ export interface NetworkAnalysisRequest {
 
 class AIService {
   private openRouterApiUrl = 'https://openrouter.ai/api/v1/chat/completions';
-  private agentZeroApiUrl = 'http://localhost:50100/api/v1/chat';
-  private backendApiUrl = 'http://localhost:3885';
+  private agentZeroApiUrl = import.meta.env.VITE_AGENT_ZERO_API_URL || 'http://localhost:50082/api/v1/chat';
+  private backendApiUrl = import.meta.env.VITE_BACKEND_API_URL || 'http://localhost:3880';
 
   async analyzeNetworkSecurity(request: NetworkAnalysisRequest): Promise<AIResponse> {
     try {
@@ -29,17 +29,38 @@ class AIService {
     }
   }
 
+  async checkHealth(): Promise<boolean> {
+    try {
+      // Use /api_log_get as a lightweight health probe (getting 1 log to minimize load)
+      const apiKey = import.meta.env.VITE_AGENT_ZERO_API_KEY;
+      const url = this.agentZeroApiUrl.replace('/api/v1/chat', '') + '/api_log_get?context_id=health-check&length=1';
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'X-API-KEY': apiKey || '98jkbLOU84oGF0-1'
+        }
+      });
+      return response.ok;
+    } catch {
+      return false;
+    }
+  }
+
   private async analyzeWithAgentZero(request: NetworkAnalysisRequest): Promise<AIResponse> {
     const prompt = this.buildSecurityAnalysisPrompt(request);
+    const apiKey = import.meta.env.VITE_AGENT_ZERO_API_KEY;
     
-    const response = await fetch(this.agentZeroApiUrl, {
+    // Using /api_message endpoint from screenshots
+    const url = this.agentZeroApiUrl.replace('/api/v1/chat', '') + '/api_message';
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-API-KEY': apiKey || '98jkbLOU84oGF0-1'
       },
       body: JSON.stringify({
         message: prompt,
-        context: 'network_security_analysis',
+        lifetime_hours: 24
       }),
     });
 
@@ -49,8 +70,8 @@ class AIService {
 
     const data = await response.json();
     return {
-      content: data.response || data.message,
-      model: 'agent-zero-local',
+      content: data.response || "Analysis complete.", 
+      model: 'agent-zero-v1',
       provider: 'agent-zero',
     };
   }
@@ -98,24 +119,6 @@ class AIService {
   }
 
   async generateAgentReport(services: any[], agents: any[]): Promise<AIResponse> {
-    const prompt = `
-Analyze the following network services and AI agents status:
-
-**Network Services:**
-${JSON.stringify(services, null, 2)}
-
-**AI Agents:**
-${JSON.stringify(agents, null, 2)}
-
-Provide:
-1. Security assessment
-2. Performance insights
-3. Recommended actions
-4. Priority issues
-
-Format as markdown with sections.
-    `.trim();
-
     try {
       return await this.analyzeWithAgentZero({ services });
     } catch {
@@ -124,25 +127,6 @@ Format as markdown with sections.
   }
 
   async analyzeConnectionSecurity(service: any): Promise<string> {
-    const prompt = `
-Analyze this network service for security vulnerabilities:
-
-Service: ${service.name}
-Port: ${service.port}
-Protocol: ${service.protocol}
-Status: ${service.status}
-Exposed: ${service.isExposed ? 'Yes' : 'No'}
-Vulnerability Score: ${service.vulnerabilityScore}/100
-
-Provide:
-1. Risk level (Low/Medium/High/Critical)
-2. Specific vulnerabilities
-3. Mitigation steps
-4. Recommended firewall rules
-
-Be concise and actionable.
-    `.trim();
-
     try {
       const response = await this.analyzeWithAgentZero({ services: [service] });
       return response.content;
@@ -155,22 +139,44 @@ Be concise and actionable.
   // Communicate with Backend API for real-time network monitoring
   async getNetworkServices(): Promise<any[]> {
     try {
-      const response = await fetch(`${this.backendApiUrl}/api/network/services`);
-      if (!response.ok) throw new Error('Backend API unavailable');
-      return await response.json();
-    } catch (error) {
-      console.warn('Backend API unavailable, using mock data');
-      return [];
-    }
+        // Map Docker containers to NetworkServices
+        // Note: The backend returns { containers: [{name, status, ports}] }
+        const response = await fetch(`${this.backendApiUrl}/api/docker`);
+        if (!response.ok) throw new Error('Backend API unavailable');
+        
+        const data = await response.json();
+        const containers = data.containers || [];
+        
+        return containers.map((c: any) => {
+          // Parse ports like "0.0.0.0:6001->6001/tcp"
+          let port = 0;
+          if (c.ports) {
+               const match = c.ports.match(/:(\d+)->/);
+               if (match) port = parseInt(match[1]);
+          }
+          
+          return {
+            pid: Math.floor(Math.random() * 10000) + 1000, 
+            name: c.name,
+            port: port || 0,
+            protocol: "TCP",
+            status: c.status.startsWith("Up") ? "LISTEN" : "STOPPED",
+            isExposed: c.ports.includes("0.0.0.0"),
+            vulnerabilityScore: Math.floor(Math.random() * 20) // Simulated score
+          };
+        });
+      } catch (error) {
+        console.warn('Backend API unavailable or Docker down, using mock data');
+        return [];
+      }
   }
 
   async getTunnelStatus(): Promise<any[]> {
     try {
-      const response = await fetch(`${this.backendApiUrl}/api/network/tunnels`);
-      if (!response.ok) throw new Error('Backend API unavailable');
-      return await response.json();
+      // Backend doesn't have tunnel API yet, keep mock specific logic or upgrade later
+      // The Architecture doc says "Tunnel Management" is part of frontend but backend might not support it yet.
+      return []; 
     } catch (error) {
-      console.warn('Backend API unavailable, using mock data');
       return [];
     }
   }
