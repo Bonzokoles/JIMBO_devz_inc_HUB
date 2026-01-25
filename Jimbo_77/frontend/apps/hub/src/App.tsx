@@ -3,8 +3,11 @@ import { useState } from "react";
 import { UnifiedOpsView } from "./features/unified/UnifiedOpsView";
 import { PublishingView } from "./features/publishing/PublishingView";
 import BunkerWarRoom from "./features/analysis/BunkerWarRoom";
+import { PumoView } from "./features/pumo/PumoView";
 import { ZenonView } from "./features/zenon";
 import { MoaFlowVisualizer } from "./features/moa";
+import { PythonToolsView } from "./features/python-tools/PythonToolsView";
+import { AgentsView } from "./features/agents/AgentsView";
 import { Sidebar } from "./components/Sidebar";
 
 export default function App() {
@@ -12,26 +15,20 @@ export default function App() {
 
   const renderContent = () => {
     switch (activeTab) {
-      case "dashboard": return <UnifiedOpsView />;
+      case "dashboard": return <UnifiedOpsView onOpenPumo={() => setActiveTab('pumo_analytics')} />;
+      case "pumo_analytics": return <PumoView onBack={() => setActiveTab('dashboard')} />;
+      case "python_labs": return <PythonToolsView />;
       case "publisher": return <PublishingView />;
       case "wild_bunch": return <BunkerWarRoom />;
       case "zenon_prompts": return <ZenonView />;
       case "moa_flow": return <MoaFlowVisualizer />;
       case "agents":
-        return (
-          <div className="h-full flex items-center justify-center p-10">
-            <div className="glass-panel p-10 rounded-2xl border border-dashed border-gray-700 text-center">
-              <div className="text-6xl mb-4 animate-bounce">🚧</div>
-              <h2 className="text-2xl font-bold text-primary mb-2">AGENT MANAGEMENT</h2>
-              <p className="text-gray-400 font-mono">Under Construction by JIMBO_77</p>
-            </div>
-          </div>
-        );
+        return <AgentsView />;
       case "network":
         return (
           <div className="h-full w-full bg-black relative">
             <iframe
-              src="http://localhost:5173"
+              src="http://localhost:5174"
               className="w-full h-full border-0 opacity-90 hover:opacity-100 transition-opacity"
               title="Network Control Center"
             />
