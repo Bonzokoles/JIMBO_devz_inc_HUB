@@ -45,6 +45,6 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: "jimbo-network-control"
+          projectName: "fragrant-dream-4257"
           directory: "Jimbo_77/frontend/apps/network-control/dist"
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
